@@ -15,6 +15,11 @@ class AuthController extends Controller
     }
    
     public function index(){
+        if(Auth::id()>0)
+        {
+            return redirect()->route('dashboard.index')->with('succes','dăng nhập thành công');
+        }
+        
         return view('admin.user.auth.login');
      }  
      public function login(AuthRequest $request){
