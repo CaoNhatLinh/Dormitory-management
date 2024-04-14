@@ -41,12 +41,12 @@ return [
 
         'mysql' => [
             'driver' => 'mysql',
-            'url' => env('DB_URL'),
-            'host' => env('DB_HOST', '127.0.0.1'),
-            'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'laravel'),
-            'username' => env('DB_USERNAME', 'root'),
-            'password' => env('DB_PASSWORD', ''),
+            'url' => env('dormitory-remote-dormitory-managment-php.b.aivencloud.com:15992'),
+            'host' => env('DB_HOST', 'dormitory-remote-dormitory-managment-php.b.aivencloud.com'),
+            'port' => env('DB_PORT', '15988'),
+            'database' => env('DB_DATABASE', 'defaultdb'),
+            'username' => env('DB_USERNAME', 'avnadmin'),
+            'password' => env('DB_PASSWORD', 'AVNS_OdxHfcudb43dFufrVYw'),
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => env('DB_CHARSET', 'utf8mb4'),
             'collation' => env('DB_COLLATION', 'utf8mb4_unicode_ci'),
