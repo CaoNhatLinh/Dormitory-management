@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use PharIo\Manifest\Email;
 
 class AuthRequest extends FormRequest
 {
@@ -23,14 +24,15 @@ class AuthRequest extends FormRequest
     {
         return [
             
-            'username' => 'required',
-            'password' => 'required',
+            'email' => ['required', 'email'],
+            'password' => ['required'],
         ];
     }
     public function messages(): array
     {
         return [
-            'username.required' => 'vui lòng nhập username',
+            'email.required' => 'vui lòng nhập email',
+            'email.email' => 'vui lòng nhập đúng định dạng email',
             'password.required' => 'vui lòng nhập password'
         ];
     }

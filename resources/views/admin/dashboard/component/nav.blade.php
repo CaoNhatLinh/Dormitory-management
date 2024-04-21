@@ -110,7 +110,7 @@
 
 
                         <li>
-                            <a href="login.html">
+                            <a href="{{route('auth.logout')}}">
                                 <i class="fa fa-sign-out"></i> Log out
                             </a>
                         </li>
@@ -122,4 +122,23 @@
                     </ul>
 
                 </nav>
-            </div>
+</div>
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Chat view</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="index.html">Home</a>
+            </li>
+            <li>
+                <a>Miscellaneous</a>
+            </li>
+            <li class="active">
+                <strong>Chat view</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>

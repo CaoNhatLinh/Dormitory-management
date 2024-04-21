@@ -21,18 +21,31 @@ class AuthController extends Controller
         }
         
         return view('admin.user.auth.login');
-     }  
+     } 
+    
      public function login(AuthRequest $request){
         $credentials = [
-            'username' => $request->input('username'),
+            'email' => $request->input('email'),
             'password' => $request->input('password')
         ];
         
-        if (Auth::attempt($credentials)) {
-            return redirect()->route('dashboard.index')->with('succes','dăng nhập thành công');
+        if (Auth::attempt($credentials,$request-> input('remember'))) {
+            return redirect()->route('dashboard.index')->with('succes','Đăng nhập thành công');
            
         }
-        return redirect()->route('auth.admin')->with('error','username hoặc mật khẩu không chính xác');
-     }    
+        return redirect()->back()->with('error','email hoặc mật khẩu không chính xác');
+     } 
+     public function logout(Request $request)
+     {
+         Auth::logout();
+     
+         $request->session()->invalidate();
+     
+         $request->session()->regenerateToken();
+     
+         return redirect()->route('auth.admin');
+     } 
+        
+     
 }
     

@@ -20,8 +20,9 @@ class DatabaseSeeder extends Seeder
         DB::table('permissions')->insert([
             'permission_name' => 'admin',
         ]);
-        DB::table('admins')->insert([
-            'username' => 'admin1',
+        DB::table('users')->insert([
+            'email' => 'admin@gmail.com',
+            'name'=> 'Nguyễn Văn A',
             'employee_id' => null,
             'permission_id' => 1,
             'password' => Hash::make(123456)

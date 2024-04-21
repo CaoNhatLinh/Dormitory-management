@@ -16,11 +16,15 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $table = 'admins';
+    protected $table = 'users';
+    protected $primaryKey = 'user_id';
     protected $fillable = [
+        
         'name',
         'email',
         'password',
+        'employee_id',
+        'permission_id'
     ];
 
     /**
@@ -41,7 +45,7 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
+           
             'password' => 'hashed',
         ];
     }
