@@ -1,8 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admin\User\AuthController;
-use App\Http\Controllers\Admin\User\DashboardController;
-use App\Http\Controllers\Admin\User\EmployeeController;
+use App\Http\Controllers\Admin\Dashboard\DashboardController;
+use App\Http\Controllers\Admin\Dashboard\EmployeeController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Auth\Middleware\Authenticate;
