@@ -26,7 +26,7 @@
                         <a href="#"><i class="fa fa-bar-chart-o"></i> <span class="nav-label">Contracts</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level collapse">
                             <li><a href="graph_flot.html">New contract</a></li>
-                            <li><a href="graph_flot.html">Students list</a></li>
+                            <li><a href="{{route('student.index')}}">Students list</a></li>
                         </ul>
                     </li>
                     

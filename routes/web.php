@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\User\AuthController;
 use App\Http\Controllers\Admin\Dashboard\DashboardController;
 use App\Http\Controllers\Admin\Dashboard\EmployeeController;
+use App\Http\Controllers\Admin\Student\StudentController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Auth\Middleware\Authenticate;
@@ -21,3 +22,6 @@ Route::GET('dashboard/index', [DashboardController::class, 'index'])->name('dash
 
 // EMPLOYEE
 Route::get('employee', [EmployeeController::class, 'index'])->name('employee.index');
+
+// STUDENT
+Route::get("/student", [StudentController::class, 'index'])->name("student.index");
