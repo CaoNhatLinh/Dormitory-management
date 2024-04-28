@@ -1,6 +1,4 @@
-
 <div class="row  border-bottom white-bg dashboard-header">
-
 <div class="col-md-3">
     <h2>Welcome Amelia</h2>
     <small>You have 42 messages and 6 notifications.</small>

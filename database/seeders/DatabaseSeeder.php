@@ -20,12 +20,26 @@ class DatabaseSeeder extends Seeder
         DB::table('permissions')->insert([
             'permission_name' => 'admin',
         ]);
+        DB::table('positions')->insert([
+            'position_name' => 'manager'
+           
+        ]);
+        DB::table('employees')->insert([
+            'person_id' => '674264762172',
+            'name'=> 'Nguyễn Văn A',
+            'gender' => 'Nam',
+            'address' => 'Tây Thạnh, Tân Phú',
+            'nationality' => 'Việt Nam',
+            'date_of_birth' => '2000-1-1',
+            'avatar' => 'https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671142.jpg',
+            'position_id' => 1
+        ]);
         DB::table('users')->insert([
             'email' => 'admin@gmail.com',
-            'name'=> 'Nguyễn Văn A',
-            'employee_id' => null,
+            'employee_id' => 1,
             'permission_id' => 1,
             'password' => Hash::make(123456)
         ]);
+       
     }
 }

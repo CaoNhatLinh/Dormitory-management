@@ -28,12 +28,14 @@ class AuthController extends Controller
             'email' => $request->input('email'),
             'password' => $request->input('password')
         ];
-
+       
         if (Auth::attempt($credentials, $request->input('remember'))) {
-            return redirect()->route('dashboard.index')->with('succes', 'Đăng nhập thành công');
+            return redirect()->route('dashboard.index')->with('succes', 'Domitory management system', 'Welcome');
         }
         return redirect()->back()->with('error', 'email hoặc mật khẩu không chính xác');
     }
+    
+ 
     public function logout(Request $request)
     {
         Auth::logout();
@@ -44,4 +46,5 @@ class AuthController extends Controller
 
         return redirect()->route('auth.admin');
     }
+    
 }
