@@ -1,3 +1,5 @@
+
+
 <h1>Danh sách sinh viên</h1>
 
     <table class="table">
@@ -15,7 +17,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($students as $student) 
+            @foreach ($data['students'] as $student) 
                 <tr>
                     <td>{{ $student->student_id }}</td> 
                     <td>{{ $student->name }}</td>
