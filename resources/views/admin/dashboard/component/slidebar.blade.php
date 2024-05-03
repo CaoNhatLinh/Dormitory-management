@@ -62,7 +62,7 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="css_animation.html"><i class="fa fa-magic"></i> <span class="nav-label">Analysis </span></a>
+                        <a href="{{route('analysis.index')}}"><i class="fa fa-magic"></i> <span class="nav-label">Analysis</span></a>
                     </li>
                    
                     <li>

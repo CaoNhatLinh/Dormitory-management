@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\User\AuthController;
 use App\Http\Controllers\Admin\Dashboard\DashboardController;
 use App\Http\Controllers\Admin\Dashboard\EmployeeController;
+use App\Http\Controllers\Admin\Dashboard\AnalysisController;
 use App\Http\Controllers\Admin\Student\StudentController;
 use App\Http\Controllers\Admin\User\UserController;
 use Illuminate\Support\Facades\Auth;
@@ -30,4 +31,8 @@ Route::get('employee', [EmployeeController::class, 'index'])->name('employee.ind
 
 // STUDENT
 Route::get("/student", [StudentController::class, 'index'])->name("student.index");
+
+//GRAPH
+
+Route::get("Analysis", [AnalysisController::class, 'index'])->name("analysis.index");
 

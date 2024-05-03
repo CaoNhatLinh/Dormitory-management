@@ -1,4 +1,4 @@
-<link href="{{asset('css/profile.css')}}" rel="stylesheet">
+
 <div class="container">
     <div class="row">
         <div class="col-md-7 ">

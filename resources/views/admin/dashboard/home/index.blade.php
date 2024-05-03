@@ -1,85 +1,97 @@
-<div class="row  border-bottom white-bg dashboard-header">
-<div class="col-md-3">
-    <h2>Welcome Amelia</h2>
-    <small>You have 42 messages and 6 notifications.</small>
-    <ul class="list-group clear-list m-t">
-        <li class="list-group-item fist-item">
-            <span class="pull-right">
-                09:00 pm
-            </span>
-            <span class="label label-success">1</span> Please contact me
-        </li>
-        <li class="list-group-item">
-            <span class="pull-right">
-                10:16 am
-            </span>
-            <span class="label label-info">2</span> Sign a contract
-        </li>
-        <li class="list-group-item">
-            <span class="pull-right">
-                08:22 pm
-            </span>
-            <span class="label label-primary">3</span> Open new shop
-        </li>
-        <li class="list-group-item">
-            <span class="pull-right">
-                11:06 pm
-            </span>
-            <span class="label label-default">4</span> Call back to Sylvia
-        </li>
-        <li class="list-group-item">
-            <span class="pull-right">
-                12:00 am
-            </span>
-            <span class="label label-primary">5</span> Write a letter to Sandra
-        </li>
-    </ul>
-</div>
-<div class="col-md-6">
-    <div class="flot-chart dashboard-chart">
-        <div class="flot-chart-content" id="flot-dashboard-chart"></div>
-    </div>
-    <div class="row text-left">
-        <div class="col-xs-4">
-            <div class=" m-l-md">
-                <span class="h4 font-bold m-t block">$ 406,100</span>
-                <small class="text-muted m-b block">Sales marketing report</small>
+<div class="wrapper wrapper-content animated fadeInRight"><div class="row1 g-6 mb-6">
+    <div class="col-xl-3 col-sm-6 col-12">
+        <div class="card shadow border-0">
+            <div class="card-body">
+                <div class="row1">
+                    <div class="col">
+                        <span class="h6 font-semibold text-muted text-sm d-block mb-2">Sinh viên đang ở</span>
+                        <span class="h3 font-bold mb-0">400</span>
+                    </div>
+                    <div class="col-auto">
+                        <div class="icon icon-shape bg-tertiary text-white text-lg rounded-circle">
+                            <i class="bi bi-credit-card"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2 mb-0 text-sm">
+                    <span class="badge badge-pill bg-soft-success text-success me-2">
+                        <i class="bi bi-arrow-up me-1"></i>13%
+                    </span>
+                    <span class="text-nowrap text-xs text-muted">ssssssssss</span>
+                </div>
             </div>
         </div>
-        <div class="col-xs-4">
-            <span class="h4 font-bold m-t block">$ 150,401</span>
-            <small class="text-muted m-b block">Annual sales revenue</small>
-        </div>
-        <div class="col-xs-4">
-            <span class="h4 font-bold m-t block">$ 16,822</span>
-            <small class="text-muted m-b block">Half-year revenue margin</small>
-        </div>
-
     </div>
-</div>
-<div class="col-md-3">
-    <div class="statistic-box">
-        <h4>
-            Project Beta progress
-        </h4>
-        <p>
-            You have two project with not compleated task.
-        </p>
-        <div class="row text-center">
-            <div class="col-lg-6">
-                <canvas id="doughnutChart2" width="80" height="80" style="margin: 18px auto 0"></canvas>
-                <h5>Kolter</h5>
-            </div>
-            <div class="col-lg-6">
-                <canvas id="doughnutChart" width="80" height="80" style="margin: 18px auto 0"></canvas>
-                <h5>Maxtor</h5>
+    <div class="col-xl-3 col-sm-6 col-12">
+        <div class="card shadow border-0">
+            <div class="card-body">
+                
+                <div class="row1">
+                    <div class="col">
+                        <span class="h6 font-semibold text-muted text-sm d-block mb-2">Số lượng nhân viên</span>
+                        <span class="h3 font-bold mb-0">215</span>
+                    </div>
+                    <div class="col-auto">
+                        <div class="icon icon-shape bg-primary text-white text-lg rounded-circle">
+                            <i class="bi bi-people"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2 mb-0 text-sm">
+                    <span class="badge badge-pill bg-soft-success text-success me-2">
+                        <i class="bi bi-arrow-up me-1"></i>30%
+                    </span>
+                    <span class="text-nowrap text-xs text-muted">Since last month</span>
+                </div>
             </div>
         </div>
-        <div class="m-t">
-            <small>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</small>
-        </div>
-
     </div>
-</div>
+    <div class="col-xl-3 col-sm-6 col-12">
+        <div class="card shadow border-0">
+            <div class="card-body">
+                <div class="row1">
+                    <div class="col">
+                        <span class="h6 font-semibold text-muted text-sm d-block mb-2">Số lượng trang thiết bị</span>
+                        <span class="h3 font-bold mb-0">1.400</span>
+                    </div>
+                    <div class="col-auto">
+                        <div class="icon icon-shape bg-info text-white text-lg rounded-circle">
+                            <i class="bi bi-clock-history"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2 mb-0 text-sm">
+                    <span class="badge badge-pill bg-soft-danger text-danger me-2">
+                        <i class="bi bi-arrow-down me-1"></i>-5%
+                    </span>
+                    <span class="text-nowrap text-xs text-muted">Since last month</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-sm-6 col-12">
+        <div class="card shadow border-0">
+            <div class="card-body">
+                <div class="row1">
+                    <div class="col">
+                        <span class="h6 font-semibold text-muted text-sm d-block mb-2">Số phòng</span>
+                        <span class="h3 font-bold mb-0">95%</span>
+                    </div>
+                    <div class="col-auto">
+                        <div class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                            <i class="bi bi-minecart-loaded"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2 mb-0 text-sm">
+                    <span class="badge badge-pill bg-soft-success text-success me-2">
+                        <i class="bi bi-arrow-up me-1"></i>10%
+                    </span>
+                    <span class="text-nowrap text-xs text-muted">Since last month</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div></div>
 
-</div>
+
