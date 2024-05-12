@@ -1,0 +1,64 @@
+/* VINH - CUSTOM CSS */
+.text-size-sm {
+    font-size: 14px;
+}
+
+.text-size-mini {
+    font-size: 12px;
+}
+
+.text-size-md {
+    font-size: 16px;
+}
+
+.text-size-lg {
+    font-size: 20px;
+}
+
+.text-size-xl {
+    font-size: 24px;
+}
+
+.text-size-2xl {
+    font-size: 28px;
+}
+
+.rounded-5 {
+    border-radius: 5px;
+}
+
+.rounded-10 {
+    border-radius: 10px;
+}
+
+.rounded-20 {
+    border-radius: 20px;
+}
+
+.rounded-30 {
+    border-radius: 30px;
+}
+
+.rounded-circle {
+    border-radius: 50%;
+}
+
+.me-2 {
+    margin-right: 4px;
+}
+
+ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+button {
+    outline: none;
+    border: none;
+    background-color: transparent;
+}
+
+input {
+    outline: none;
+    border: none;
+}

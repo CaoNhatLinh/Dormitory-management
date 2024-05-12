@@ -9,7 +9,7 @@
 
         <div id="page-wrapper" class="gray-bg dashbard-1">
         @include('admin.dashboard.component.nav')
-        @include($template)
+        <div style="padding-bottom: 80px;">@include($template)</div>
         @include('admin.dashboard.component.footer')
         </div>
     </div>

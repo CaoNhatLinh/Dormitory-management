@@ -3,6 +3,8 @@
 use App\Http\Controllers\Admin\User\AuthController;
 use App\Http\Controllers\Admin\Dashboard\DashboardController;
 use App\Http\Controllers\Admin\Dashboard\EmployeeController;
+use App\Http\Controllers\Admin\Room\RoomController;
+use App\Http\Controllers\Admin\Room\RoomTypeController;
 use App\Http\Controllers\Admin\Student\StudentController;
 use App\Http\Controllers\Admin\User\UserController;
 use Illuminate\Support\Facades\Auth;
@@ -30,4 +32,21 @@ Route::get('employee', [EmployeeController::class, 'index'])->name('employee.ind
 
 // STUDENT
 Route::get("/student", [StudentController::class, 'index'])->name("student.index");
+Route::get("/student/createView", [StudentController::class, 'createView'])->name("student.createView");
+Route::post("/student/create", [StudentController::class, 'create'])->name("student.create");
+Route::get("/student/editView/{id}", [StudentController::class, 'editView'])->name("student.editView");
+Route::post("/student/edit/{id}", [StudentController::class, 'edit'])->name("student.edit");
 
+// ROOM
+Route::get("/room", [RoomController::class, 'index'])->name("room.index");
+Route::get("/room/createView", [RoomController::class, 'createView'])->name("room.createView");
+Route::post("/room/create", [RoomController::class, 'create'])->name("room.create");
+Route::get("/room/editView/{id}", [RoomController::class, 'editView'])->name("room.editView");
+Route::post("/room/edit/{id}", [RoomController::class, 'edit'])->name("room.edit");
+
+// ROOM TYPE
+Route::get("/room/type", [RoomTypeController::class, 'index'])->name("roomType.index");
+Route::get("/room/type/createView", [RoomTypeController::class, 'createView'])->name("roomType.createView");
+Route::post("/room/type/create", [RoomTypeController::class, 'create'])->name("roomType.create");
+Route::get("/room/type/editView/{id}", [RoomTypeController::class, 'editView'])->name("roomType.editView");
+Route::post("/room/type/edit/{id}", [RoomTypeController::class, 'edit'])->name("roomType.edit");

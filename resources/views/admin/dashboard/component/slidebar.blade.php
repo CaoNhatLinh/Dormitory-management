@@ -33,10 +33,10 @@
                     <li>
                     <a href="#"><i class="fa fa-edit"></i> <span class="nav-label">Rooms</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level collapse">
-                            <li><a href="mailbox.html">Rooms list</a></li>
-                            <li><a href="mail_detail.html">New room</a></li>
-                            <li><a href="mail_detail.html">Room types list</a></li>
-                            <li><a href="mail_detail.html">New room type</a></li>
+                            <li><a href="{{route('room.index')}}">Rooms list</a></li>
+                            <li><a href="{{route('room.createView')}}">New room</a></li>
+                            <li><a href="{{route('roomType.index')}}">Room types list</a></li>
+                            <li><a href="{{route('roomType.createView')}}">New room type</a></li>
                         </ul>
                     </li>
                    
