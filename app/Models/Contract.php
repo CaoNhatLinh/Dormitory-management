@@ -9,5 +9,6 @@ class Contract extends Model
 {
     use HasFactory;
     protected $primaryKey = 'contract_id';
+    protected $table = 'contracts';
     public $timestamps = false;
 }

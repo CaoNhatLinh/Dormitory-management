@@ -51,15 +51,15 @@
                     {{-- <img style="width: 50px; height: 50px;" class="rounded-circle" src="{{ $student->avatar }}" alt=""> --}}
                 </td> 
                 <td style="vertical-align: middle;">
-                    <a class="text-size-lg me-2" href="">
+                    <a class="text-size-lg me-2" href="{{route('student.detailView', $student->student_id)}}">
                         <i class="fa fa-eye"></i>
                     </a>
                     <a class="text-size-lg me-2" href="{{route('student.editView', $student->student_id)}}">
                         <i class="fa fa-edit"></i>
                     </a>
-                    <a class="text-size-lg" href="">
+                    {{-- <a class="text-size-lg" href="">
                         <i class="fa fa-trash"></i>
-                    </a>
+                    </a> --}}
                 </td> 
                 
             </tr>

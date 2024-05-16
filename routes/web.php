@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\Contract\ContractController;
 use App\Http\Controllers\Admin\User\AuthController;
 use App\Http\Controllers\Admin\Dashboard\DashboardController;
 use App\Http\Controllers\Admin\Dashboard\EmployeeController;
@@ -36,6 +37,8 @@ Route::get("/student/createView", [StudentController::class, 'createView'])->nam
 Route::post("/student/create", [StudentController::class, 'create'])->name("student.create");
 Route::get("/student/editView/{id}", [StudentController::class, 'editView'])->name("student.editView");
 Route::post("/student/edit/{id}", [StudentController::class, 'edit'])->name("student.edit");
+Route::get("/student/detailView/{id}", [StudentController::class, 'detailView'])->name("student.detailView");
+
 
 // ROOM
 Route::get("/room", [RoomController::class, 'index'])->name("room.index");
@@ -50,3 +53,9 @@ Route::get("/room/type/createView", [RoomTypeController::class, 'createView'])->
 Route::post("/room/type/create", [RoomTypeController::class, 'create'])->name("roomType.create");
 Route::get("/room/type/editView/{id}", [RoomTypeController::class, 'editView'])->name("roomType.editView");
 Route::post("/room/type/edit/{id}", [RoomTypeController::class, 'edit'])->name("roomType.edit");
+
+
+// CONTRACT
+Route::get("/contract", [ContractController::class, 'index'])->name("contract.index");
+Route::get("/contract/createView/{id}", [ContractController::class, 'createView'])->name("contract.createView");
+Route::post("/contract/create/{id}", [ContractController::class, 'create'])->name("contract.create");

@@ -7,6 +7,7 @@ use App\Models\Position;
 use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Contract;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -182,5 +183,33 @@ class StudentController extends Controller
         } else {
             return redirect()->back()->with('error', 'Failed to update student.');
         }
+    }
+
+    public function detailView($id)
+    {
+        // Config - template
+        $authId = Auth::id();
+        $title = 'Edit student';
+        $employee = Employee::find($authId);
+        $employee_id = $employee->employee_id;
+        $position_name = Position::find($employee_id)->position_name;
+        $config = $this->config();
+        $template = 'admin.student.detail';
+
+
+        // Data 
+        $student = Student::find($id);
+        $contracts = Contract::where('student_id', $id)->get();
+
+
+        return view('admin.dashboard.layout', compact(
+            'template',
+            'config',
+            'title',
+            'employee',
+            'position_name',
+            'student',
+            'contracts'
+        ));
     }
 }
