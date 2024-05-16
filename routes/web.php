@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\Dashboard\EmployeeController;
 use App\Http\Controllers\Admin\Room\RoomController;
 use App\Http\Controllers\Admin\Room\RoomTypeController;
 use App\Http\Controllers\Admin\Student\StudentController;
+use App\Http\Controllers\Admin\Dashboard\AnalysisController;
 use App\Http\Controllers\Admin\User\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -59,3 +60,6 @@ Route::post("/room/type/edit/{id}", [RoomTypeController::class, 'edit'])->name("
 Route::get("/contract", [ContractController::class, 'index'])->name("contract.index");
 Route::get("/contract/createView/{id}", [ContractController::class, 'createView'])->name("contract.createView");
 Route::post("/contract/create/{id}", [ContractController::class, 'create'])->name("contract.create");
+
+//GRAPH
+Route::get("Analysis", [AnalysisController::class, 'index'])->name("analysis.index");

@@ -15,4 +15,11 @@
 
     <link href="{{asset('css/animate.css')}}" rel="stylesheet">
     <link href="{{asset('css/style.css')}}" rel="stylesheet">
+<<<<<<< HEAD
     <link href="{{asset('css/app.css')}}" rel="stylesheet">
+=======
+    @foreach($config['css'] as $key => $value) 
+    
+      <link href="{{asset($value)}}"rel="stylesheet" >
+    @endforeach 
+>>>>>>> a84e6e4f67a86168b9a37ef42e8a3fe8d4c09aa8

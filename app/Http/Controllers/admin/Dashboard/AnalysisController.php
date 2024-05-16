@@ -1,17 +1,18 @@
 <?php
-
 namespace App\Http\Controllers\Admin\Dashboard;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Employee;
 use App\Models\Position;
+use App\Models\Student;
 use Illuminate\Support\Facades\Auth;
 
-class DashboardController extends Controller
+class AnalysisController extends Controller
 {
     public function __construct()
     {
+
     }
     public function config()
     {
@@ -31,29 +32,34 @@ class DashboardController extends Controller
                 'js/demo/sparkline-demo.js',
                 'js/plugins/sparkline/jquery.sparkline.min.js',
                 'js/plugins/chartJs/Chart.min.js',
-                'js/plugins/toastr/toastr.min.js',
+
 
             ],
             'css' => [
-                    'css/dashboard.css'
+
+                'css/plugins/c3/c3.min.css',
             ]
         ];
     }
-   
     public function index()
     {
-
-        $config = $this->config();
-        $title = 'Dormitory management';
+        $students = Student::all();
+        $data = ['students' => $students];
         $id = Auth::id();
+        $title = 'Analysis';
         $employee = Employee::find($id);
         $employee_id = $employee->employee_id;
         $position_name = Position::find($employee_id) -> position_name;
-        $template = 'admin.dashboard.home.index';
+        $config = $this->config();
+        $template = 'admin.analysis.index';
         return view('admin.dashboard.layout', compact(
             'template',
             'config',
-            'title','position_name','employee'
+            'data',
+            'title',
+            'employee',
+            'position_name'
         ));
     }
+  
 }

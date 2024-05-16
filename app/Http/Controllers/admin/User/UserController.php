@@ -9,13 +9,39 @@ use App\Models\Employee;
 use App\Models\Position;
 use Illuminate\Support\Facades\Auth;
 
+use function Laravel\Prompts\error;
 
 class UserController extends Controller
 {
     public function __construct()
     {
     }
-    
+    public function config()
+    {
+        return $config = [
+            'js' => [
+                'js/plugins/flot/jquery.flot.js',
+                'js/plugins/flot/jquery.flot.js',
+                'js/plugins/flot/jquery.flot.tooltip.min.js',
+                'js/plugins/flot/jquery.flot.spline.js',
+                'js/plugins/flot/query.flot.resize.js',
+                'js/plugins/flot/query.flot.resize.js',
+                'js/plugins/flot/jquery.flot.pie.js',
+                'js/plugins/peity/jquery.peity.min.js',
+                'js/demo/peity-demo.js',
+                'js/inspinia.js',
+                'js/plugins/gritter/jquery.gritter.min.js',
+                'js/demo/sparkline-demo.js',
+                'js/plugins/sparkline/jquery.sparkline.min.js',
+                'js/plugins/chartJs/Chart.min.js',
+                'js/plugins/toastr/toastr.min.js',
+
+            ],
+            'css' => [
+                'css/profile.css'
+                ]
+        ];
+    }
     public function index()
     {
         if (Auth::check()) {
@@ -38,7 +64,7 @@ class UserController extends Controller
                 ));
             }
         } else {
-            return view('admin.user.auth.login');
+            return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
         }
     }
 }
