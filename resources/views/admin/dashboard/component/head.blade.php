@@ -16,19 +16,17 @@
     <link href="{{asset('css/animate.css')}}" rel="stylesheet">
     <link href="{{asset('css/style.css')}}" rel="stylesheet">
     <link href="{{asset('css/app.css')}}" rel="stylesheet">
-    
     @foreach($config['linkcss'] as $key => $value) 
     
     <link href="$value"rel="stylesheet" >
-
     @endforeach 
-  
-
+    @foreach($config['css'] as $key => $value) 
     
-  <Style>
+      <link href="{{asset($value)}}"rel="stylesheet" >
+    @endforeach 
+
+    <style>
     .metismenu .collapse.in {
   visibility: visible !important;
 }
-  </Style>
-  
-
+  </style>

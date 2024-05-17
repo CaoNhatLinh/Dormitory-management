@@ -3,7 +3,7 @@
 use App\Http\Controllers\Admin\Contract\ContractController;
 use App\Http\Controllers\Admin\User\AuthController;
 use App\Http\Controllers\Admin\Dashboard\DashboardController;
-use App\Http\Controllers\Admin\Dashboard\EmployeeController;
+use App\Http\Controllers\Admin\Employee\EmployeeController;
 use App\Http\Controllers\Admin\Room\RoomController;
 use App\Http\Controllers\Admin\Room\RoomTypeController;
 use App\Http\Controllers\Admin\Student\StudentController;

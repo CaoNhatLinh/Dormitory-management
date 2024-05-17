@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Dashboard;
+namespace App\Http\Controllers\Admin\Employee;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -23,11 +23,16 @@ class EmployeeController extends Controller
             'js' => [
                 'js/plugins/dataTables/datatables.min.js',
                 'js/plugins/pace/pace.min.js',
+                'js/plugins/footable/footable.all.min.js',
             ],
             'linkjs' => [
                
             ],
-            'css' => [],
+            'css' => [
+                'css/plugins/dataTables/datatables.min.css',
+                'css/plugins/footable/footable.core.css',
+                
+            ],
             'linkcss' => [
                 
             ],
@@ -60,7 +65,16 @@ class EmployeeController extends Controller
                     });
         
                 });
+                ',
                 '
+                $(document).ready(function() {
+        
+                    $(\'.footable\').footable();
+                    $(\'.footable2\').footable();
+        
+                });
+                '
+            
             ]
 
 
@@ -72,6 +86,8 @@ class EmployeeController extends Controller
         if (Auth::check()) {
             $config = $this->config();
             $title = 'Dormitory management';
+            $employees = Employee::all();
+            $data = ['employees' => $employees];
             $id = Auth::id();
             $employee = Employee::find($id);
             $employee_id = $employee->employee_id;
@@ -82,7 +98,8 @@ class EmployeeController extends Controller
                 'config',
                 'title',
                 'position_name',
-                'employee'
+                'employee',
+                 'data',
             ));
         } else {
             return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
