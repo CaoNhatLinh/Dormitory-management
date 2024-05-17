@@ -19,6 +19,9 @@ class Employee extends Model
         'position_id',
         'date_of_birth'
     ];
-
+    public function position()
+    {
+        return $this->belongsTo(Position::class, 'position_id');
+    }
     
 }
