@@ -55,7 +55,7 @@
                                     <thead>
                                         <tr>
                                             <th>Mã hợp đồng</th>
-                                            {{-- <th>Phòng</th> --}}
+                                            <th>Phòng</th>
                                             <th>Ngày bắt đầu</th>
                                             <th>Ngày kết thúc</th>
                                             <th>Trạng thái</th>
@@ -66,7 +66,7 @@
                                         @foreach($contracts as $contract)
                                             <tr>
                                                 <td>{{ $contract->contract_id }}</td>
-                                                {{-- <td>{{ $contract->room->room_name }}</td> --}}
+                                                <td>{{ $contract->room->room_name }}</td>
                                                 <td>{{ $contract->start_date }}</td>
                                                 <td>{{ $contract->end_date }}</td>
                                                 <td>{{ $contract->status }}</td>
