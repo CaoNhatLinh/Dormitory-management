@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\Room\RoomController;
 use App\Http\Controllers\Admin\Room\RoomTypeController;
 use App\Http\Controllers\Admin\Student\StudentController;
 use App\Http\Controllers\Admin\Dashboard\AnalysisController;
+use App\Http\Controllers\Admin\Device\DeviceController;
 use App\Http\Controllers\Admin\User\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -61,3 +62,5 @@ Route::get("/contract", [ContractController::class, 'index'])->name("contract.in
 Route::get("/contract/createView/{id}", [ContractController::class, 'createView'])->name("contract.createView");
 Route::post("/contract/create/{id}", [ContractController::class, 'create'])->name("contract.create");
 
+//DEVICE
+Route::get("/device", [DeviceController::class, 'index'])->name("device.index");
