@@ -31,7 +31,8 @@ Route::get("profile", [UserController::class, 'index'])->name("user.index");
 
 // EMPLOYEE
 Route::get('/employee', [EmployeeController::class, 'index'])->name('employee.index');
-
+Route::get("/employee/createView", [EmployeeController::class, 'createView'])->name("employee.createView");
+Route::post("/employee/create", [EmployeeController::class, 'create'])->name("employee.create");
 // STUDENT
 Route::get("/student", [StudentController::class, 'index'])->name("student.index");
 Route::get("/student/createView", [StudentController::class, 'createView'])->name("student.createView");
