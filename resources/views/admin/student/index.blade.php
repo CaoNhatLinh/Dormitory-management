@@ -1,21 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            prefix: 'tw-',
-            corePlugins: {
-                preflight: false, // Set preflight to false to disable default styles
-            },
-        }
-      </script>
-    <title>Danh sách sinh viên</title>
-</head>
-<body>
+
     
 
 <div class="tw-flex tw-items-center tw-justify-between tw-my-4">
@@ -66,5 +49,3 @@
         @endforeach
     </tbody>
 </table>
-</body>
-</html>

@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin\Dashboard;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use App\Models\Employee;
+use App\Models\Position;
+use Illuminate\Support\Facades\Auth;
 class EmployeeController extends Controller
 {
     public function __construct()
@@ -13,29 +15,78 @@ class EmployeeController extends Controller
     }
     public function config()
     {
+
+        
+    
+       
         return $config = [
             'js' => [
-                'js/plugins/flot/jquery.flot.js',
-                'js/plugins/flot/jquery.flot.js',
-                'js/plugins/flot/jquery.flot.tooltip.min.js',
-                'js/plugins/flot/jquery.flot.spline.js',
-                'js/plugins/flot/query.flot.resize.js',
-                'js/plugins/flot/query.flot.resize.js',
-                'js/plugins/flot/jquery.flot.pie.js',
-                'js/plugins/peity/jquery.peity.min.js',
-                'js/demo/peity-demo.js',
-                'js/inspinia.js',
-                'js/plugins/gritter/jquery.gritter.min.js',
-                'js/demo/sparkline-demo.js',
-                'js/plugins/sparkline/jquery.sparkline.min.js',
-
+                'js/plugins/dataTables/datatables.min.js',
+                'js/plugins/pace/pace.min.js',
             ],
-            'css' => []
+            'linkjs' => [
+               
+            ],
+            'css' => [],
+            'linkcss' => [
+                
+            ],
+            
+            'script' => [
+                '
+                $(document).ready(function(){
+                    $(\'.dataTables-example\').DataTable({
+                        pageLength: 25,
+                        responsive: true,
+                        dom: \'<"html5buttons"B>lTfgitp\',
+                        buttons: [
+                            { extend: \'copy\'},
+                            {extend: \'csv\'},
+                            {extend: \'excel\', title: \'ExampleFile\'},
+                            {extend: \'pdf\', title: \'ExampleFile\'},
+        
+                            {extend: \'print\',
+                             customize: function (win){
+                                    $(win.document.body).addClass(\'white-bg\');
+                                    $(win.document.body).css(\'font-size\', \'10px\');
+        
+                                    $(win.document.body).find(\'table\')
+                                            .addClass(\'compact\')
+                                            .css(\'font-size\', \'inherit\');
+                            }
+                            }
+                        ]
+        
+                    });
+        
+                });
+                '
+            ]
+
+
         ];
     }
     public function index()
     {
-        echo 1; die();
+        
+        if (Auth::check()) {
+            $config = $this->config();
+            $title = 'Dormitory management';
+            $id = Auth::id();
+            $employee = Employee::find($id);
+            $employee_id = $employee->employee_id;
+            $position_name = Position::find($employee_id)->position_name;
+            $template = 'admin.employee.index';
+            return view('admin.dashboard.layout', compact(
+                'template',
+                'config',
+                'title',
+                'position_name',
+                'employee'
+            ));
+        } else {
+            return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
+        }
     }
   
 }

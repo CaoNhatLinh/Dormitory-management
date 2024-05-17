@@ -5871,8 +5871,9 @@ body.body-small .vote-icon {
   display: none;
 }
 .metismenu .collapse.in {
-  display: block;
+  display: block ;
 }
+
 .metismenu .collapsing {
   position: relative;
   height: 0;

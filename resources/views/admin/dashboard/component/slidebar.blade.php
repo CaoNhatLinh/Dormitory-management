@@ -61,9 +61,7 @@
                             
                         </ul>
                     </li>
-                    <li>
-                        <a href="{{route('analysis.index')}}"><i class="fa fa-magic"></i> <span class="nav-label">Analysis</span></a>
-                    </li>
+                  
                    
                     <li>
                     <a href="#"><i class="fa fa-files-o"></i> <span class="nav-label">Employees</span><span class="fa arrow"></span></a>
