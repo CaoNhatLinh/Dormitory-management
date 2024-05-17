@@ -21,31 +21,38 @@ class ContractController extends Controller
 
     public function config()
     {
-        return $config = [
+         return $config = [
             'js' => [
-                'js/plugins/flot/jquery.flot.js',
-                'js/plugins/flot/jquery.flot.js',
-                'js/plugins/flot/jquery.flot.tooltip.min.js',
-                'js/plugins/flot/jquery.flot.spline.js',
-                'js/plugins/flot/query.flot.resize.js',
-                'js/plugins/flot/query.flot.resize.js',
-                'js/plugins/flot/jquery.flot.pie.js',
-                'js/plugins/peity/jquery.peity.min.js',
-                'js/demo/peity-demo.js',
+                
+                'js/jquery-3.1.1.min.js',
+                'js/bootstrap.min.js',
+                'js/plugins/metisMenu/jquery.metisMenu.js',
+                'js/plugins/slimscroll/jquery.slimscroll.min.js',
+                'js/plugins/dataTables/datatables.min.js',
                 'js/inspinia.js',
-                'js/plugins/gritter/jquery.gritter.min.js',
-                'js/demo/sparkline-demo.js',
-                'js/plugins/sparkline/jquery.sparkline.min.js',
-                'js/plugins/chartJs/Chart.min.js',
-                'js/plugins/toastr/toastr.min.js',
-
+                'js/plugins/pace/pace.min.js',
             ],
-            'css' => [
-                'css/dashboard.css'
+            'linkjs' => [
+                'https://cdn.tailwindcss.com'
+            ],
+            'css' => [],
+            'linkcss' => [
+               
+            ],
+            
+            'script' =>[
+                '
+                tailwind.config = {
+                    prefix: \'tw-\',
+                    corePlugins: {
+                        preflight: false, // Set preflight to false to disable default styles
+                    },
+                }',
             ]
+
+
         ];
     }
-
     public function index()
     {
         $contracts = Contract::all();

@@ -3,7 +3,7 @@
 use App\Http\Controllers\Admin\Contract\ContractController;
 use App\Http\Controllers\Admin\User\AuthController;
 use App\Http\Controllers\Admin\Dashboard\DashboardController;
-use App\Http\Controllers\Admin\Dashboard\EmployeeController;
+use App\Http\Controllers\Admin\Employee\EmployeeController;
 use App\Http\Controllers\Admin\Room\RoomController;
 use App\Http\Controllers\Admin\Room\RoomTypeController;
 use App\Http\Controllers\Admin\Student\StudentController;
@@ -30,7 +30,7 @@ Route::GET('dashboard', [DashboardController::class, 'index'])->name('dashboard.
 Route::get("profile", [UserController::class, 'index'])->name("user.index");
 
 // EMPLOYEE
-Route::get('employee', [EmployeeController::class, 'index'])->name('employee.index');
+Route::get('/employee', [EmployeeController::class, 'index'])->name('employee.index');
 
 // STUDENT
 Route::get("/student", [StudentController::class, 'index'])->name("student.index");
@@ -61,5 +61,3 @@ Route::get("/contract", [ContractController::class, 'index'])->name("contract.in
 Route::get("/contract/createView/{id}", [ContractController::class, 'createView'])->name("contract.createView");
 Route::post("/contract/create/{id}", [ContractController::class, 'create'])->name("contract.create");
 
-//GRAPH
-Route::get("Analysis", [AnalysisController::class, 'index'])->name("analysis.index");

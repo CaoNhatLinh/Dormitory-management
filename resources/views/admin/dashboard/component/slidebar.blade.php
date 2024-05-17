@@ -3,7 +3,7 @@
                 <ul class="nav metismenu" id="side-menu">
                     <li class="nav-header">
                         <div class="dropdown profile-element"> <span>
-                                <img alt="image" class="img-circle" width="48px"  height="48px" src="{{ $employee->avatar }}" />
+                             <img alt="image" class="img-circle" width="50px"  height="50px" src="{{ asset('uploads/avatars/'. $employee->avatar) }}" />
                             </span>
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                                 <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold"> {{ $employee->name }}</strong>
@@ -61,9 +61,7 @@
                             
                         </ul>
                     </li>
-                    <li>
-                        <a href="{{route('analysis.index')}}"><i class="fa fa-magic"></i> <span class="nav-label">Analysis</span></a>
-                    </li>
+                  
                    
                     <li>
                     <a href="#"><i class="fa fa-files-o"></i> <span class="nav-label">Employees</span><span class="fa arrow"></span></a>
