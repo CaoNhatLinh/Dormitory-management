@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class StudentController extends Controller
@@ -28,14 +29,10 @@ class StudentController extends Controller
             'linkjs' => [
                 'https://cdn.tailwindcss.com'
             ],
-            'css' => [
-                
-            ],
-            'linkcss' => [
-                
-            ],
-            
-            'script' =>[
+            'css' => [],
+            'linkcss' => [],
+
+            'script' => [
                 '
                 tailwind.config = {
                     prefix: \'tw-\',
@@ -56,8 +53,15 @@ class StudentController extends Controller
         $employee = Employee::find($id);
         $employee_id = $employee->employee_id;
         $position_name = Position::find($employee_id)->position_name;
+
         $config = $this->config();
         $template = 'admin.student.index';
+
+        // update contract status = 'expired' if end_date <= current date
+        DB::table('contracts')
+            ->where('end_date', '<=', date('Y-m-d'))
+            ->update(['status' => 'expired']);
+
         return view('admin.dashboard.layout', compact(
             'template',
             'config',
@@ -218,7 +222,7 @@ class StudentController extends Controller
     {
         // Config - template
         $authId = Auth::id();
-        $title = 'Edit student';
+        $title = 'Student detail';
         $employee = Employee::find($authId);
         $employee_id = $employee->employee_id;
         $position_name = Position::find($employee_id)->position_name;
@@ -228,6 +232,16 @@ class StudentController extends Controller
 
         // Data 
         $student = Student::find($id);
+
+        // Check if student has any contract and status = 'renting'
+        $isAvailableCreateContract = true;
+        $contract = Contract::where('student_id', $id)->where('status', 'renting')->first();
+        if ($contract) {
+            $isAvailableCreateContract = false;
+        }
+
+
+
         $contracts = Contract::where('student_id', $id)->get();
 
 
@@ -238,7 +252,8 @@ class StudentController extends Controller
             'employee',
             'position_name',
             'student',
-            'contracts'
+            'contracts',
+            'isAvailableCreateContract'
         ));
     }
 }

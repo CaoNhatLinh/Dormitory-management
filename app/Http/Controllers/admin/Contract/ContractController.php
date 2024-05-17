@@ -17,13 +17,17 @@ class ContractController extends Controller
 {
     public function __construct()
     {
+        // update contract status = 'expired' if end_date <= current date
+        DB::table('contracts')
+            ->where('end_date', '<=', date('Y-m-d'))
+            ->update(['status' => 'expired']);
     }
 
     public function config()
     {
-         return $config = [
+        return $config = [
             'js' => [
-                
+
                 'js/jquery-3.1.1.min.js',
                 'js/bootstrap.min.js',
                 'js/plugins/metisMenu/jquery.metisMenu.js',
@@ -36,11 +40,9 @@ class ContractController extends Controller
                 'https://cdn.tailwindcss.com'
             ],
             'css' => [],
-            'linkcss' => [
-               
-            ],
-            
-            'script' =>[
+            'linkcss' => [],
+
+            'script' => [
                 '
                 tailwind.config = {
                     prefix: \'tw-\',
@@ -64,6 +66,7 @@ class ContractController extends Controller
         $employee_id = $employee->employee_id;
         $position_name = Position::find($employee_id)->position_name;
 
+
         $config = $this->config();
         $template = 'admin.contract.index';
 
@@ -86,7 +89,12 @@ class ContractController extends Controller
         $config = $this->config();
 
         $student_id = $id;
-        // Get rooms with quantity less than occupancy
+        // Check if current student_id has contract and status = 'renting' then redirect to student detail page
+        $contract = Contract::where('student_id', $student_id)->where('status', 'renting')->first();
+        if ($contract) {
+            return redirect()->route('student.detailView', ['id' => $student_id]);
+        }
+
         $rooms = Room::all()->where('quantity', '<', 'occupancy');
 
 
@@ -122,5 +130,54 @@ class ContractController extends Controller
 
 
         return redirect()->route('student.detailView', ['id' => $id]);
+    }
+
+    public function editView($id)
+    {
+        $authId = Auth::id();
+        $employee = Employee::find($authId);
+        $employee_id = $employee->employee_id;
+        $position_name = Position::find($employee_id)->position_name;
+        $config = $this->config();
+
+        $contract = Contract::find($id);
+        $rooms = Room::all()->where('quantity', '<', 'occupancy');
+
+        $title = 'Edit contract';
+        $template = 'admin.contract.edit';
+
+        return view('admin.dashboard.layout', compact(
+            'template',
+            'config',
+            'title',
+            'employee',
+            'position_name',
+            'contract',
+            'rooms'
+        ));
+    }
+
+    public function edit(Request $request, $id)
+    {
+
+        $contract = Contract::find($id);
+
+        switch ($request->input('action')) {
+            case 'edit':
+                $contract->room_id = $request->room_id ?? $contract->room_id;
+                $contract->save();
+                break;
+
+            case 'cancel':
+                $contract->status = 'cancelled';
+                $contract->save();
+                break;
+
+            default:
+                break;
+        }
+
+
+        return redirect()->route('student.detailView', ['id' => $contract->student_id]);
     }
 }

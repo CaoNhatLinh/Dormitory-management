@@ -60,4 +60,5 @@ Route::post("/room/type/edit/{id}", [RoomTypeController::class, 'edit'])->name("
 Route::get("/contract", [ContractController::class, 'index'])->name("contract.index");
 Route::get("/contract/createView/{id}", [ContractController::class, 'createView'])->name("contract.createView");
 Route::post("/contract/create/{id}", [ContractController::class, 'create'])->name("contract.create");
-
+Route::get("/contract/editView/{id}", [ContractController::class, 'editView'])->name("contract.editView");
+Route::post("/contract/edit/{id}", [ContractController::class, 'edit'])->name("contract.edit");

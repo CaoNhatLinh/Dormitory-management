@@ -45,7 +45,14 @@
                             </div>
                             <div class="form-group">
                                 <label for="status">Trạng thái</label>
-                                <input value="{{$room->status}}"  type="text" id="status" name="status" class="form-control">
+                                {{-- <input value="{{$room->status}}"  type="text" id="status" name="status" class="form-control"> --}}
+                                <select id="status" name="status" class="form-control">
+                                        @foreach($statuses as $status)
+                                            <option value="{{ $status }}" {{ $status == $room->status ? 'selected' : '' }}>
+                                                {{ $status }}
+                                            </option>
+                                        @endforeach 
+                                 </select>
                                 @if ($errors->has('status'))
                                     <span class="tw-text-red-500">{{ $errors->first('status') }}</span>
                                 @endif

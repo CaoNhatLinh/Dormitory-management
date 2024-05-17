@@ -30,7 +30,9 @@
                         <div>
                             <div class="tw-flex tw-justify-between tw-items-center tw-mb-3">
                                 <h2>Danh sách hợp đồng</h2>
-                                <a href="{{route('contract.createView', $student->student_id)}}" class="btn btn-primary">Tạo hợp đồng</a>
+                                @if ($isAvailableCreateContract)
+                                    <a href="{{ route('contract.createView', $student->student_id) }}" class="btn btn-primary">Tạo hợp đồng</a>
+                                @endif
                                
                             </div>
                             <div class="table-responsive tw-mt-3">
@@ -54,9 +56,10 @@
                                                 <td>{{ $contract->end_date }}</td>
                                                 <td>{{ $contract->status }}</td>
                                                 <td>
-                                                    <a class="text-size-lg me-2" href="">
+                                                    <a class="text-size-lg me-2" href="{{route('contract.editView', $contract->contract_id)}}">
                                                         <i class="fa fa-edit"></i>
                                                     </a>
+                                                </td>
                                                 </td>
                                             </tr>
                                         @endforeach

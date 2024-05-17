@@ -16,6 +16,8 @@ use App\Models\RoomType;
 
 class RoomController extends Controller
 {
+    const STATUSES  = ['active', 'inactive', 'repaired'];
+
     public function __construct()
     {
     }
@@ -23,20 +25,14 @@ class RoomController extends Controller
     public function config()
     {
         return $config = [
-            'js' => [
-               
-            ],
+            'js' => [],
             'linkjs' => [
                 'https://cdn.tailwindcss.com'
             ],
-            'css' => [
-                
-            ],
-            'linkcss' => [
-               
-            ],
-            
-            'script' =>[
+            'css' => [],
+            'linkcss' => [],
+
+            'script' => [
                 '
                 tailwind.config = {
                     prefix: \'tw-\',
@@ -88,6 +84,7 @@ class RoomController extends Controller
 
         $config = $this->config();
         $template = 'admin.room.create';
+        $statuses = self::STATUSES;
 
         return view('admin.dashboard.layout', compact(
             'template',
@@ -95,7 +92,8 @@ class RoomController extends Controller
             'roomTypes',
             'title',
             'employee',
-            'position_name'
+            'position_name',
+            'statuses'
         ));
     }
 
@@ -114,7 +112,7 @@ class RoomController extends Controller
         $room->room_type_id = $request->room_type_id;
         $room->occupancy = $request->occupancy;
         $room->quantity = $request->quantity;
-        $room->status = $request->status;
+        $room->status = $request->status ?? "active";
         $room->save();
 
         return redirect()->route('room.index');
@@ -135,6 +133,8 @@ class RoomController extends Controller
         $config = $this->config();
         $template = 'admin.room.edit';
 
+        $statuses = self::STATUSES;
+
         return view('admin.dashboard.layout', compact(
             'template',
             'config',
@@ -142,7 +142,8 @@ class RoomController extends Controller
             'roomTypes',
             'title',
             'employee',
-            'position_name'
+            'position_name',
+            'statuses'
         ));
     }
 
