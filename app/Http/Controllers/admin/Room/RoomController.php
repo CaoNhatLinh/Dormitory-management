@@ -25,11 +25,18 @@ class RoomController extends Controller
     public function config()
     {
         return $config = [
-            'js' => [],
+            'js' => [
+                'js/plugins/dataTables/datatables.min.js',
+                'js/plugins/pace/pace.min.js',
+                'js/plugins/footable/footable.all.min.js',
+            ],
             'linkjs' => [
                 'https://cdn.tailwindcss.com'
             ],
-            'css' => [],
+            'css' => [
+                'css/plugins/dataTables/datatables.min.css',
+                'css/plugins/footable/footable.core.css',
+            ],
             'linkcss' => [],
 
             'script' => [
@@ -40,6 +47,38 @@ class RoomController extends Controller
                         preflight: false, // Set preflight to false to disable default styles
                     },
                 }',
+                '
+                $(document).ready(function(){
+                    $(\'.dataTables-example\').DataTable({
+                        pageLength: 25,
+                        responsive: true,
+                        dom: \'<"html5buttons"B>lTfgitp\',
+                        buttons: [
+        
+                            {extend: \'print\',
+                             customize: function (win){
+                                    $(win.document.body).addClass(\'white-bg\');
+                                    $(win.document.body).css(\'font-size\', \'10px\');
+        
+                                    $(win.document.body).find(\'table\')
+                                            .addClass(\'compact\')
+                                            .css(\'font-size\', \'inherit\');
+                            }
+                            }
+                        ]
+        
+                    });
+        
+                });
+                ',
+                '
+                $(document).ready(function() {
+        
+                    $(\'.footable\').footable();
+                    $(\'.footable2\').footable();
+        
+                });
+                '
             ]
         ];
     }

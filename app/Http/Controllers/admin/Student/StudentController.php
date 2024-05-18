@@ -23,13 +23,18 @@ class StudentController extends Controller
     {
         return $config = [
             'js' => [
-                'js/inspinia.js',
+                'js/plugins/dataTables/datatables.min.js',
+                'js/plugins/pace/pace.min.js',
+                'js/plugins/footable/footable.all.min.js',
 
             ],
             'linkjs' => [
                 'https://cdn.tailwindcss.com'
             ],
-            'css' => [],
+            'css' => [
+                'css/plugins/dataTables/datatables.min.css',
+                'css/plugins/footable/footable.core.css',
+            ],
             'linkcss' => [],
 
             'script' => [
@@ -40,6 +45,38 @@ class StudentController extends Controller
                         preflight: false, // Set preflight to false to disable default styles
                     },
                 }',
+                '
+                $(document).ready(function(){
+                    $(\'.dataTables-example\').DataTable({
+                        pageLength: 25,
+                        responsive: true,
+                        dom: \'<"html5buttons"B>lTfgitp\',
+                        buttons: [
+        
+                            {extend: \'print\',
+                             customize: function (win){
+                                    $(win.document.body).addClass(\'white-bg\');
+                                    $(win.document.body).css(\'font-size\', \'10px\');
+        
+                                    $(win.document.body).find(\'table\')
+                                            .addClass(\'compact\')
+                                            .css(\'font-size\', \'inherit\');
+                            }
+                            }
+                        ]
+        
+                    });
+        
+                });
+                ',
+                '
+                $(document).ready(function() {
+        
+                    $(\'.footable\').footable();
+                    $(\'.footable2\').footable();
+        
+                });
+                '
             ]
         ];
     }
@@ -60,6 +97,7 @@ class StudentController extends Controller
         // update contract status = 'expired' if end_date <= current date
         DB::table('contracts')
             ->where('end_date', '<=', date('Y-m-d'))
+            ->where('status', '=', 'renting')
             ->update(['status' => 'expired']);
 
         return view('admin.dashboard.layout', compact(
@@ -142,7 +180,7 @@ class StudentController extends Controller
         $position_name = Position::find($employee_id)->position_name;
         $config = $this->config();
         $template = 'admin.student.edit';
-        
+
 
         // Data 
         $student = Student::find($id);
@@ -220,6 +258,12 @@ class StudentController extends Controller
 
     public function detailView($id)
     {
+        // update contract status = 'expired' if end_date <= current date
+        DB::table('contracts')
+            ->where('end_date', '<=', date('Y-m-d'))
+            ->where('status', '=', 'renting')
+            ->update(['status' => 'expired']);
+
         // Config - template
         $authId = Auth::id();
         $title = 'Student detail';
@@ -232,6 +276,7 @@ class StudentController extends Controller
 
         // Data 
         $student = Student::find($id);
+
 
         // Check if student has any contract and status = 'renting'
         $isAvailableCreateContract = true;

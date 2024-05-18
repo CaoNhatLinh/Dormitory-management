@@ -26,7 +26,7 @@
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label for="room_id">Đổi phòng mới</label>
-                                    @if ($contract->status == "renting")
+                                    @if ($contract->status != "renting")
                                         <select id="room_id" name="room_id" class="form-control">
                                             <option value="">Chọn phòng</option>
                                             @foreach($rooms as $room)
@@ -65,12 +65,12 @@
                        
                         
                         <div class="tw-flex tw-items-center tw-justify-between">
-                            @if ($contract->status == "renting")
+                            @if ($contract->status != "renting")
                                 <button type="submit" class="btn btn-primary" value="edit" name="action">Chỉnh sửa hợp đồng</button>
                                 <button type="submit" class="btn btn-danger tw-mt-3" value="cancel" name="action">Hủy hợp đồng</button>
                             @endif
 
-                            @if ($contract->status != "renting")
+                            @if ($contract->status == "renting")
                                 <button type="button" class="btn btn-primary"  disabled>Chỉnh sửa hợp đồng</button>
                                 <button type="button" class="btn btn-danger tw-mt-3" disabled>Hủy hợp đồng</button>
                             @endif

@@ -17,10 +17,6 @@ class ContractController extends Controller
 {
     public function __construct()
     {
-        // update contract status = 'expired' if end_date <= current date
-        DB::table('contracts')
-            ->where('end_date', '<=', date('Y-m-d'))
-            ->update(['status' => 'expired']);
     }
 
     public function config()
@@ -82,6 +78,12 @@ class ContractController extends Controller
 
     public function createView($id)
     {
+
+        DB::table('contracts')
+            ->where('end_date', '<=', date('Y-m-d'))
+            ->where('status', '=', 'renting')
+            ->update(['status' => 'expired']);
+
         $authId = Auth::id();
         $employee = Employee::find($authId);
         $employee_id = $employee->employee_id;
@@ -125,7 +127,7 @@ class ContractController extends Controller
         $contract->room_id = $request->room_id;
         $contract->start_date = $request->start_date;
         $contract->end_date = $request->end_date;
-        $contract->status = "active";
+        $contract->status = "renting";
         $contract->save();
 
 
@@ -134,6 +136,12 @@ class ContractController extends Controller
 
     public function editView($id)
     {
+
+        DB::table('contracts')
+            ->where('end_date', '<=', date('Y-m-d'))
+            ->where('status', '=', 'renting')
+            ->update(['status' => 'expired']);
+
         $authId = Auth::id();
         $employee = Employee::find($authId);
         $employee_id = $employee->employee_id;
