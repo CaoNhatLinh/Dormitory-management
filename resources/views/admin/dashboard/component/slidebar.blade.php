@@ -71,15 +71,14 @@
                 </ul>
             </li>
 
-
             <li>
                 <a href="#"><i class="fa fa-files-o"></i> <span class="nav-label">Employees</span><span class="fa arrow"></span></a>
 
                 <ul class="nav nav-second-level collapse">
                     <li><a href="{{route('employee.index')}}">Employees list</a></li>
                     <li><a href="{{route('employee.createView')}}">New employee</a></li>
-                    <li><a href="agile_board.html">Positions list</a></li>
-                    <li><a href="timeline_2.html">New position</a></li>
+                    <li><a href="{{route('position.index')}}">Positions list</a></li>
+                    <li><a href="{{route('position.createView')}}">New position</a></li>
 
                 </ul>
             </li>
