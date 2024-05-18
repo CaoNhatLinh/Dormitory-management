@@ -10,21 +10,21 @@
                                 <img class="tw-w-[100px] tw-h-[100px] tw-rounded-full tw-my-3" src="{{ asset('uploads/avatars/'. $employee->avatar) }}" alt="" class="img-thumbnail">
                                 <dl class="dl-horizontal [&>*]:!tw-text-start [&>*]:tw-py-3">
                                     <dt>Employee ID:</dt>
-                                    <dd>{{ $employee->student_id }}</dd>
+                                    <dd>{{ $employeeDetails->employee_id }}</dd>
                                     <dt>Full name:</dt>
-                                    <dd>{{ $employee->name }}</dd>
+                                    <dd>{{ $employeeDetails->name }}</dd>
                                     <dt>Position:</dt>
-                                    <dd>{{ $employee->position->position_name }}</dd>
+                                    <dd>{{ $employeeDetails->position->position_name }}</dd>
                                     <dt>Date of birth</dt>
-                                    <dd>{{ $employee->date_of_birth }}</dd>
+                                    <dd>{{ $employeeDetails->date_of_birth }}</dd>
                                     <dt>Giới tính:</dt>
-                                    <dd>{{ $employee->gender }}</dd>
+                                    <dd>{{ $employeeDetails->gender }}</dd>
                                     <dt>Person ID:</dt>
-                                    <dd>{{ $employee->person_id }}</dd>
+                                    <dd>{{ $employeeDetails->person_id }}</dd>
                                     <dt>Nationality:</dt>
-                                    <dd>{{ $employee->nationality }}</dd>
+                                    <dd>{{ $employeeDetails->nationality }}</dd>
                                     <dt>Address:</dt>
-                                    <dd>{{ $employee->address }}</dd>
+                                    <dd>{{ $employeeDetails->address }}</dd>
                                 </dl>
                             </div>
                         </div>

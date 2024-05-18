@@ -43,10 +43,10 @@
             <li>
                 <a href="#"><i class="fa fa-edit"></i> <span class="nav-label">Devices</span><span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse">
-                    <li><a href="form_basic.html">Devices list</a></li>
-                    <li><a href="form_advanced.html">New device</a></li>
-                    <li><a href="graph_morris.html">Device types list</a></li>
-                    <li><a href="graph_morris.html">New device type</a></li>
+                    <li><a href="{{route('device.index')}}">Devices list</a></li>
+                    <li><a href="{{route('device.createView')}}">New device</a></li>
+                    <li><a href="{{route('deviceType.index')}}">Device types list</a></li>
+                    <li><a href="{{route('deviceType.createView')}}">New device type</a></li>
 
                 </ul>
             </li>

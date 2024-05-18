@@ -7,7 +7,7 @@
         @csrf
         <div class="tw-mb-4">
             <label for="name" class="tw-block tw-text-gray-700">Name</label>
-            <input value={{ $student->name }} type="text" name="name" id="name" placeholder="Name" required
+            <input value="{{ $student->name }}" type="text" name="name" id="name" placeholder="Name" required
                 class="tw-w-full tw-px-3 tw-py-4 tw-leading-tight tw-border tw-rounded tw-shadow tw-appearance-none tw-focus:outline-none tw-focus:shadow-outline">
             @if ($errors->has('name'))
                 <span class="tw-text-red-500">{{ $errors->first('name') }}</span>
@@ -15,7 +15,7 @@
         </div>
         <div class="tw-mb-4">
             <label for="class" class="tw-block tw-text-gray-700">Class</label>
-            <input value={{ $student->class }} type="text" name="class" id="class" placeholder="Class" required
+            <input value="{{ $student->class }}" type="text" name="class" id="class" placeholder="Class" required
                 class="tw-w-full tw-px-3 tw-py-4 tw-leading-tight tw-border tw-rounded tw-shadow tw-appearance-none tw-focus:outline-none tw-focus:shadow-outline">
             @if ($errors->has('class'))
                 <span class="tw-text-red-500">{{ $errors->first('class') }}</span>
@@ -23,7 +23,7 @@
         </div>
         <div class="tw-mb-4">
             <label for="date_of_birth" class="tw-block tw-text-gray-700">Date of Birth</label>
-            <input value={{ $student->date_of_birth }} type="date" name="date_of_birth" id="date_of_birth" required
+            <input value="{{ $student->date_of_birth }}" type="date" name="date_of_birth" id="date_of_birth" required
                 class="tw-w-full tw-px-3 tw-py-4 tw-leading-tight tw-border tw-rounded tw-shadow tw-appearance-none tw-focus:outline-none tw-focus:shadow-outline">
             @if ($errors->has('date_of_birth'))
                 <span class="tw-text-red-500">{{ $errors->first('date_of_birth') }}</span>
@@ -43,7 +43,7 @@
         </div>
         <div class="tw-mb-4">
             <label for="person_id" class="tw-block tw-text-gray-700">Person ID</label>
-            <input value={{ $student->person_id }} type="text" name="person_id" id="person_id" placeholder="Person ID" required
+            <input value="{{ $student->person_id }}" type="text" name="person_id" id="person_id" placeholder="Person ID" required
                 class="tw-w-full tw-px-3 tw-py-4 tw-leading-tight tw-border tw-rounded tw-shadow tw-appearance-none tw-focus:outline-none tw-focus:shadow-outline">
             @if ($errors->has('person_id'))
                 <span class="tw-text-red-500">{{ $errors->first('person_id') }}</span>
@@ -51,7 +51,7 @@
         </div>
         <div class="tw-mb-4">
             <label for="phone_number" class="tw-block tw-text-gray-700">Phone Number</label>
-            <input value={{$student->phone_number}} type="text" name="phone_number" id="phone_number" placeholder="Phone Number" required
+            <input value="{{$student->phone_number}}" type="text" name="phone_number" id="phone_number" placeholder="Phone Number" required
                 class="tw-w-full tw-px-3 tw-py-4 tw-leading-tight tw-border tw-rounded tw-shadow tw-appearance-none tw-focus:outline-none tw-focus:shadow-outline">
             @if ($errors->has('phone_number'))
                 <span class="tw-text-red-500">{{ $errors->first('phone_number') }}</span>
@@ -59,7 +59,7 @@
         </div>
         <div class="tw-mb-4">
             <label for="avatar" class="tw-block tw-text-gray-700">Avatar</label>
-            <div class="tw-flex tw-items-center tw-justify-between">
+            <div class="tw-flex tw-items-cente  r tw-justify-between">
                 @if ($student->avatar)
                     <img src="{{ asset('uploads/avatars/' . $student->avatar) }}" alt="avatar" class="tw-w-[80px] tw-h-[80px] tw-rounded-full tw-me-3 tw-mb-4">
                 @endif

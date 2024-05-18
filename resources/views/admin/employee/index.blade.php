@@ -40,8 +40,8 @@
                             <td>{{ $employee->date_of_birth }}</td>
                             <td>{{ $employee->nationality }}</td>
                             <td>
-                                <a class="text-size-lg me-2" href="{{route('employee.editView', $employee->employee_id)}}"><i class="fa  fa fa-eye"></i></a>
-                                <a class="text-size-lg me-2" href="#"><i class="fa fa-edit"></i></a>
+                                <a class="text-size-lg me-2" href="{{route('employee.detailView', $employee->employee_id)}}"><i class="fa  fa fa-eye"></i></a>
+                                <a class="text-size-lg me-2" href="{{route('employee.editView', $employee->employee_id)}}"><i class="fa fa-edit"></i></a>
                             </td>
                         </tr>
 

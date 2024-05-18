@@ -1,0 +1,41 @@
+.ibox-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.search-container {
+border: 1px solid #ccc;
+border-radius: 5px;
+display: inline-flex; 
+align-items: center; 
+}
+.search-bar input {
+    width: 100%;
+    padding-right: 40px; 
+    border: none;
+    border-radius: 0; 
+    border-bottom: 1px solid #ccc; 
+    box-shadow: none; 
+    outline: none;
+}
+.search-bar input:hover {
+    border-color: #ccc; 
+}
+.search-bar {
+    position: relative;
+    max-width: 300px;
+    width: 100%;
+    margin: 0; 
+    border: none; 
+}
+.search-icon {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    margin-right: 8px; 
+}
+.title th{
+    user-select: none;
+}
