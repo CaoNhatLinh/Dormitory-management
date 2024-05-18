@@ -7,11 +7,9 @@ use App\Http\Controllers\Admin\Employee\EmployeeController;
 use App\Http\Controllers\Admin\Room\RoomController;
 use App\Http\Controllers\Admin\Room\RoomTypeController;
 use App\Http\Controllers\Admin\Student\StudentController;
-use App\Http\Controllers\Admin\Dashboard\AnalysisController;
+use App\Http\Controllers\Admin\Employee\PositionController;
 use App\Http\Controllers\Admin\User\UserController;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Auth\Middleware\Authenticate;
 
 
 Route::get('/', function () {
@@ -33,6 +31,16 @@ Route::get("profile", [UserController::class, 'index'])->name("user.index");
 Route::get('/employee', [EmployeeController::class, 'index'])->name('employee.index');
 Route::get("/employee/createView", [EmployeeController::class, 'createView'])->name("employee.createView");
 Route::post("/employee/create", [EmployeeController::class, 'create'])->name("employee.create");
+Route::get("/employee/editView/{id}", [EmployeeController::class, 'editView'])->name("employee.editView");
+Route::post("/employee/edit/{id}", [EmployeeController::class, 'edit'])->name("employee.edit");
+Route::get("/employee/detailView/{id}", [EmployeeController::class, 'detailView'])->name("employee.detailView");
+
+//POSITION
+Route::get('/position', [PositionController::class, 'index'])->name('position.index');
+Route::get("/position/createView", [PositionController::class, 'createView'])->name("position.createView");
+Route::post("/position/create", [PositionController::class, 'create'])->name("position.create");
+Route::post("/position/edit/{id}", [PositionController::class, 'edit'])->name("position.edit");
+
 // STUDENT
 Route::get("/student", [StudentController::class, 'index'])->name("student.index");
 Route::get("/student/createView", [StudentController::class, 'createView'])->name("student.createView");

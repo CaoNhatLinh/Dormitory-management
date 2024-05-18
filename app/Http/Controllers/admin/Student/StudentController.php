@@ -138,7 +138,7 @@ class StudentController extends Controller
         $position_name = Position::find($employee_id)->position_name;
         $config = $this->config();
         $template = 'admin.student.edit';
-
+        
 
         // Data 
         $student = Student::find($id);

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Employee;
 use App\Models\Position;
+use DateTime;
 use Illuminate\Support\Facades\Auth;
 class EmployeeController extends Controller
 {
@@ -45,10 +46,6 @@ class EmployeeController extends Controller
                         responsive: true,
                         dom: \'<"html5buttons"B>lTfgitp\',
                         buttons: [
-                            { extend: \'copy\'},
-                            {extend: \'csv\'},
-                            {extend: \'excel\', title: \'ExampleFile\'},
-                            {extend: \'pdf\', title: \'ExampleFile\'},
         
                             {extend: \'print\',
                              customize: function (win){
@@ -88,6 +85,7 @@ class EmployeeController extends Controller
             
             'js/plugins/pace/pace.min.js',
             'js/plugins/datapicker/bootstrap-datepicker.js',
+            'js/plugins/chosen/chosen.jquery.js', 
         ],
         'linkjs' => [
            
@@ -95,6 +93,7 @@ class EmployeeController extends Controller
         'css' => [
             
             'css/plugins/datapicker/datepicker3.css',
+            'css/plugins/chosen/bootstrap-chosen.css'
         ],
         'linkcss' => [
             
@@ -110,7 +109,10 @@ class EmployeeController extends Controller
                     forceParse: false,
                     calendarWeeks: true,
                     autoclose: true
-                });})',
+                });
+                $(\'.chosen-select\').chosen({ width: "100%" });
+            
+            })',
         ]
 
 
@@ -121,7 +123,7 @@ class EmployeeController extends Controller
         
         if (Auth::check()) {
             $config = $this->config();
-            $title = 'Dormitory management';
+            $title = 'Employeee list';
             $employees = Employee::with('position')->get();
             $data = ['employees' => $employees];
             $id = Auth::id();
@@ -144,12 +146,13 @@ class EmployeeController extends Controller
     public function createView()
     {
         $id = Auth::id();
-        $title = 'Create student';
+        $title = 'Create employee';
         $employee = Employee::find($id);
         $employee_id = $employee->employee_id;
         $position_name = Position::find($employee_id)->position_name;
         $config = $this->configCreateView();
 
+        $positions = Position::all();
         $template = 'admin.employee.create';
 
         return view('admin.dashboard.layout', compact(
@@ -157,7 +160,8 @@ class EmployeeController extends Controller
             'config',
             'title',
             'employee',
-            'position_name'
+            'position_name',
+            'positions',
         ));
     }
 
@@ -185,14 +189,18 @@ class EmployeeController extends Controller
         $employee = new Employee();
         $employee->person_id = $request->person_id;
         $employee->name = $request->name;
-        $employee->date_of_birth = $request->date_of_birth;
+        $dateTime = DateTime::createFromFormat('d/m/Y', $request->date_of_birth);
+        $date = $dateTime->format('Y-m-d');
+
+        $employee->date_of_birth = $date;
         $employee->gender = $request->gender;
         $employee->address = $request->address;
         $employee->nationality = $request->nationality;
         $employee->position_id = $request->position_id;
         $employee->avatar = $avatar;
-        $result = $employee->save();
+        $employee->status = "working";
 
+        $result = $employee->save();
         if ($result) {
             return redirect()->route('employee.index')->with('success', 'employee created successfully.');
         } else {
