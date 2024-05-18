@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\Room\RoomTypeController;
 use App\Http\Controllers\Admin\Student\StudentController;
 use App\Http\Controllers\Admin\Dashboard\AnalysisController;
 use App\Http\Controllers\Admin\Device\DeviceController;
+use App\Http\Controllers\Admin\Device\DeviceTypeController;
 use App\Http\Controllers\Admin\User\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -65,3 +66,10 @@ Route::post("/contract/create/{id}", [ContractController::class, 'create'])->nam
 
 //DEVICE
 Route::get("/device", [DeviceController::class, 'index'])->name("device.index");
+Route::get("/device/createView", [DeviceController::class, 'createView'])->name("device.createView");
+Route::post("/device/create", [DeviceController::class, 'create'])->name("device.create");
+
+//DEVICE TYPE
+Route::get("/device/devicetype", [DeviceTypeController::class, 'index'])->name("deviceType.index");
+Route::get("/device/devicetype/createView", [DeviceTypeController::class, 'createView'])->name("deviceType.createView");
+Route::post("/device/devicetype/create", [DeviceTypeController::class, 'create'])->name("deviceType.create");

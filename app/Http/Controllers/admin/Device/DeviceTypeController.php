@@ -8,8 +8,9 @@ use App\Models\DeviceType;
 use App\Models\Employee;
 use App\Models\Position;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
-class DeviceController extends Controller
+class DeviceTypeController extends Controller
 {
     public function __construct()
     {
@@ -19,16 +20,26 @@ class DeviceController extends Controller
     {
         return $config = [
             'js' => [
+               
             ],
             'linkjs' => [
-                
+                'https://cdn.tailwindcss.com'
             ],
             'css' => [
-            ],
-            'linkcss' => [
                 
             ],
+            'linkcss' => [
+               
+            ],
+            
             'script' =>[
+                '
+                tailwind.config = {
+                    prefix: \'tw-\',
+                    corePlugins: {
+                        preflight: false, // Set preflight to false to disable default styles
+                    },
+                }',
             ]
         ];
     }
@@ -48,7 +59,7 @@ class DeviceController extends Controller
             $position_name = Position::find($employee_id)->position_name;
     
             $config = $this->config();
-            $template = 'admin.device.index';
+            $template = 'admin.device.devicetype.index';
     
             return view('admin.dashboard.layout', compact(
                 'template',
@@ -62,5 +73,38 @@ class DeviceController extends Controller
         else {
             return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
         }
+    }
+    public function createView()
+    {
+        $id = Auth::id();
+        $title = 'Create device type';
+        $employee = Employee::find($id);
+        $employee_id = $employee->employee_id;
+        $position_name = Position::find($employee_id)->position_name;
+        $config = $this->config();
+
+        $template = 'admin.device.devicetype.create';
+
+
+        return view('admin.dashboard.layout', compact(
+            'template',
+            'config',
+            'title',
+            'employee',
+            'position_name'
+        ));
+    }
+
+    public function create(Request $request)
+    {
+        $request->validate([
+            'device_type_name' => 'required|unique:device_types',
+        ]);
+
+        $deviceType = new DeviceType();
+        $deviceType->device_type_name = $request->device_type_name;
+        $deviceType->save();
+
+        return redirect()->route('deviceType.index')->with('success', 'Device Type created successfully!');
     }
 }
