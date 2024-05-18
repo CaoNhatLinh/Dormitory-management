@@ -1,59 +1,4 @@
 <nav class="navbar-default navbar-static-side" role="navigation">
-<<<<<<< HEAD
-            <div class="sidebar-collapse">
-                <ul class="nav metismenu" id="side-menu">
-                    <li class="nav-header">
-                        <div class="dropdown profile-element"> <span>
-                             <img alt="image" class="img-circle" width="50px"  height="50px" src="{{ asset('uploads/avatars/'. $employee->avatar) }}" />
-                            </span>
-                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                                <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold"> {{ $employee->name }}</strong>
-                                    </span> <span class="text-muted text-xs block">{{ $position_name }} <b class="caret"></b></span> </span> </a>
-                            <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                                <li><a href="{{route('user.index')}}">Profile</a></li>
-                                <li class="divider"></li>
-                                <li><a href="login.html">Logout</a></li>
-                            </ul>
-                        </div>
-                        <div class="logo-element">
-                            IN+
-                        </div>
-                    </li>
-                    <li class="active">
-                        <a href="{{route('dashboard.index')}}"><i class="fa fa-th-large"></i> <span class="nav-label">Dashboards</span> </a>
-                    </li>
-                    
-                    <li>
-                        <a href="#"><i class="fa fa-bar-chart-o"></i> <span class="nav-label">Contracts</span><span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level collapse">
-                            <li><a href="graph_flot.html">New contract</a></li>
-                            <li><a href="{{route('student.index')}}">Students list</a></li>
-                        </ul>
-                    </li>
-                    
-                    <li>
-                    <a href="#"><i class="fa fa-edit"></i> <span class="nav-label">Rooms</span><span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level collapse">
-                            <li><a href="{{route('room.index')}}">Rooms list</a></li>
-                            <li><a href="{{route('room.createView')}}">New room</a></li>
-                            <li><a href="{{route('roomType.index')}}">Room types list</a></li>
-                            <li><a href="{{route('roomType.createView')}}">New room type</a></li>
-                        </ul>
-                    </li>
-                   
-                    <li>
-                        <a href="#"><i class="fa fa-edit"></i> <span class="nav-label">Devices</span><span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level collapse">
-                            <li><a href="{{route('device.index')}}">Devices list</a></li>
-                            <li><a href="form_advanced.html">New device</a></li>
-                            <li><a href="graph_morris.html">Device types list</a></li>
-                            <li><a href="graph_morris.html">New device type</a></li>
-                           
-                        </ul>
-                    </li>
-                    <li>
-                    <a href="#"><i class="fa fa-desktop"></i> <span class="nav-label">Invoices</span><span class="fa arrow"></span></a>
-=======
     <div class="sidebar-collapse">
         <ul class="nav metismenu" id="side-menu">
             <li class="nav-header">
@@ -76,7 +21,6 @@
             <li class="active">
                 <a href="{{route('dashboard.index')}}"><i class="fa fa-th-large"></i> <span class="nav-label">Dashboards</span> </a>
             </li>
->>>>>>> ee1b3ff64100171cf1b6eb4361a90268bd74e11f
 
             <li>
                 <a href="#"><i class="fa fa-bar-chart-o"></i> <span class="nav-label">Contracts</span><span class="fa arrow"></span></a>
@@ -99,10 +43,10 @@
             <li>
                 <a href="#"><i class="fa fa-edit"></i> <span class="nav-label">Devices</span><span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse">
-                    <li><a href="form_basic.html">Devices list</a></li>
-                    <li><a href="form_advanced.html">New device</a></li>
-                    <li><a href="graph_morris.html">Device types list</a></li>
-                    <li><a href="graph_morris.html">New device type</a></li>
+                    <li><a href="{{route('device.index')}}">Devices list</a></li>
+                    <li><a href="{{route('device.createView')}}">New device</a></li>
+                    <li><a href="{{route('deviceType.index')}}">Device types list</a></li>
+                    <li><a href="{{route('deviceType.createView')}}">New device type</a></li>
 
                 </ul>
             </li>
