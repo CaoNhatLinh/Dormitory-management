@@ -107,4 +107,40 @@ class DeviceTypeController extends Controller
 
         return redirect()->route('deviceType.index')->with('success', 'Device Type created successfully!');
     }
+    public function editView($id)
+    {
+        $authId = Auth::id();
+        $title = 'Edit device type';
+        $employee = Employee::find($authId);
+        $employee_id = $employee->employee_id;
+        $position_name = Position::find($employee_id)->position_name;
+        $config = $this->config();
+
+        $template = 'admin.device.devicetype.edit';
+
+        $deviceType = deviceType::find($id);
+
+        return view('admin.dashboard.layout', compact(
+            'template',
+            'config',
+            'title',
+            'employee',
+            'position_name',
+            'deviceType'
+        ));
+    }
+
+    public function edit(Request $request, $id)
+    {
+        $deviceType = deviceType::find($id);
+        $request->validate([
+            'device_type_name' => [
+                'required',
+                Rule::unique('device_types', 'device_type_name')->ignore($deviceType->device_type_name, 'device_type_name'),
+            ],
+        ]);
+        $deviceType->device_type_name = $request->device_type_name;
+        $result = $deviceType->save();
+        return redirect()->route('deviceType.index');
+    }
 }

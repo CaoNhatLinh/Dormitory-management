@@ -68,8 +68,17 @@ Route::post("/contract/create/{id}", [ContractController::class, 'create'])->nam
 Route::get("/device", [DeviceController::class, 'index'])->name("device.index");
 Route::get("/device/createView", [DeviceController::class, 'createView'])->name("device.createView");
 Route::post("/device/create", [DeviceController::class, 'create'])->name("device.create");
+Route::get("/device/editView/{id}", [DeviceController::class, 'editView'])->name("device.editView");
+Route::post("/device/edit/{id}", [DeviceController::class, 'edit'])->name("device.edit");
+Route::get('/device/search', [DeviceController::class, 'search'])->name('device.search');
+Route::get('/device/delete/{id}', [DeviceController::class, 'delete'])->name('device.delete');
+
+
+
 
 //DEVICE TYPE
 Route::get("/device/devicetype", [DeviceTypeController::class, 'index'])->name("deviceType.index");
 Route::get("/device/devicetype/createView", [DeviceTypeController::class, 'createView'])->name("deviceType.createView");
 Route::post("/device/devicetype/create", [DeviceTypeController::class, 'create'])->name("deviceType.create");
+Route::get("/device/devicetype/editView/{id}", [DeviceTypeController::class, 'editView'])->name("deviceType.editView");
+Route::post("/device/devicetype/edit/{id}", [DeviceTypeController::class, 'edit'])->name("deviceType.edit");

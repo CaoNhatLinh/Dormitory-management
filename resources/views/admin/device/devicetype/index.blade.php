@@ -13,6 +13,7 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Device type</th>
+                                        <th>Total Devices</th>
                                         <th>Operation</th>
                                     </tr>
                                 </thead>
@@ -21,11 +22,12 @@
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $deviceType->device_type_name }}</td>
-                                                <!-- <td>
-                                                    <a class="text-size-lg me-2" href="{{route('deviceType.editView', $deviceType->device_type_id)}}">
-                                                        <i class="fa fa-edit"></i>
-                                                    </a>
-                                                </td> -->
+                                            <td>{{ count($deviceType->devices) }}</td>
+                                            <td>
+                                                <a class="text-size-lg me-2" href="{{route('deviceType.editView', $deviceType->device_type_id)}}">
+                                                    <i class="fa fa-edit"></i>
+                                                </a>
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>

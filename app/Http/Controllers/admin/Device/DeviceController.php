@@ -20,19 +20,19 @@ class DeviceController extends Controller
     {
         return $config = [
             'js' => [
-               
+                'js/device.js'
             ],
             'linkjs' => [
                 'https://cdn.tailwindcss.com'
             ],
             'css' => [
-                
+                'css/device.css'
             ],
             'linkcss' => [
                
             ],
             
-            'script' =>[
+            'script' => [
                 '
                 tailwind.config = {
                     prefix: \'tw-\',
@@ -48,12 +48,10 @@ class DeviceController extends Controller
     {
         if(Auth::check())
         {
-            // $devices = Device::all();
             $devices=Device::with('deviceType')->get();
             $data = ['devices' => $devices];
             $id = Auth::id();
             $title = 'Device list';
-    
             $employee = Employee::find($id);
             $employee_id = $employee->employee_id;
             $position_name = Position::find($employee_id)->position_name;
@@ -67,7 +65,7 @@ class DeviceController extends Controller
                 'data',
                 'title',
                 'employee',
-                'position_name'
+                'position_name',
             ));
         }
         else {
@@ -94,7 +92,7 @@ class DeviceController extends Controller
             'deviceTypes',
             'title',
             'employee',
-            'position_name'
+            'position_name',
         ));
     }
 
@@ -114,6 +112,96 @@ class DeviceController extends Controller
         $device->device_type_id = $validatedData['device_type_id'];
         $device->save();
         return redirect()->route('device.index')->with('success', 'Device created successfully!');
+    }
+    public function editView($id)
+    {
+        $device = device::find($id);
+        $deviceTypes = deviceType::all();
+
+        $authId = Auth::id();
+        $title = 'Update device';
+
+        $employee = Employee::find($authId);
+        $employee_id = $employee->employee_id;
+        $position_name = Position::find($employee_id)->position_name;
+
+        $config = $this->config();
+        $template = 'admin.device.edit';
+
+        return view('admin.dashboard.layout', compact(
+            'template',
+            'config',
+            'device',
+            'deviceTypes',
+            'title',
+            'employee',
+            'position_name'
+        ));
+    }
+
+    public function edit(Request $request, $id)
+    {
+        $device = device::find($id);
+        $request->validate([
+            'device_name' => 'required|max:255|unique:devices,device_name,'.$id.',device_id',
+            'quantity' => 'required|integer|min:0',
+            'original_price' => 'required|numeric|min:0',
+            'device_type_id' => 'required|exists:device_types,device_type_id',
+        ]);
+
+        $device->device_name = $request->device_name;
+        $device->device_type_id = $request->device_type_id;
+        $device->quantity = $request->quantity;
+        $device->original_price = $request->original_price;
+        $device->save();
+
+        return redirect()->route('device.index');
+    }
+    public function search(Request $request)
+    {
+        if ($request->has('keyword')) {
+            $keyword = $request->input('keyword');
+            $devices = Device::with('deviceType')
+                            ->where('device_name', 'like', "%$keyword%")
+                            ->orWhere('device_id', 'like', "%$keyword%")
+                            ->orWhere('quantity', 'like', "%$keyword%")
+                            ->orWhere('original_price', 'like', "%$keyword%")
+                            ->orWhereHas('deviceType', function($query) use ($keyword) {
+                                $query->where('device_type_name', 'like', "%$keyword%");
+                            })->get();
+        } else {
+            $devices = Device::with('deviceType')->get();
+        }
+    
+        $data = ['devices' => $devices];
+        $id = Auth::id();
+        $title = 'Search Results'; // Tiêu đề có thể thay đổi tùy thuộc vào yêu cầu của bạn
+        $employee = Employee::find($id);
+        $employee_id = $employee->employee_id;
+        $position_name = Position::find($employee_id)->position_name;
+        $config = $this->config();
+        $template = 'admin.device.index';
+    
+        return view('admin.dashboard.layout', compact(
+            'template',
+            'config',
+            'data',
+            'title',
+            'employee',
+            'position_name',
+        ));
+    }
+    public function delete($id)
+    {
+        $device = Device::find($id);
+    
+        if (!$device) {
+            return redirect()->route('device.index')->with('error', 'Device not found!');
+        }
+    
+        $device->delete();
+    
+        return redirect()->route('device.index')->with('success', 'Device deleted successfully!');
     }
     
 }
