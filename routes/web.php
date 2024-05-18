@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\Room\RoomController;
 use App\Http\Controllers\Admin\Room\RoomTypeController;
 use App\Http\Controllers\Admin\Student\StudentController;
 use App\Http\Controllers\Admin\Dashboard\AnalysisController;
+use App\Http\Controllers\Admin\Device\DeviceController;
 use App\Http\Controllers\Admin\User\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -31,7 +32,8 @@ Route::get("profile", [UserController::class, 'index'])->name("user.index");
 
 // EMPLOYEE
 Route::get('/employee', [EmployeeController::class, 'index'])->name('employee.index');
-
+Route::get("/employee/createView", [EmployeeController::class, 'createView'])->name("employee.createView");
+Route::post("/employee/create", [EmployeeController::class, 'create'])->name("employee.create");
 // STUDENT
 Route::get("/student", [StudentController::class, 'index'])->name("student.index");
 Route::get("/student/createView", [StudentController::class, 'createView'])->name("student.createView");
@@ -62,3 +64,6 @@ Route::get("/contract/createView/{id}", [ContractController::class, 'createView'
 Route::post("/contract/create/{id}", [ContractController::class, 'create'])->name("contract.create");
 Route::get("/contract/editView/{id}", [ContractController::class, 'editView'])->name("contract.editView");
 Route::post("/contract/edit/{id}", [ContractController::class, 'edit'])->name("contract.edit");
+
+//DEVICE
+Route::get("/device", [DeviceController::class, 'index'])->name("device.index");
