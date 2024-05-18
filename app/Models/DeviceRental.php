@@ -11,19 +11,20 @@ class DeviceRental extends Model
     protected $primaryKey = 'device_rental_id';
     protected $table = 'device_rentals';
     protected $fillable = [
-        'device_id',
+        'room_id',
         'total_rental_price',
         'quantity',
-        'monthly_rental_device_id'
+        'date_device_rental',
+        'status'
     ];
 
-    public function device()
+    public function room()
     {
-        return $this->belongsTo(Device::class, 'device_id');
+        return $this->belongsTo(Room::class, 'room_id');
     }
 
-    public function rentalDetails()
+    public function deviceRentalDetails()
     {
-        return $this->hasMany(RentalDetail::class, 'rental_id');
+        return $this->hasMany(DeviceRentalDetail::class, 'rental_id');
     }
 }

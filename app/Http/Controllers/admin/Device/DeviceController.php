@@ -20,14 +20,17 @@ class DeviceController extends Controller
     {
         return $config = [
             'js' => [
-                'js/device.js'
+                'js/device.js',
+                'js/plugins/dataTables/datatables.min.js',
+                'js/plugins/pace/pace.min.js',
+                'js/plugins/footable/footable.all.min.js',
             ],
             'linkjs' => [
                 'https://cdn.tailwindcss.com'
             ],
             'css' => [
-                'css/device.css'
-            ],
+                'css/device.css',
+            ],  
             'linkcss' => [
                
             ],
@@ -40,6 +43,20 @@ class DeviceController extends Controller
                         preflight: false, // Set preflight to false to disable default styles
                     },
                 }',
+                '
+                $(document).ready(function(){
+                    $(\'.dataTables-example\').DataTable({
+                        pageLength: 4,
+                        searching: false, 
+                        ordering: false, 
+                        responsive: true,
+                        info: false,  
+                        paging: true,
+                        lengthChange: false
+                    });
+        
+                });
+                ',
             ]
         ];
     }
