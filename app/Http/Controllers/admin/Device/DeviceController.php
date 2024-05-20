@@ -26,7 +26,7 @@ class DeviceController extends Controller
                 'js/plugins/footable/footable.all.min.js',
             ],
             'linkjs' => [
-                'https://cdn.tailwindcss.com'
+              
             ],
             'css' => [
                 'css/device.css',
@@ -36,13 +36,7 @@ class DeviceController extends Controller
             ],
             
             'script' => [
-                '
-                tailwind.config = {
-                    prefix: \'tw-\',
-                    corePlugins: {
-                        preflight: false, // Set preflight to false to disable default styles
-                    },
-                }',
+                
                 '
                 $(document).ready(function(){
                     $(\'.dataTables-example\').DataTable({

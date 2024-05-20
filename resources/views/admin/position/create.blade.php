@@ -19,14 +19,14 @@
                         <label class="col-sm-2 control-label">Position name</label>
                         <div class="col-sm-10"><input type="text" name="position_name" id="position_name" placeholder="Position name" class="form-control" required>
                             @if ($errors->has('position_name'))
-                            <span class="help-block m-b-none">{{ $errors->first('position_name') }}</span>
+                            <span class="help-block m-b-none label label-warning">{{ $errors->first('position_name') }}</span>
                             @endif
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <div class="col-sm-4 col-sm-offset-2">
-                            <button class="btn btn-primary" type="submit">Create</button>
+                            <button class="btn btn-primary dim btn-sm" type="submit">Create</button>
                         </div>
                     </div>
                 </form>

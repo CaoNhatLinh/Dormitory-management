@@ -20,29 +20,95 @@ class UserController extends Controller
     {
         return $config = [
             'js' => [
-                'js/plugins/flot/jquery.flot.js',
-                'js/plugins/flot/jquery.flot.js',
-                'js/plugins/flot/jquery.flot.tooltip.min.js',
-                'js/plugins/flot/jquery.flot.spline.js',
-                'js/plugins/flot/query.flot.resize.js',
-                'js/plugins/flot/query.flot.resize.js',
-                'js/plugins/flot/jquery.flot.pie.js',
-                'js/plugins/peity/jquery.peity.min.js',
-                'js/demo/peity-demo.js',
-                'js/inspinia.js',
-                'js/plugins/gritter/jquery.gritter.min.js',
-                'js/demo/sparkline-demo.js',
-                'js/plugins/sparkline/jquery.sparkline.min.js',
-                'js/plugins/chartJs/Chart.min.js',
-                'js/plugins/toastr/toastr.min.js',
+                'js/device.js',
+                'js/plugins/dataTables/datatables.min.js',
+                'js/plugins/pace/pace.min.js',
+                'js/plugins/footable/footable.all.min.js',
+            ],
+            'linkjs' => [
+              
+            ],
+            'css' => [
+                'css/device.css',
+            ],  
+            'linkcss' => [
+               
+            ],
+            
+            'script' => [
+                
+                '
+                $(document).ready(function(){
+                    $(\'.dataTables-example\').DataTable({
+                        pageLength: 4,
+                        searching: false, 
+                        ordering: false, 
+                        responsive: true,
+                        info: false,  
+                        paging: true,
+                        lengthChange: false
+                    });
+        
+                });
+                ',
+            ]
+        ];
+    }
+    public function configProfile()
+    {
+        return $config = [
+            'js' => [
+                
 
+            ],
+            'linkjs' => [
+                
             ],
             'css' => [
                 'css/profile.css'
-                ]
+            ],
+            'linkcss' => [
+                
+            ],
+            'script' => [
+                '$(function() {
+                    $(\'#profile-image1\').on(\'click\', function() {
+                        $(\'#profile-image-upload\').click();
+                    });
+                });'
+            ]
         ];
     }
+
     public function index()
+    {
+        if(Auth::check())
+        {
+            $users=User::with('permission', 'employee')->get();
+            $data = ['users' => $users];
+            $id = Auth::id();
+            $title = 'User list';
+            $employee = Employee::find($id);
+            $employee_id = $employee->employee_id;
+            $position_name = Position::find($employee_id)->position_name;
+    
+            $config = $this->config();
+            $template = 'admin.user.index';
+    
+            return view('admin.dashboard.layout', compact(
+                'template',
+                'config',
+                'data',
+                'title',
+                'employee',
+                'position_name',
+            ));
+        }
+        else {
+            return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
+        }
+    }
+    public function profileView()
     {
         if (Auth::check()) {
             $user = Auth::user();
@@ -53,8 +119,8 @@ class UserController extends Controller
                 $employee = Employee::find($id);
                 $employee_id = $employee->employee_id;
                 $position_name = Position::find($employee_id) -> position_name;
-                $config = $this->config();
-                $template = 'admin.user.index';
+                $config = $this->configProfile();
+                $template = 'admin.user.profile';
                 return view('admin.dashboard.layout', compact(
                     'template','title',
                     'config',
@@ -67,4 +133,6 @@ class UserController extends Controller
             return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
         }
     }
+
+    
 }

@@ -9,7 +9,7 @@ use App\Http\Controllers\Admin\Room\RoomController;
 use App\Http\Controllers\Admin\Room\RoomTypeController;
 use App\Http\Controllers\Admin\Student\StudentController;
 use App\Http\Controllers\Admin\Employee\PositionController;
-use App\Http\Controllers\Admin\Device\DeviceController;
+use App\Http\Controllers\Admin\Device\DeviceController; 
 use App\Http\Controllers\Admin\Device\DeviceTypeController;
 use App\Http\Controllers\Admin\User\UserController;
 use Illuminate\Support\Facades\Route;
@@ -28,7 +28,9 @@ Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');
 Route::GET('dashboard', [DashboardController::class, 'index'])->name('dashboard.index')->middleware('auth');
 
 //USER
-Route::get("profile", [UserController::class, 'index'])->name("user.index");
+Route::get("/profile", [UserController::class, 'profileView'])->name("user.profileView");
+Route::get("/user", [UserController::class, 'index'])->name("user.index");
+
 
 // EMPLOYEE
 Route::get('/employee', [EmployeeController::class, 'index'])->name('employee.index');
@@ -42,7 +44,7 @@ Route::get("/employee/detailView/{id}", [EmployeeController::class, 'detailView'
 Route::get('/position', [PositionController::class, 'index'])->name('position.index');
 Route::get("/position/createView", [PositionController::class, 'createView'])->name("position.createView");
 Route::post("/position/create", [PositionController::class, 'create'])->name("position.create");
-Route::post("/position/edit/{id}", [PositionController::class, 'edit'])->name("position.edit");
+Route::post("/position/edit", [PositionController::class, 'edit'])->name("position.edit");
 
 // STUDENT
 Route::get("/student", [StudentController::class, 'index'])->name("student.index");

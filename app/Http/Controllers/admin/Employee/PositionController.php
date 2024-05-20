@@ -39,7 +39,20 @@ class PositionController extends Controller
                     $(\'.footable2\').footable();
         
                 });'
-
+                ,
+                'document.addEventListener("DOMContentLoaded", function() {
+                  
+                    $(\'#myModal\').on(\'show.bs.modal\', function(event) {
+                       
+                        var button = $(event.relatedTarget);
+                        var positionId = button.data(\'id\');
+                        var positionName = button.data(\'name\');
+                        
+                        var modal = $(this);
+                        modal.find(\'.modal-body input[name="position_id"]\').val(positionId);
+                        modal.find(\'.modal-body input[name="position_name"]\').val(positionName);
+                    });
+                });'
             ]
 
 
@@ -147,6 +160,23 @@ class PositionController extends Controller
             return redirect()->route('position.index')->with('success', 'position created successfully.');
         } else {
             return redirect()->back()->with('error', 'Failed to create position.');
+        }
+    }
+
+
+    public function edit(Request $request)
+    {
+        $request->validate([
+            'position_name' => 'required|unique:positions'
+        ]);
+        
+        $position = Position::find($request->position_id);
+        $position->position_name = $request->position_name;
+        $result = $position->save();
+        if ($result) {
+            return redirect()->route('position.index')->with('success', 'position edited successfully.');
+        } else {
+            return redirect()->back()->with('error', 'Failed to update position.');
         }
     }
 }

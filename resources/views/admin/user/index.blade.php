@@ -1,82 +1,58 @@
-
-<div class="container">
+<div class="tw-mt-5">
     <div class="row">
-        <div class="col-md-7 ">
-
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4>User Profile</h4>
-                </div>
-                <div class="panel-body">
-                    <div class="box box-info">
-
-                        <div class="box-body">
-                            <div class="col-sm-6">
-                                <div align="center"> <img alt="User Pic" src="{{ $employee->avatar }}" id="profile-image1" class="img-circle img-responsive">
-
-                                    <input id="profile-image-upload" class="hidden" type="file">
-                                    <div style="color:#999;">click here to change profile image</div>
-                                    <!--Upload Image Js And Css-->
-
-                                </div>
-                                <br>
-
-                                <!-- /input-group -->
-                            </div>
-                            <div class="col-sm-6">
-                                <h4 style="color:#00b1b1;">{{ $employee->name }} </h4></span>
-                                <span>
-                                    <p>{{ $position_name}}</p>
-                                </span>
-                            </div>
-                            <div class="clearfix"></div>
-                            <hr style="margin:5px 0 5px 0;">
-
-                            <div class="col-sm-5 col-xs-6 tital ">Mail:</div>
-                            <div class="col-sm-7">{{ $user->email }}</div>
-                            <div class="clearfix"></div>
-                            <div class="bot-border"></div>
-                            <div class="col-sm-5 col-xs-6 tital ">Gender:</div>
-                            <div class="col-sm-7">{{ $employee->gender }}</div>
-
-                            <div class="clearfix"></div>
-                            <div class="bot-border"></div>
-
-                            <div class="col-sm-5 col-xs-6 tital ">Date Of Birth:</div>
-                            <div class="col-sm-7">{{ $employee->date_of_birth }}</div>
-
-                            <div class="clearfix"></div>
-                            <div class="bot-border"></div>
-
-                            <div class="col-sm-5 col-xs-6 tital ">Address:</div>
-                            <div class="col-sm-7">{{ $employee->address }}</div>
-
-                            <div class="clearfix"></div>
-                            <div class="bot-border"></div>
-
-                            <div class="col-sm-5 col-xs-6 tital ">Nationality:</div>
-                            <div class="col-sm-7">{{ $employee->nationality }}</div>
-
-                            <div class="clearfix"></div>
-                            <div class="bot-border"></div>
-
-                           
-                            <!-- /.box-body -->
-                        </div>
-                        <!-- /.box -->
-
+        <div class="col-lg-12">
+            <div class="ibox">
+                <div class="ibox-title d-flex justify-content-between align-items-center">
+                    <h5>Danh sách thiết bị</h5>
+                    <div class="search-container">
+                        <form class="search-bar" action="{{ route('device.search') }}" method="GET">
+                            <input type="text" name="keyword" class="form-control"
+                                placeholder="Search user...">
+                            <button type="submit" class="search-icon fa fa-search"></button>
+                        </form>
                     </div>
-
-
                 </div>
+                <div class="ibox-content">
+                    <div class="table-responsive">
+                        <table id="deviceTable"
+                            class="dataTables_wrapper footable table table-stripped toggle-arrow-tiny dataTables-example">
+                            <thead>
+                                <tr class="title">
+                                    <th onclick="sortTable(0)">User ID <i class="fa fa-sort"></i></th>
+                                    <th onclick="sortTable(1)">Email <i class="fa fa-sort"></i></th>
+                                    <th onclick="sortTable(2)">Full name<i class="fa fa-sort"></i></th>
+                                    <th onclick="sortTable(3)">Permission name <i class="fa fa-sort"></i></th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($data['users'] as $user)
+                                <tr>
+                                    <td>{{ $user->user_id }}</td>
+                                    <td>{{ $user->email }}</td>
+                                    <td>{{ $user->employee->name }}</td>
+                                    <td>{{ $user->permission->permission_name }}</td>
+                                    <td>
+                                        <a class="text-size-lg me-2"
+                                            href="#">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        <a class="text-size-lg me-2"
+                                            href="#"
+                                            onclick="return confirm('Bạn có chắc chắn muốn xóa thiết bị này không?');">
+                                            <i class="fa  fa-trash"></i>
+                                        </a>
+                                        <a class="text-size-lg me-2" href="#">
+                                            <img style="width:24px;height:24px;margin-bottom:8px"
+                                                src="{{ asset('images/rent.png') }}" alt="">
+                                        </a>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
             </div>
         </div>
-        <script>
-            $(function() {
-                $('#profile-image1').on('click', function() {
-                    $('#profile-image-upload').click();
-                });
-            });
-        </script>
     </div>
 </div>
