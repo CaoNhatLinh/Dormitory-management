@@ -14,38 +14,34 @@ class EmployeeController extends Controller
 {
     public function __construct()
     {
-
     }
     public function config()
     {
 
-        
-        
-       
+
+
+
         return $config = [
             'js' => [
                 'js/plugins/dataTables/datatables.min.js',
                 'js/plugins/pace/pace.min.js',
                 'js/plugins/footable/footable.all.min.js',
             ],
-            'linkjs' => [
-               
-            ],
+            'linkjs' => [],
             'css' => [
                 'css/plugins/dataTables/datatables.min.css',
                 'css/plugins/footable/footable.core.css',
-                
+
             ],
-            'linkcss' => [
-                
-            ],
-            
+            'linkcss' => [],
+
             'script' => [
                 '
                 $(document).ready(function(){
                     $(\'.dataTables-example\').DataTable({
-                        pageLength: 25,
                         responsive: true,
+                        paging: false,
+                        info: false,  
                         dom: \'<"html5buttons"B>lTfgitp\',
                         buttons: [
         
@@ -72,8 +68,10 @@ class EmployeeController extends Controller
                     $(\'.footable2\').footable();
         
                 });
-                '
-            
+                ',
+               
+
+                
             ]
 
 
@@ -82,45 +80,52 @@ class EmployeeController extends Controller
     public function configCreateView()
     {
 
-    return $config = [
-        'js' => [
-            
-            'js/plugins/pace/pace.min.js',
-            'js/plugins/datapicker/bootstrap-datepicker.js',
-            'js/plugins/chosen/chosen.jquery.js', 
-        ],
-        'linkjs' => [
-           
-        ],
-        'css' => [
-            
-            'css/plugins/datapicker/datepicker3.css',
-            'css/plugins/chosen/bootstrap-chosen.css'
-        ],
-        'linkcss' => [
-            
-        ],
-        
-        'script' => [
-        
-            ' $(document).ready(function(){
+        return $config = [
+            'js' => [
 
-                $(\'#data_1 .input-group.date\').datepicker({
-                    todayBtn: "linked",
-                    keyboardNavigation: false,
-                    forceParse: false,
-                    calendarWeeks: true,
-                    autoclose: true
-                });
-                $(\'.chosen-select\').chosen({ width: "100%" });
-            
-            })',
-        ]
+                'js/plugins/pace/pace.min.js',
+                'js/plugins/datapicker/bootstrap-datepicker.js',
+                'js/plugins/chosen/chosen.jquery.js',
+                'js/plugins/jasny/jasny-bootstrap.min.js'
+            ],
+            'linkjs' => [
+                'https://cdn.tailwindcss.com'
+            ],
+            'css' => [
+
+                'css/plugins/datapicker/datepicker3.css',
+                'css/plugins/chosen/bootstrap-chosen.css',
+                'css/plugins/jasny/jasny-bootstrap.min.css',
+                'css/profile.css'
+            ],
+            'linkcss' => [],
+
+            'script' => [
+                ' $(document).ready(function(){
+                    $(\'#data_1 .input-group.date\').datepicker({
+                        todayBtn: "linked",
+                        keyboardNavigation: false,
+                        forceParse: false,
+                        calendarWeeks: true,
+                        autoclose: true
+                    });
+                    $(\'.chosen-select\').chosen({ width: "100%" });
+                    })
+                 ',
+                 '
+                 tailwind.config = {
+                     prefix: \'tw-\',
+                     corePlugins: {
+                         preflight: false, // Set preflight to false to disable default styles
+                     },
+                 }',
+                 
+            ]
 
 
-    ];
-}
-public function configDetail()
+        ];
+    }
+    public function configDetail()
     {
         return $config = [
             'js' => [
@@ -130,14 +135,10 @@ public function configDetail()
             'linkjs' => [
                 'https://cdn.tailwindcss.com'
             ],
-            'css' => [
-                
-            ],
-            'linkcss' => [
-                
-            ],
-            
-            'script' =>[
+            'css' => [],
+            'linkcss' => [],
+
+            'script' => [
                 '
                 tailwind.config = {
                     prefix: \'tw-\',
@@ -150,7 +151,7 @@ public function configDetail()
     }
     public function index()
     {
-        
+
         if (Auth::check()) {
             $config = $this->config();
             $title = 'Employeee list';
@@ -167,7 +168,7 @@ public function configDetail()
                 'title',
                 'position_name',
                 'employee',
-                 'data',
+                'data',
             ));
         } else {
             return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
@@ -269,11 +270,9 @@ public function configDetail()
         $employee = Employee::find($authId);
         $employee_id = $employee->employee_id;
         $position_name = Position::find($employee_id)->position_name;
-        $config = $this->configCreateView(); 
+        $config = $this->configCreateView();
         $template = 'admin.employee.edit';
-        
 
-        // Data 
         $employee = Employee::find($id);
         $positions = Position::all();
         return view('admin.dashboard.layout', compact(
@@ -292,26 +291,31 @@ public function configDetail()
         $employee = Employee::find($id);
 
         $request->validate([
+            'position_id' => 'required',
             'name' => 'required',
+            'gender' => 'required',
             'nationality' => 'required',
             'date_of_birth' => 'required|date',
-            'gender' => 'required',
-            'position_id' => 'required',
             'nationality' => 'required',
+            'address' => 'required',
             'person_id' => [
                 'required',
-                Rule::unique('employee', 'person_id')->ignore($employee->person_id, 'person_id'),
-            ]
-            
+                Rule::unique('employees', 'person_id')->ignore($employee->person_id, 'person_id'),
+            ],
+            'status' => 'required|in:Working,Terminated,On Leave'
+
         ]);
 
-
+        $employee->person_id = $request->person_id;
         $employee->name = $request->name;
-        $employee->date_of_birth = $request->date_of_birth;
         $employee->gender = $request->gender;
         $employee->nationality = $request->nationality;
-        $employee->person_id = $request->person_id;
+        $employee->address = $request->address;
+        $dateTime = DateTime::createFromFormat('d/m/Y', $request->date_of_birth);
+        $date = $dateTime->format('Y-m-d');
+        $employee->date_of_birth = $date;
         $employee->position_id = $request->position_id;
+        $employee->status = $request->status;
         if ($request->hasFile('avatar')) {
             $oldAvatarPath = public_path("/uploads/avatars/" . $employee->avatar);
             if (file_exists($oldAvatarPath)) {
@@ -323,10 +327,9 @@ public function configDetail()
             $image->move($path, $imageName);
             $employee->avatar = $imageName;
         } else {
-           
         }
         $result = $employee->save();
-
+        
         if ($result) {
             return redirect()->route('employee.index')->with('success', 'employee edited successfully.');
         } else {

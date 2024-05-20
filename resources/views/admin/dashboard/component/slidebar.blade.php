@@ -9,9 +9,9 @@
                         <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold"> {{ $employee->name }}</strong>
                             </span> <span class="text-muted text-xs block">{{ $position_name }} <b class="caret"></b></span> </span> </a>
                     <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                        <li><a href="{{route('user.index')}}">Profile</a></li>
+                        <li><a href="{{route('user.profileView')}}">Profile</a></li>
                         <li class="divider"></li>
-                        <li><a href="login.html">Logout</a></li>
+                        <li><a href="{{route('auth.logout')}}">Logout</a></li>
                     </ul>
                 </div>
                 <div class="logo-element">
@@ -85,7 +85,7 @@
             <li>
                 <a href="#"><i class="fa fa-flask"></i> <span class="nav-label">Users</span><span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse">
-                    <li><a href="typography.html">Users list</a></li>
+                    <li><a href="{{route('user.index')}}">Users list</a></li>
                     <li><a href="icons.html">New user</a></li>
                 </ul>
             </li>

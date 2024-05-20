@@ -1,56 +1,88 @@
-<div class="row">
-    <div class="col-lg-12">
-        <div class="ibox float-e-margins">
-            <div class="ibox-title">
-                <h5>The list of Employee</h5>
-                <div class="ibox-tools">
-                    <a class="collapse-link">
-                        <i class="fa fa-chevron-up"></i>
-                    </a>
+<div class="wrapper wrapper-content animated fadeInRight ecommerce">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>The list of Employee</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
 
+                    </div>
                 </div>
-            </div>
-            <div class="ibox-content">
-                <table class=" dataTables_wrapper footable table table-stripped toggle-arrow-tiny dataTables-example">
-                    <thead>
-                        <tr>
-                            <th data-toggle="true">Employee ID</th>
-                            <th>Name</th>
+                <div class="ibox-content">
+                <button class="btn btn-primary btn-sm dim" >
+                        <a class="btn-link font-bold" href="{{ route('employee.createView') }}">New Employee</a>
+                    </button>
+                    <table class="footable table table-stripped toggle-arrow-tiny dataTables-example" data-page-size="15">
+                        <thead>
+                            <tr>
+                                <th data-toggle="true">Employee ID</th>
+                                <th data-hide="phone">Name</th>
+                                <th data-hide="phone">Position</th>
+                                <th data-hide="phone">Status</th>
+                                <th data-hide="all">Person ID</th>
+                                <th data-hide="all">Gender</th>
+                                <th data-hide="all">Address</th>
+                                <th data-hide="all">Date</th>
+                                <th data-hide="all">Nationality</th>
+                                <th data-sort-ignore="true">Action</th>
 
-                            <th>Position</th>
-                            <th>Status</th>
-                            <th data-hide="all">Person ID</th>
-                            <th data-hide="all">Gender</th>
-                            <th data-hide="all">Address</th>
-                            <th data-hide="all">Date</th>
-                            <th data-hide="all">Nationality</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($data['employees'] as $employee)
-                        <tr>
-                            <td>{{ $employee->employee_id }}</td>
-                            <td>{{ $employee->name }}</td>
-                            <td>{{ $employee->position->position_name }}</td>
-                            <td>{{ $employee->status }}</td>
-                            <td>{{ $employee->person_id }}</td>
-                            <td>{{ $employee->gender }}</td>
-                            <td>{{ $employee->address }}</td>
-                            <td>{{ $employee->date_of_birth }}</td>
-                            <td>{{ $employee->nationality }}</td>
-                            <td>
-                                <a class="text-size-lg me-2" href="{{route('employee.detailView', $employee->employee_id)}}"><i class="fa  fa fa-eye"></i></a>
-                                <a class="text-size-lg me-2" href="{{route('employee.editView', $employee->employee_id)}}"><i class="fa fa-edit"></i></a>
-                            </td>
-                        </tr>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($data['employees'] as $employee)
+                            <tr>
+                                <td>{{ $employee->employee_id }}</td>
+                                <td>{{ $employee->name }}</td>
+                                <td>{{ $employee->position->position_name }}</td>
 
-                        @endforeach
-                    </tbody>
+                                <td>
+                                    @if ($employee->status == 'Working' )
+                                    <label class="label label-primary">{{ $employee->status }}</label>
+                                    @elseif ($employee->status == 'Terminated' )
+                                    <label class="label label-danger">{{ $employee->status }}</label>
+                                    @elseif ($employee->status == 'On Leave' )
+                                    <label class="label label-warning">{{ $employee->status }}</label>
+                                    @endif
+                                </td>
+                                <td>{{ $employee->person_id }}</td>
+                                <td>{{ $employee->gender }}</td>
+                                <td>{{ $employee->address }}</td>
+                                <td>{{ $employee->date_of_birth }}</td>
+                                <td>{{ $employee->nationality }}</td>
+                                <td >
+                                    <div class="btn-group">
+                                        <button class="btn btn-outline btn-primary dim btn-sm">
+                                            <a class="me-2" href="{{route('employee.detailView', $employee->employee_id)}}">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+                                        </button>
+                                        <button class="btn btn-outline btn-primary dim btn-sm">
+                                            <a class=" me-2" href="{{route('employee.editView', $employee->employee_id)}}">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                        </button>
+                                    </div>
+                                </td>
 
-                </table>
+                            </tr>
+                            @endforeach
 
+
+
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="6">
+                                    <ul class="pagination pull-right"></ul>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-                                                                        </div>
+</div>

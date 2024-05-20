@@ -2,23 +2,18 @@
 
 namespace App\Models;
 
-use Google\Service\AndroidEnterprise\Permission;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Employee extends Model
+class Permission extends Model
 {
     use HasFactory;
-    protected $table = 'employees';
-    protected $primaryKey = 'employee_id';
+    protected $table = 'permissions';
+    protected $primaryKey = 'permission_id';
     public $timestamps = false;
-    public function position()
-    {
-        return $this->belongsTo(Position::class, 'position_id');
-    }
+    
     public function users()
     {
         return $this->hasMany(User::class, 'employee_id');
     }
-
 }
