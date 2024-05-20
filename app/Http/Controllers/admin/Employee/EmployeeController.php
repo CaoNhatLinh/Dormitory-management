@@ -15,12 +15,13 @@ class EmployeeController extends Controller
     public function __construct()
     {
     }
+    const STATUSES  = ['Working','Terminated','On Leave'];
     public function config()
     {
 
 
 
-
+        
         return $config = [
             'js' => [
                 'js/plugins/dataTables/datatables.min.js',
@@ -199,14 +200,14 @@ class EmployeeController extends Controller
     public function create(Request $request)
     {
         $request->validate([
-            'person_id' => 'required|unique:employees',
-            'name' => 'required',
+            'person_id' => 'required|integer|unique:employees',
+            'name' => 'required|string',
             'avatar' => 'required|image|mimes:jpg,png,jpeg',
-            'gender' => 'required',
-            'address' => 'required',
-            'nationality' => 'required',
+            'gender' => 'required|string',
+            'address' => 'required|string',
+            'nationality' => 'required|string',
             'date_of_birth' => 'required|date',
-            'position_id' => 'required',
+            'position_id' => 'required|integer',
         ]);
 
 
@@ -229,7 +230,7 @@ class EmployeeController extends Controller
         $employee->nationality = $request->nationality;
         $employee->position_id = $request->position_id;
         $employee->avatar = $avatar;
-        $employee->status = "working";
+        $employee->status = "Working";
 
         $result = $employee->save();
         if ($result) {
@@ -252,27 +253,28 @@ class EmployeeController extends Controller
 
         // Data 
         $employeeDetails = Employee::with('position')->find($id);
-
+        $statuses = self::STATUSES;
         return view('admin.dashboard.layout', compact(
             'template',
             'config',
             'title',
             'employee',
             'position_name',
-            'employeeDetails'
+            'employeeDetails',
+            'statuses'
         ));
     }
     public function editView($id)
     {
         // Config - template
-        $authId = Auth::id();
         $title = 'Edit employee';
+        $authId = Auth::id();
         $employee = Employee::find($authId);
         $employee_id = $employee->employee_id;
         $position_name = Position::find($employee_id)->position_name;
         $config = $this->configCreateView();
         $template = 'admin.employee.edit';
-
+        $statuses = self::STATUSES;
         $employee = Employee::find($id);
         $positions = Position::all();
         return view('admin.dashboard.layout', compact(
@@ -282,22 +284,23 @@ class EmployeeController extends Controller
             'employee',
             'position_name',
             'employee',
-            'positions'
+            'positions',
+            'statuses'
         ));
     }
 
     public function edit(Request $request, $id)
     {
         $employee = Employee::find($id);
-
         $request->validate([
-            'position_id' => 'required',
-            'name' => 'required',
-            'gender' => 'required',
-            'nationality' => 'required',
+           
+            'name' => 'required|string',
+            'avatar' => 'required|image|mimes:jpg,png,jpeg',
+            'gender' => 'required|string',
+            'address' => 'required|string',
+            'nationality' => 'required|string',
             'date_of_birth' => 'required|date',
-            'nationality' => 'required',
-            'address' => 'required',
+            'position_id' => 'required|integer',
             'person_id' => [
                 'required',
                 Rule::unique('employees', 'person_id')->ignore($employee->person_id, 'person_id'),

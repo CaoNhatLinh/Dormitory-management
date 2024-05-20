@@ -23,9 +23,8 @@ Route::get('/', function () {
 Route::GET('admin', [AuthController::class, 'index'])->name('auth.admin');
 Route::post('login', [AuthController::class, 'login'])->name('auth.login');
 Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');
-
 //DASHBOARD
-Route::GET('dashboard', [DashboardController::class, 'index'])->name('dashboard.index')->middleware('auth');
+Route::GET('dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
 //USER
 Route::get("/profile", [UserController::class, 'profileView'])->name("user.profileView");
