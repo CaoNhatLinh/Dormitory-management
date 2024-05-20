@@ -11,6 +11,7 @@ use App\Models\Contract;
 use App\Models\Room;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rule;
 
 class ContractController extends Controller
@@ -53,65 +54,70 @@ class ContractController extends Controller
     }
     public function index()
     {
-        $contracts = Contract::all();
-        $data = ['contracts' => $contracts];
-        $id = Auth::id();
-        $title = 'Contract List';
+        if (Session::has('employee') && Session::has('position_name')) {
+            $employee = Session::get('employee');
+            $position_name = Session::get('position_name');
 
-        $employee = Employee::find($id);
-        $employee_id = $employee->employee_id;
-        $position_name = Position::find($employee_id)->position_name;
+            $contracts = Contract::all();
+            $data = ['contracts' => $contracts];
+            $title = 'Contract List';
 
 
-        $config = $this->config();
-        $template = 'admin.contract.index';
+            $config = $this->config();
+            $template = 'admin.contract.index';
 
-        return view('admin.dashboard.layout', compact(
-            'template',
-            'config',
-            'data',
-            'title',
-            'employee',
-            'position_name'
-        ));
+            return view('admin.dashboard.layout', compact(
+                'template',
+                'config',
+                'data',
+                'title',
+                'employee',
+                'position_name'
+            ));
+        } else {
+            return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
+        }
     }
 
     public function createView($id)
     {
+        if (Session::has('employee') && Session::has('position_name')) {
+            $employee = Session::get('employee');
+            $position_name = Session::get('position_name');
 
-        DB::table('contracts')
-            ->where('end_date', '<=', date('Y-m-d'))
-            ->where('status', '=', 'renting')
-            ->update(['status' => 'expired']);
+            DB::table('contracts')
+                ->where('end_date', '<=', date('Y-m-d'))
+                ->where('status', '=', 'renting')
+                ->update(['status' => 'expired']);
 
-        $authId = Auth::id();
-        $employee = Employee::find($authId);
-        $employee_id = $employee->employee_id;
-        $position_name = Position::find($employee_id)->position_name;
-        $config = $this->config();
 
-        $student_id = $id;
-        // Check if current student_id has contract and status = 'renting' then redirect to student detail page
-        $contract = Contract::where('student_id', $student_id)->where('status', 'renting')->first();
-        if ($contract) {
-            return redirect()->route('student.detailView', ['id' => $student_id]);
+            $config = $this->config();
+
+            $student_id = $id;
+            // Check if current student_id has contract and status = 'renting' then redirect to student detail page
+            $contract = Contract::where('student_id', $student_id)->where('status', 'renting')->first();
+            if ($contract) {
+                return redirect()->route('student.detailView', ['id' => $student_id]);
+            }
+
+            $rooms = Room::all()->where('quantity', '<', 'occupancy');
+
+
+            $title = 'Create contract';
+            $template = 'admin.contract.create';
+
+            return view('admin.dashboard.layout', compact(
+                'template',
+                'config',
+                'title',
+                'employee',
+                'position_name',
+                'student_id',
+                'rooms'
+            ));
+        } else {
+            return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
         }
-
-        $rooms = Room::all()->where('quantity', '<', 'occupancy');
-
-
-        $title = 'Create contract';
-        $template = 'admin.contract.create';
-
-        return view('admin.dashboard.layout', compact(
-            'template',
-            'config',
-            'title',
-            'employee',
-            'position_name',
-            'student_id',
-            'rooms'
-        ));
     }
 
     public function create(Request $request, $id)
@@ -136,33 +142,37 @@ class ContractController extends Controller
 
     public function editView($id)
     {
+        if (Session::has('employee') && Session::has('position_name')) {
+            $employee = Session::get('employee');
+            $position_name = Session::get('position_name');
 
-        DB::table('contracts')
-            ->where('end_date', '<=', date('Y-m-d'))
-            ->where('status', '=', 'renting')
-            ->update(['status' => 'expired']);
 
-        $authId = Auth::id();
-        $employee = Employee::find($authId);
-        $employee_id = $employee->employee_id;
-        $position_name = Position::find($employee_id)->position_name;
-        $config = $this->config();
+            DB::table('contracts')
+                ->where('end_date', '<=', date('Y-m-d'))
+                ->where('status', '=', 'renting')
+                ->update(['status' => 'expired']);
 
-        $contract = Contract::find($id);
-        $rooms = Room::all()->where('quantity', '<', 'occupancy');
 
-        $title = 'Edit contract';
-        $template = 'admin.contract.edit';
+            $config = $this->config();
 
-        return view('admin.dashboard.layout', compact(
-            'template',
-            'config',
-            'title',
-            'employee',
-            'position_name',
-            'contract',
-            'rooms'
-        ));
+            $contract = Contract::find($id);
+            $rooms = Room::all()->where('quantity', '<', 'occupancy');
+
+            $title = 'Edit contract';
+            $template = 'admin.contract.edit';
+
+            return view('admin.dashboard.layout', compact(
+                'template',
+                'config',
+                'title',
+                'employee',
+                'position_name',
+                'contract',
+                'rooms'
+            ));
+        } else {
+            return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
+        }
     }
 
     public function edit(Request $request, $id)

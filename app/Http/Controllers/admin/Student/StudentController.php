@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rule;
 
 class StudentController extends Controller
@@ -83,51 +84,60 @@ class StudentController extends Controller
 
     public function index()
     {
-        $students = Student::all();
-        $data = ['students' => $students];
-        $id = Auth::id();
-        $title = 'Student';
-        $employee = Employee::find($id);
-        $employee_id = $employee->employee_id;
-        $position_name = Position::find($employee_id)->position_name;
+        if (Session::has('employee') && Session::has('position_name')) {
 
-        $config = $this->config();
-        $template = 'admin.student.index';
+            $employee = Session::get('employee');
+            $position_name = Session::get('position_name');
 
-        // update contract status = 'expired' if end_date <= current date
-        DB::table('contracts')
-            ->where('end_date', '<=', date('Y-m-d'))
-            ->where('status', '=', 'renting')
-            ->update(['status' => 'expired']);
+            $students = Student::all();
+            $data = ['students' => $students];
+            $title = 'Student';
 
-        return view('admin.dashboard.layout', compact(
-            'template',
-            'config',
-            'data',
-            'title',
-            'employee',
-            'position_name'
-        ));
+
+            $config = $this->config();
+            $template = 'admin.student.index';
+
+            // update contract status = 'expired' if end_date <= current date
+            DB::table('contracts')
+                ->where('end_date', '<=', date('Y-m-d'))
+                ->where('status', '=', 'renting')
+                ->update(['status' => 'expired']);
+
+            return view('admin.dashboard.layout', compact(
+                'template',
+                'config',
+                'data',
+                'title',
+                'employee',
+                'position_name'
+            ));
+        } else {
+            return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
+        }
     }
 
     public function createView()
     {
-        $id = Auth::id();
-        $title = 'Create student';
-        $employee = Employee::find($id);
-        $employee_id = $employee->employee_id;
-        $position_name = Position::find($employee_id)->position_name;
-        $config = $this->config();
+        if (Session::has('employee') && Session::has('position_name')) {
+            $employee = Session::get('employee');
+            $position_name = Session::get('position_name');
 
-        $template = 'admin.student.create';
+            $title = 'Create student';
 
-        return view('admin.dashboard.layout', compact(
-            'template',
-            'config',
-            'title',
-            'employee',
-            'position_name'
-        ));
+            $config = $this->config();
+
+            $template = 'admin.student.create';
+
+            return view('admin.dashboard.layout', compact(
+                'template',
+                'config',
+                'title',
+                'employee',
+                'position_name'
+            ));
+        } else {
+            return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
+        }
     }
 
     public function create(Request $request)
@@ -172,27 +182,31 @@ class StudentController extends Controller
 
     public function editView($id)
     {
-        // Config - template
-        $authId = Auth::id();
-        $title = 'Edit student';
-        $employee = Employee::find($authId);
-        $employee_id = $employee->employee_id;
-        $position_name = Position::find($employee_id)->position_name;
-        $config = $this->config();
-        $template = 'admin.student.edit';
+        if (Session::has('employee') && Session::has('position_name')) {
+            $employee = Session::get('employee');
+            $position_name = Session::get('position_name');
+
+            // Config - template
+            $title = 'Edit student';
+
+            $config = $this->config();
+            $template = 'admin.student.edit';
 
 
-        // Data 
-        $student = Student::find($id);
+            // Data 
+            $student = Student::find($id);
 
-        return view('admin.dashboard.layout', compact(
-            'template',
-            'config',
-            'title',
-            'employee',
-            'position_name',
-            'student'
-        ));
+            return view('admin.dashboard.layout', compact(
+                'template',
+                'config',
+                'title',
+                'employee',
+                'position_name',
+                'student'
+            ));
+        } else {
+            return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
+        }
     }
 
     public function edit(Request $request, $id)
@@ -258,50 +272,51 @@ class StudentController extends Controller
 
     public function detailView($id)
     {
-        // update contract status = 'expired' if end_date <= current date
-        DB::table('contracts')
-            ->where('end_date', '<=', date('Y-m-d'))
-            ->where('status', '=', 'renting')
-            ->update(['status' => 'expired']);
+        if (Session::has('employee') && Session::has('position_name')) {
+            $employee = Session::get('employee');
+            $position_name = Session::get('position_name');
 
-        // Config - template
-        $authId = Auth::id();
-        $title = 'Student detail';
-        $employee = Employee::find($authId);
-        $employee_id = $employee->employee_id;
-        $position_name = Position::find($employee_id)->position_name;
-        $config = $this->config();
-        $template = 'admin.student.detail';
+            // update contract status = 'expired' if end_date <= current date
+            DB::table('contracts')
+                ->where('end_date', '<=', date('Y-m-d'))
+                ->where('status', '=', 'renting')
+                ->update(['status' => 'expired']);
 
+            // Config - template
+            $title = 'Student detail';
 
-        // Data 
-        $student = Student::find($id);
+            $config = $this->config();
+            $template = 'admin.student.detail';
 
 
-        // Check if student has any contract and status = 'renting'
-        $isAvailableCreateContract = true;
-        $contract = Contract::where('student_id', $id)->where('status', 'renting')->first();
-        if ($contract) {
-            $isAvailableCreateContract = false;
+            // Data 
+            $student = Student::find($id);
+
+            // Check if student has any contract and status = 'renting'
+            $isAvailableCreateContract = true;
+            $contract = Contract::where('student_id', $id)->where('status', 'renting')->first();
+            if ($contract) {
+                $isAvailableCreateContract = false;
+            }
+
+            $contracts = Contract::where('student_id', $id)->get();
+
+            $statuses = ['renting' => 'Đang thuê', 'expired' => 'Hết hạn', 'canceled' => 'Đã hủy'];
+
+
+            return view('admin.dashboard.layout', compact(
+                'template',
+                'config',
+                'title',
+                'employee',
+                'position_name',
+                'student',
+                'contracts',
+                'isAvailableCreateContract',
+                'statuses'
+            ));
+        } else {
+            return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
         }
-
-
-
-        $contracts = Contract::where('student_id', $id)->get();
-
-        $statuses = ['renting' => 'Đang thuê', 'expired' => 'Hết hạn', 'canceled' => 'Đã hủy'];
-
-
-        return view('admin.dashboard.layout', compact(
-            'template',
-            'config',
-            'title',
-            'employee',
-            'position_name',
-            'student',
-            'contracts',
-            'isAvailableCreateContract',
-            'statuses'
-        ));
     }
 }

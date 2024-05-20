@@ -13,6 +13,7 @@ use App\Models\Position;
 use App\Models\Room;
 use App\Models\RoomBill;
 use App\Models\RoomType;
+use Illuminate\Support\Facades\Session;
 
 class RoomBillController extends Controller
 {
@@ -86,56 +87,61 @@ class RoomBillController extends Controller
 
     public function index()
     {
-        $id = Auth::id();
-        $title = 'Room bill';
+        if (Session::has('employee') && Session::has('position_name')) {
+            $employee = Session::get('employee');
+            $position_name = Session::get('position_name');
 
-        $employee = Employee::find($id);
-        $employee_id = $employee->employee_id;
-        $position_name = Position::find($employee_id)->position_name;
+            $title = 'Room bill';
 
-        $config = $this->config();
-        $template = 'admin.bill.room.index';
+            $config = $this->config();
+            $template = 'admin.bill.room.index';
 
-        // Get all room bill from database order by bill_date
-        $roomBills = RoomBill::all();
-        $statuses = self::STATUSES;
+            // Get all room bill from database order by bill_date
+            $roomBills = RoomBill::all();
+            $statuses = self::STATUSES;
 
-        return view('admin.dashboard.layout', compact(
-            'template',
-            'config',
-            'title',
-            'employee',
-            'position_name',
-            'roomBills',
-            'statuses'
-        ));
+            return view('admin.dashboard.layout', compact(
+                'template',
+                'config',
+                'title',
+                'employee',
+                'position_name',
+                'roomBills',
+                'statuses'
+            ));
+        } else {
+            return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
+        }
     }
 
     public function createView()
     {
-        $id = Auth::id();
-        $title = 'Create room bill';
+        if (Session::has('employee') && Session::has('position_name')) {
+            $employee = Session::get('employee');
+            $position_name = Session::get('position_name');
 
-        $employee = Employee::find($id);
-        $employee_id = $employee->employee_id;
-        $position_name = Position::find($employee_id)->position_name;
+            $title = 'Create room bill';
 
-        $config = $this->config();
-        $template = 'admin.bill.room.create';
 
-        $statuses = self::STATUSES;
-        $rooms = Room::all();
+            $config = $this->config();
+            $template = 'admin.bill.room.create';
 
-        return view('admin.dashboard.layout', compact(
-            'template',
-            'config',
-            'title',
-            'employee',
-            'position_name',
-            'statuses',
-            'rooms'
+            $statuses = self::STATUSES;
+            $rooms = Room::all();
 
-        ));
+            return view('admin.dashboard.layout', compact(
+                'template',
+                'config',
+                'title',
+                'employee',
+                'position_name',
+                'statuses',
+                'rooms'
+
+            ));
+        } else {
+            return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
+        }
     }
 
     public function create(Request $request)
@@ -170,38 +176,36 @@ class RoomBillController extends Controller
 
     public function createExcelView(Request $request)
     {
-        $id = Auth::id();
-        $title = 'Create room bill by excel';
+        if (Session::has('employee') && Session::has('position_name')) {
+            $employee = Session::get('employee');
+            $position_name = Session::get('position_name');
 
-        $employee = Employee::find($id);
-        $employee_id = $employee->employee_id;
-        $position_name = Position::find($employee_id)->position_name;
-
-        $config = $this->config();
-        $template = 'admin.bill.room.createExcel';
+            $title = 'Create room bill by excel';
 
 
+            $config = $this->config();
+            $template = 'admin.bill.room.createExcel';
 
-        $excel_room_bills = [];
-
-        // if ($request->hasFile('excel_room_bill')) {
-        //     $excel_room_bills = Excel::toArray(new RoomBillsImport, $request->file('excel_room_bill'));
-        //     $excel_room_bills = $excel_room_bills[0]; // Lấy sheet đầu tiên
-        // }
-
-
-        return view('admin.dashboard.layout', compact(
-            'template',
-            'config',
-            'title',
-            'employee',
-            'position_name',
-            'excel_room_bills'
-        ));
+            $excel_room_bills = [];
+            return view('admin.dashboard.layout', compact(
+                'template',
+                'config',
+                'title',
+                'employee',
+                'position_name',
+                'excel_room_bills'
+            ));
+        } else {
+            return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
+        }
     }
 
     public function createExcel(Request $request)
     {
+        if (Session::has('employee') && Session::has('position_name')) {
+            $employee = Session::get('employee');
+            $position_name = Session::get('position_name');
+        }
 
         return redirect()->route('bill.room.index');
     }
@@ -217,30 +221,32 @@ class RoomBillController extends Controller
 
     public function editView($id)
     {
-        $id = Auth::id();
-        $title = 'Edit room bill';
+        if (Session::has('employee') && Session::has('position_name')) {
+            $employee = Session::get('employee');
+            $position_name = Session::get('position_name');
 
-        $employee = Employee::find($id);
-        $employee_id = $employee->employee_id;
-        $position_name = Position::find($employee_id)->position_name;
+            $title = 'Edit room bill';
 
-        $config = $this->config();
-        $template = 'admin.bill.room.edit';
+            $config = $this->config();
+            $template = 'admin.bill.room.edit';
 
-        $statuses = self::STATUSES;
-        $rooms = Room::all();
-        $roomBill = RoomBill::find($id);
+            $statuses = self::STATUSES;
+            $rooms = Room::all();
+            $roomBill = RoomBill::find($id);
 
-        return view('admin.dashboard.layout', compact(
-            'template',
-            'config',
-            'title',
-            'employee',
-            'position_name',
-            'statuses',
-            'rooms',
-            'roomBill'
-        ));
+            return view('admin.dashboard.layout', compact(
+                'template',
+                'config',
+                'title',
+                'employee',
+                'position_name',
+                'statuses',
+                'rooms',
+                'roomBill'
+            ));
+        } else {
+            return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
+        }
     }
 
     public function edit(Request $request, $id)

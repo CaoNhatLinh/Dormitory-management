@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\RoomType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rule;
 
 class RoomTypeController extends Controller
@@ -44,47 +45,49 @@ class RoomTypeController extends Controller
 
     public function index()
     {
-        $roomTypes = RoomType::all();
-        $data = ['roomTypes' => $roomTypes];
-        $id = Auth::id();
-        $title = 'Room type list';
+        if (Session::has('employee') && Session::has('position_name')) {
+            $roomTypes = RoomType::all();
+            $data = ['roomTypes' => $roomTypes];
+            $title = 'Room type list';
 
-        $employee = Employee::find($id);
-        $employee_id = $employee->employee_id;
-        $position_name = Position::find($employee_id)->position_name;
+            $config = $this->config();
+            $template = 'admin.room.type.index';
 
-        $config = $this->config();
-        $template = 'admin.room.type.index';
-
-        return view('admin.dashboard.layout', compact(
-            'template',
-            'config',
-            'data',
-            'title',
-            'employee',
-            'position_name'
-        ));
+            return view('admin.dashboard.layout', compact(
+                'template',
+                'config',
+                'data',
+                'title',
+                'employee',
+                'position_name'
+            ));
+        } else {
+            return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
+        }
     }
 
     public function createView()
     {
-        $id = Auth::id();
-        $title = 'Create room type';
-        $employee = Employee::find($id);
-        $employee_id = $employee->employee_id;
-        $position_name = Position::find($employee_id)->position_name;
-        $config = $this->config();
+        if (Session::has('employee') && Session::has('position_name')) {
+            $employee = Session::get('employee');
+            $position_name = Session::get('position_name');
 
-        $template = 'admin.room.type.create';
+            $title = 'Create room type';
+            $config = $this->config();
+
+            $template = 'admin.room.type.create';
 
 
-        return view('admin.dashboard.layout', compact(
-            'template',
-            'config',
-            'title',
-            'employee',
-            'position_name'
-        ));
+            return view('admin.dashboard.layout', compact(
+                'template',
+                'config',
+                'title',
+                'employee',
+                'position_name'
+            ));
+        } else {
+            return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
+        }
     }
 
     public function create(Request $request)
@@ -104,25 +107,28 @@ class RoomTypeController extends Controller
 
     public function editView($id)
     {
-        $authId = Auth::id();
-        $title = 'Edit room type';
-        $employee = Employee::find($authId);
-        $employee_id = $employee->employee_id;
-        $position_name = Position::find($employee_id)->position_name;
-        $config = $this->config();
+        if (Session::has('employee') && Session::has('position_name')) {
+            $employee = Session::get('employee');
+            $position_name = Session::get('position_name');
 
-        $template = 'admin.room.type.edit';
+            $title = 'Edit room type';
+            $config = $this->config();
 
-        $roomType = RoomType::find($id);
+            $template = 'admin.room.type.edit';
 
-        return view('admin.dashboard.layout', compact(
-            'template',
-            'config',
-            'title',
-            'employee',
-            'position_name',
-            'roomType'
-        ));
+            $roomType = RoomType::find($id);
+
+            return view('admin.dashboard.layout', compact(
+                'template',
+                'config',
+                'title',
+                'employee',
+                'position_name',
+                'roomType'
+            ));
+        } else {
+            return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
+        }
     }
 
     public function edit(Request $request, $id)

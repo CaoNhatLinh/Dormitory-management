@@ -12,7 +12,7 @@ use App\Models\Employee;
 use App\Models\Position;
 use App\Models\Room;
 use App\Models\RoomType;
-
+use Illuminate\Support\Facades\Session;
 
 class RoomController extends Controller
 {
@@ -85,55 +85,57 @@ class RoomController extends Controller
 
     public function index()
     {
-        // Get all rooms with room type foreign key
-        $rooms = Room::with('roomType')->get();
-        $data = ['rooms' => $rooms];
+        if (Session::has('employee') && Session::has('position_name')) {
+            $employee = Session::get('employee');
+            $position_name = Session::get('position_name');
 
+            // Get all rooms with room type foreign key
+            $rooms = Room::with('roomType')->get();
+            $data = ['rooms' => $rooms];
 
-        $id = Auth::id();
-        $title = 'Room List';
+            $title = 'Room List';
 
-        $employee = Employee::find($id);
-        $employee_id = $employee->employee_id;
-        $position_name = Position::find($employee_id)->position_name;
+            $config = $this->config();
+            $template = 'admin.room.index';
 
-        $config = $this->config();
-        $template = 'admin.room.index';
-
-        return view('admin.dashboard.layout', compact(
-            'template',
-            'config',
-            'data',
-            'title',
-            'employee',
-            'position_name'
-        ));
+            return view('admin.dashboard.layout', compact(
+                'template',
+                'config',
+                'data',
+                'title',
+                'employee',
+                'position_name'
+            ));
+        } else {
+            return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
+        }
     }
 
     public function createView()
     {
-        $roomTypes = RoomType::all();
+        if (Session::has('employee') && Session::has('position_name')) {
+            $roomTypes = RoomType::all();
+            $employee = Session::get('employee');
+            $position_name = Session::get('position_name');
 
-        $id = Auth::id();
-        $title = 'Create Room';
+            $title = 'Create Room';
 
-        $employee = Employee::find($id);
-        $employee_id = $employee->employee_id;
-        $position_name = Position::find($employee_id)->position_name;
+            $config = $this->config();
+            $template = 'admin.room.create';
+            $statuses = self::STATUSES;
 
-        $config = $this->config();
-        $template = 'admin.room.create';
-        $statuses = self::STATUSES;
-
-        return view('admin.dashboard.layout', compact(
-            'template',
-            'config',
-            'roomTypes',
-            'title',
-            'employee',
-            'position_name',
-            'statuses'
-        ));
+            return view('admin.dashboard.layout', compact(
+                'template',
+                'config',
+                'roomTypes',
+                'title',
+                'employee',
+                'position_name',
+                'statuses'
+            ));
+        } else {
+            return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
+        }
     }
 
     public function create(Request $request)
@@ -159,31 +161,34 @@ class RoomController extends Controller
 
     public function editView($id)
     {
-        $room = Room::find($id);
-        $roomTypes = RoomType::all();
+        if (Session::has('employee') && Session::has('position_name')) {
+            $employee = Session::get('employee');
+            $position_name = Session::get('position_name');
 
-        $authId = Auth::id();
-        $title = 'Update room';
+            $room = Room::find($id);
+            $roomTypes = RoomType::all();
 
-        $employee = Employee::find($authId);
-        $employee_id = $employee->employee_id;
-        $position_name = Position::find($employee_id)->position_name;
 
-        $config = $this->config();
-        $template = 'admin.room.edit';
+            $title = 'Update room';
 
-        $statuses = self::STATUSES;
+            $config = $this->config();
+            $template = 'admin.room.edit';
 
-        return view('admin.dashboard.layout', compact(
-            'template',
-            'config',
-            'room',
-            'roomTypes',
-            'title',
-            'employee',
-            'position_name',
-            'statuses'
-        ));
+            $statuses = self::STATUSES;
+
+            return view('admin.dashboard.layout', compact(
+                'template',
+                'config',
+                'room',
+                'roomTypes',
+                'title',
+                'employee',
+                'position_name',
+                'statuses'
+            ));
+        } else {
+            return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
+        }
     }
 
     public function edit(Request $request, $id)
