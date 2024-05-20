@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Employee;
 use App\Models\Position;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Session;
 class DashboardController extends Controller
 {
     public function __construct()
@@ -168,14 +168,11 @@ class DashboardController extends Controller
 
     public function index()
     {
-
-        if (Auth::check()) {
-            $config = $this->config();
+        if (Session::has('employee') && Session::has('position_name')) {
+            $employee = Session::get('employee');
+            $position_name = Session::get('position_name');
             $title = 'Dormitory management';
-            $id = Auth::id();
-            $employee = Employee::find($id);
-            $employee_id = $employee->employee_id;
-            $position_name = Position::find($employee_id)->position_name;
+            $config = $this->config();  
             $template = 'admin.dashboard.home.index';
             return view('admin.dashboard.layout', compact(
                 'template',
@@ -187,5 +184,6 @@ class DashboardController extends Controller
         } else {
             return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
         }
+        
     }
 }

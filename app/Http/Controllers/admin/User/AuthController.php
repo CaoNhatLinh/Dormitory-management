@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\AuthRequest;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Employee;
+use App\Models\Position;
+use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
@@ -28,14 +31,23 @@ class AuthController extends Controller
             'email' => $request->input('email'),
             'password' => $request->input('password')
         ];
-       
         if (Auth::attempt($credentials, $request->input('remember'))) {
+            $authId = Auth::id();
+            $employee = Employee::find($authId);
+            $employee_id = $employee->employee_id;
+            $position_name = Position::find($employee_id)->position_name;
+            Session::put('employee', $employee);
+            Session::put('position_name', $position_name);
             return redirect()->route('dashboard.index')->with('succes', 'Domitory management system', 'Welcome');
         }
-        return redirect()->back()->with('error', 'email hoặc mật khẩu không chính xác');
+        else
+        {
+            return redirect()->back()->with('error', 'email hoặc mật khẩu không chính xác');
+        }
+        
     }
+
     
- 
     public function logout(Request $request)
     {
         Auth::logout();
@@ -43,8 +55,8 @@ class AuthController extends Controller
         $request->session()->invalidate();
 
         $request->session()->regenerateToken();
-
+        Session::forget('employee');
+        Session::forget('position_name');
         return redirect()->route('auth.admin');
     }
-    
 }

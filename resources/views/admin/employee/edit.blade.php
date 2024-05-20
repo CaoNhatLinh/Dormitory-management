@@ -124,9 +124,14 @@
 
                         <div class="col-sm-10">
                             <select class="form-control m-b" name="status" required data-placeholder="Choose a Status">
-                                <option value="Working" {{ $employee->status == 'Working' ? 'selected' : '' }}>Working</option>
+                                @foreach($statuses as  $status)
+                                    <option value="{{ $status }}" {{ $status == $employee->status ? 'selected' : '' }}>
+                                        {{ $status }}
+                                    </option>
+                                @endforeach 
+                                <!-- <option value="Working" {{ $employee->status == 'Working' ? 'selected' : '' }}>Working</option>
                                 <option value="Terminated" {{ $employee->status == 'Terminated' ? 'selected' : '' }}>Terminated</option>
-                                <option value="On Leave" {{ $employee->status == 'On Leave' ? 'selected' : '' }}>On Leave</option>
+                                <option value="On Leave" {{ $employee->status == 'On Leave' ? 'selected' : '' }}>On Leave</option> -->
                             </select>
                             @if ($errors->has('status'))
                             <span class="help-block m-b-none label label-warning">{{ $errors->first('status') }}</span>
