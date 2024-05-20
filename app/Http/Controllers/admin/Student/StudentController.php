@@ -289,6 +289,8 @@ class StudentController extends Controller
 
         $contracts = Contract::where('student_id', $id)->get();
 
+        $statuses = ['renting' => 'Đang thuê', 'expired' => 'Hết hạn', 'canceled' => 'Đã hủy'];
+
 
         return view('admin.dashboard.layout', compact(
             'template',
@@ -298,7 +300,8 @@ class StudentController extends Controller
             'position_name',
             'student',
             'contracts',
-            'isAvailableCreateContract'
+            'isAvailableCreateContract',
+            'statuses'
         ));
     }
 }

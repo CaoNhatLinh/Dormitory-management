@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\Bill\RoomBillController;
 use App\Http\Controllers\Admin\Contract\ContractController;
 use App\Http\Controllers\Admin\User\AuthController;
 use App\Http\Controllers\Admin\Dashboard\DashboardController;
@@ -92,3 +93,14 @@ Route::get("/device/devicetype/createView", [DeviceTypeController::class, 'creat
 Route::post("/device/devicetype/create", [DeviceTypeController::class, 'create'])->name("deviceType.create");
 Route::get("/device/devicetype/editView/{id}", [DeviceTypeController::class, 'editView'])->name("deviceType.editView");
 Route::post("/device/devicetype/edit/{id}", [DeviceTypeController::class, 'edit'])->name("deviceType.edit");
+
+
+// ROOM BILL
+Route::get("/bill/room", [RoomBillController::class, 'index'])->name("bill.room.index");
+Route::get("/bill/room/createView", [RoomBillController::class, 'createView'])->name("bill.room.createView");
+Route::post("/bill/room/create", [RoomBillController::class, 'create'])->name("bill.room.create");
+Route::get("/bill/room/createExcelView", [RoomBillController::class, 'createExcelView'])->name("bill.room.createExcelView");
+Route::post("/bill/room/createExcel", [RoomBillController::class, 'createExcel'])->name("bill.room.createExcel");
+Route::post("/bill/room/loadExcel", [RoomBillController::class, 'loadExcel'])->name("bill.room.loadExcel");
+Route::get("/bill/room/editView/{id}", [RoomBillController::class, 'editView'])->name("bill.room.editView");
+Route::post("/bill/room/edit/{id}", [RoomBillController::class, 'edit'])->name("bill.room.edit");

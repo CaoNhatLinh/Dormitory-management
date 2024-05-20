@@ -16,7 +16,7 @@ use App\Models\RoomType;
 
 class RoomController extends Controller
 {
-    const STATUSES  = ['active', 'inactive', 'repaired'];
+    const STATUSES  = ['active' => 'Hoạt động', 'inactive' => 'Không hoạt động', 'repaired' => 'Đang sửa chữa'];
 
     public function __construct()
     {
@@ -154,7 +154,7 @@ class RoomController extends Controller
         $room->status = $request->status ?? "active";
         $room->save();
 
-        return redirect()->route('room.index');
+        return redirect()->route('room.index')->with('success', 'Room created successfully');
     }
 
     public function editView($id)
@@ -209,6 +209,6 @@ class RoomController extends Controller
         $room->status = $request->status;
         $room->save();
 
-        return redirect()->route('room.index');
+        return redirect()->route('room.index')->with('success', 'Room updated successfully');
     }
 }

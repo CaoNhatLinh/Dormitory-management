@@ -54,7 +54,7 @@
                                                 <td>{{ $contract->room->room_name }}</td>
                                                 <td>{{ $contract->start_date }}</td>
                                                 <td>{{ $contract->end_date }}</td>
-                                                <td>{{ $contract->status }}</td>
+                                                <td>{{ $statuses[$contract->status] }}</td>
                                                 <td>
                                                     <a class="text-size-lg me-2" href="{{route('contract.editView', $contract->contract_id)}}">
                                                         <i class="fa fa-edit"></i>

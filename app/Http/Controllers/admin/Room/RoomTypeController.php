@@ -27,14 +27,10 @@ class RoomTypeController extends Controller
             'linkjs' => [
                 'https://cdn.tailwindcss.com'
             ],
-            'css' => [
-                
-            ],
-            'linkcss' => [
-                
-            ],
-            
-            'script' =>[
+            'css' => [],
+            'linkcss' => [],
+
+            'script' => [
                 '
                 tailwind.config = {
                     prefix: \'tw-\',
@@ -103,7 +99,7 @@ class RoomTypeController extends Controller
         $roomType->room_type_price = $request->room_type_price;
         $roomType->save();
 
-        return redirect()->route('roomType.index');
+        return redirect()->route('roomType.index')->with('success', 'Room type created successfully');
     }
 
     public function editView($id)
@@ -147,6 +143,6 @@ class RoomTypeController extends Controller
         $roomType->room_type_price = $request->room_type_price;
         $result = $roomType->save();
 
-        return redirect()->route('roomType.index');
+        return redirect()->route('roomType.index')->with('success', 'Room type updated successfully');
     }
 }
