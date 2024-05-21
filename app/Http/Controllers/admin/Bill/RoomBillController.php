@@ -87,7 +87,15 @@ class RoomBillController extends Controller
 
     public function index()
     {
-        if (Session::has('employee') && Session::has('position_name')) {
+        if (Auth::check()) {
+            if (!Session::has('employee') && !Session::has('position_name')) {
+                $authId = Auth::id();
+                $employee = Employee::find($authId);
+                $employee_id = $employee->employee_id;
+                $position_name = Position::find($employee_id)->position_name;
+                Session::put('employee', $employee);
+                Session::put('position_name', $position_name);
+            }
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
 
@@ -116,10 +124,17 @@ class RoomBillController extends Controller
 
     public function createView()
     {
-        if (Session::has('employee') && Session::has('position_name')) {
+        if (Auth::check()) {
+            if (!Session::has('employee') && !Session::has('position_name')) {
+                $authId = Auth::id();
+                $employee = Employee::find($authId);
+                $employee_id = $employee->employee_id;
+                $position_name = Position::find($employee_id)->position_name;
+                Session::put('employee', $employee);
+                Session::put('position_name', $position_name);
+            }
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
-
             $title = 'Create room bill';
 
 
@@ -176,10 +191,17 @@ class RoomBillController extends Controller
 
     public function createExcelView(Request $request)
     {
-        if (Session::has('employee') && Session::has('position_name')) {
+        if (Auth::check()) {
+            if (!Session::has('employee') && !Session::has('position_name')) {
+                $authId = Auth::id();
+                $employee = Employee::find($authId);
+                $employee_id = $employee->employee_id;
+                $position_name = Position::find($employee_id)->position_name;
+                Session::put('employee', $employee);
+                Session::put('position_name', $position_name);
+            }
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
-
             $title = 'Create room bill by excel';
 
 
@@ -221,7 +243,15 @@ class RoomBillController extends Controller
 
     public function editView($id)
     {
-        if (Session::has('employee') && Session::has('position_name')) {
+        if (Auth::check()) {
+            if (!Session::has('employee') && !Session::has('position_name')) {
+                $authId = Auth::id();
+                $employee = Employee::find($authId);
+                $employee_id = $employee->employee_id;
+                $position_name = Position::find($employee_id)->position_name;
+                Session::put('employee', $employee);
+                Session::put('position_name', $position_name);
+            }
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
 

@@ -8,6 +8,7 @@ use App\Models\Employee;
 use App\Models\Position;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+
 class DashboardController extends Controller
 {
     public function __construct()
@@ -35,16 +36,12 @@ class DashboardController extends Controller
                 'js/plugins/c3/c3.min.js',
 
             ],
-            'linkjs' => [
-                
-            ],
+            'linkjs' => [],
             'css' => [
                 'css/dashboard.css'
             ],
-            'linkcss' => [
-                
-            ],
-            'script' =>[
+            'linkcss' => [],
+            'script' => [
                 `
                 $(document).ready(function() {
                     setTimeout(function() {
@@ -168,11 +165,19 @@ class DashboardController extends Controller
 
     public function index()
     {
-        if (Session::has('employee') && Session::has('position_name')) {
+        if (Auth::check()) {
+            if (!Session::has('employee') && !Session::has('position_name')) {
+                $authId = Auth::id();
+                $employee = Employee::find($authId);
+                $employee_id = $employee->employee_id;
+                $position_name = Position::find($employee_id)->position_name;
+                Session::put('employee', $employee);
+                Session::put('position_name', $position_name);
+            }
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
             $title = 'Dormitory management';
-            $config = $this->config();  
+            $config = $this->config();
             $template = 'admin.dashboard.home.index';
             return view('admin.dashboard.layout', compact(
                 'template',
@@ -184,6 +189,5 @@ class DashboardController extends Controller
         } else {
             return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
         }
-        
     }
 }

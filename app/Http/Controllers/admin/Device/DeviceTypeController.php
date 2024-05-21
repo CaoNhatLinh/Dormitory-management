@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Admin\Device;
 
 use App\Http\Controllers\Controller;
@@ -9,6 +10,7 @@ use App\Models\Employee;
 use App\Models\Position;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Session;
 
 class DeviceTypeController extends Controller
 {
@@ -19,20 +21,14 @@ class DeviceTypeController extends Controller
     public function config()
     {
         return $config = [
-            'js' => [
-               
-            ],
+            'js' => [],
             'linkjs' => [
                 'https://cdn.tailwindcss.com'
             ],
-            'css' => [
-                
-            ],
-            'linkcss' => [
-               
-            ],
-            
-            'script' =>[
+            'css' => [],
+            'linkcss' => [],
+
+            'script' => [
                 '
                 tailwind.config = {
                     prefix: \'tw-\',
@@ -43,24 +39,25 @@ class DeviceTypeController extends Controller
             ]
         ];
     }
-   
+
     public function index()
     {
-        if(Auth::check())
-        {
+
+        if (Auth::check()) {
+            if (!Session::has('employee') && !Session::has('position_name')) {
+                $authId = Auth::id();
+                $employee = Employee::find($authId);
+                $employee_id = $employee->employee_id;
+                $position_name = Position::find($employee_id)->position_name;
+                Session::put('employee', $employee);
+                Session::put('position_name', $position_name);
+            }
             $deviceTypes = DeviceType::all();
             $data = ['deviceTypes' => $deviceTypes];
-    
-            $id = Auth::id();
             $title = 'Device Type';
-    
-            $employee = Employee::find($id);
-            $employee_id = $employee->employee_id;
-            $position_name = Position::find($employee_id)->position_name;
-    
             $config = $this->config();
             $template = 'admin.device.devicetype.index';
-    
+
             return view('admin.dashboard.layout', compact(
                 'template',
                 'config',
@@ -69,30 +66,37 @@ class DeviceTypeController extends Controller
                 'employee',
                 'position_name'
             ));
-        }
-        else {
+        } else {
             return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
         }
     }
     public function createView()
     {
-        $id = Auth::id();
-        $title = 'Create device type';
-        $employee = Employee::find($id);
-        $employee_id = $employee->employee_id;
-        $position_name = Position::find($employee_id)->position_name;
-        $config = $this->config();
+        if (Auth::check()) {
+            if (!Session::has('employee') && !Session::has('position_name')) {
+                $authId = Auth::id();
+                $employee = Employee::find($authId);
+                $employee_id = $employee->employee_id;
+                $position_name = Position::find($employee_id)->position_name;
+                Session::put('employee', $employee);
+                Session::put('position_name', $position_name);
+            }
+            $title = 'Create device type';
+            $config = $this->config();
 
-        $template = 'admin.device.devicetype.create';
+            $template = 'admin.device.devicetype.create';
 
 
-        return view('admin.dashboard.layout', compact(
-            'template',
-            'config',
-            'title',
-            'employee',
-            'position_name'
-        ));
+            return view('admin.dashboard.layout', compact(
+                'template',
+                'config',
+                'title',
+                'employee',
+                'position_name'
+            ));
+        } else {
+            return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
+        }
     }
 
     public function create(Request $request)
@@ -109,25 +113,33 @@ class DeviceTypeController extends Controller
     }
     public function editView($id)
     {
-        $authId = Auth::id();
-        $title = 'Edit device type';
-        $employee = Employee::find($authId);
-        $employee_id = $employee->employee_id;
-        $position_name = Position::find($employee_id)->position_name;
-        $config = $this->config();
+        if (Auth::check()) {
+            if (!Session::has('employee') && !Session::has('position_name')) {
+                $authId = Auth::id();
+                $employee = Employee::find($authId);
+                $employee_id = $employee->employee_id;
+                $position_name = Position::find($employee_id)->position_name;
+                Session::put('employee', $employee);
+                Session::put('position_name', $position_name);
+            }
+            $title = 'Edit device type';
+            $config = $this->config();
 
-        $template = 'admin.device.devicetype.edit';
+            $template = 'admin.device.devicetype.edit';
 
-        $deviceType = deviceType::find($id);
+            $deviceType = deviceType::find($id);
 
-        return view('admin.dashboard.layout', compact(
-            'template',
-            'config',
-            'title',
-            'employee',
-            'position_name',
-            'deviceType'
-        ));
+            return view('admin.dashboard.layout', compact(
+                'template',
+                'config',
+                'title',
+                'employee',
+                'position_name',
+                'deviceType'
+            ));
+        } else {
+            return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
+        }
     }
 
     public function edit(Request $request, $id)

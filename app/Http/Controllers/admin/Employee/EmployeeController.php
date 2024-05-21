@@ -9,19 +9,20 @@ use App\Models\Position;
 use DateTime;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Session;
 
 class EmployeeController extends Controller
 {
     public function __construct()
     {
     }
-    const STATUSES  = ['Working','Terminated','On Leave'];
+    const STATUSES  = ['Working', 'Terminated', 'On Leave'];
     public function config()
     {
 
 
 
-        
+
         return $config = [
             'js' => [
                 'js/plugins/dataTables/datatables.min.js',
@@ -70,9 +71,9 @@ class EmployeeController extends Controller
         
                 });
                 ',
-               
 
-                
+
+
             ]
 
 
@@ -113,14 +114,14 @@ class EmployeeController extends Controller
                     $(\'.chosen-select\').chosen({ width: "100%" });
                     })
                  ',
-                 '
+                '
                  tailwind.config = {
                      prefix: \'tw-\',
                      corePlugins: {
                          preflight: false, // Set preflight to false to disable default styles
                      },
                  }',
-                 
+
             ]
 
 
@@ -154,14 +155,20 @@ class EmployeeController extends Controller
     {
 
         if (Auth::check()) {
-            $config = $this->config();
+            if (!Session::has('employee') && !Session::has('position_name')) {
+                $authId = Auth::id();
+                $employee = Employee::find($authId);
+                $employee_id = $employee->employee_id;
+                $position_name = Position::find($employee_id)->position_name;
+                Session::put('employee', $employee);
+                Session::put('position_name', $position_name);
+            }
+            $employee = Session::get('employee');
+            $position_name = Session::get('position_name');
             $title = 'Employeee list';
             $employees = Employee::with('position')->get();
             $data = ['employees' => $employees];
-            $id = Auth::id();
-            $employee = Employee::find($id);
-            $employee_id = $employee->employee_id;
-            $position_name = Position::find($employee_id)->position_name;
+            $config = $this->config();
             $template = 'admin.employee.index';
             return view('admin.dashboard.layout', compact(
                 'template',
@@ -177,24 +184,35 @@ class EmployeeController extends Controller
     }
     public function createView()
     {
-        $id = Auth::id();
-        $title = 'Create employee';
-        $employee = Employee::find($id);
-        $employee_id = $employee->employee_id;
-        $position_name = Position::find($employee_id)->position_name;
-        $config = $this->configCreateView();
+        if (Auth::check()) {
+            if (!Session::has('employee') && !Session::has('position_name')) {
+                $authId = Auth::id();
+                $employee = Employee::find($authId);
+                $employee_id = $employee->employee_id;
+                $position_name = Position::find($employee_id)->position_name;
+                Session::put('employee', $employee);
+                Session::put('position_name', $position_name);
+            }
+            $employee = Session::get('employee');
+            $position_name = Session::get('position_name');
+            $title = 'Create employee';
 
-        $positions = Position::all();
-        $template = 'admin.employee.create';
+            $config = $this->configCreateView();
+            $template = 'admin.employee.index';
+            $positions = Position::all();
+            $template = 'admin.employee.create';
 
-        return view('admin.dashboard.layout', compact(
-            'template',
-            'config',
-            'title',
-            'employee',
-            'position_name',
-            'positions',
-        ));
+            return view('admin.dashboard.layout', compact(
+                'template',
+                'config',
+                'title',
+                'employee',
+                'position_name',
+                'positions',
+            ));
+        } else {
+            return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
+        }
     }
 
     public function create(Request $request)
@@ -241,59 +259,74 @@ class EmployeeController extends Controller
     }
     public function detailView($id)
     {
-        // Config - template
-        $authId = Auth::id();
-        $title = 'Edit student';
-        $employee = Employee::find($authId);
-        $employee_id = $employee->employee_id;
-        $position_name = Position::find($employee_id)->position_name;
-        $config = $this->configDetail();
-        $template = 'admin.employee.detail';
-
-
-        // Data 
-        $employeeDetails = Employee::with('position')->find($id);
-        $statuses = self::STATUSES;
-        return view('admin.dashboard.layout', compact(
-            'template',
-            'config',
-            'title',
-            'employee',
-            'position_name',
-            'employeeDetails',
-            'statuses'
-        ));
+        if (Auth::check()) {
+            if (!Session::has('employee') && !Session::has('position_name')) {
+                $authId = Auth::id();
+                $employee = Employee::find($authId);
+                $employee_id = $employee->employee_id;
+                $position_name = Position::find($employee_id)->position_name;
+                Session::put('employee', $employee);
+                Session::put('position_name', $position_name);
+            }
+            $employee = Session::get('employee');
+            $position_name = Session::get('position_name');
+            $title = 'Edit student';
+            $config = $this->configDetail();
+            $template = 'admin.employee.detail';
+            $employeeDetails = Employee::with('position')->find($id);
+            $statuses = self::STATUSES;
+            return view('admin.dashboard.layout', compact(
+                'template',
+                'config',
+                'title',
+                'employee',
+                'position_name',
+                'employeeDetails',
+                'statuses'
+            ));
+        } else {
+            return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
+        }
     }
     public function editView($id)
     {
-        // Config - template
-        $title = 'Edit employee';
-        $authId = Auth::id();
-        $employee = Employee::find($authId);
-        $employee_id = $employee->employee_id;
-        $position_name = Position::find($employee_id)->position_name;
-        $config = $this->configCreateView();
-        $template = 'admin.employee.edit';
-        $statuses = self::STATUSES;
-        $employee = Employee::find($id);
-        $positions = Position::all();
-        return view('admin.dashboard.layout', compact(
-            'template',
-            'config',
-            'title',
-            'employee',
-            'position_name',
-            'employee',
-            'positions',
-            'statuses'
-        ));
+        if (Auth::check()) {
+            if (!Session::has('employee') && !Session::has('position_name')) {
+                $authId = Auth::id();
+                $employee = Employee::find($authId);
+                $employee_id = $employee->employee_id;
+                $position_name = Position::find($employee_id)->position_name;
+                Session::put('employee', $employee);
+                Session::put('position_name', $position_name);
+            }
+            $employee = Session::get('employee');
+            $position_name = Session::get('position_name');
+            $title = 'Edit employee';
+            $config = $this->configCreateView();
+            $template = 'admin.employee.edit';
+            $statuses = self::STATUSES;
+            $employeeEdit = Employee::find($id);
+            $positions = Position::all();
+            return view('admin.dashboard.layout', compact(
+                'template',
+                'config',
+                'title',
+                'employee',
+                'position_name',
+                'employeeEdit',
+                'positions',
+                'statuses'
+            ));
+        } else {
+            return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
+        }
     }
 
     public function edit(Request $request, $id)
     {
         $employee = Employee::find($id);
         $request->validate([
-           
+
             'name' => 'required|string',
             'avatar' => 'required|image|mimes:jpg,png,jpeg',
             'gender' => 'required|string',
@@ -332,7 +365,7 @@ class EmployeeController extends Controller
         } else {
         }
         $result = $employee->save();
-        
+
         if ($result) {
             return redirect()->route('employee.index')->with('success', 'employee edited successfully.');
         } else {

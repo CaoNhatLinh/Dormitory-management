@@ -85,7 +85,15 @@ class RoomController extends Controller
 
     public function index()
     {
-        if (Session::has('employee') && Session::has('position_name')) {
+        if (Auth::check()) {
+            if (!Session::has('employee') && !Session::has('position_name')) {
+                $authId = Auth::id();
+                $employee = Employee::find($authId);
+                $employee_id = $employee->employee_id;
+                $position_name = Position::find($employee_id)->position_name;
+                Session::put('employee', $employee);
+                Session::put('position_name', $position_name);
+            }
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
 
@@ -113,7 +121,15 @@ class RoomController extends Controller
 
     public function createView()
     {
-        if (Session::has('employee') && Session::has('position_name')) {
+        if (Auth::check()) {
+            if (!Session::has('employee') && !Session::has('position_name')) {
+                $authId = Auth::id();
+                $employee = Employee::find($authId);
+                $employee_id = $employee->employee_id;
+                $position_name = Position::find($employee_id)->position_name;
+                Session::put('employee', $employee);
+                Session::put('position_name', $position_name);
+            }
             $roomTypes = RoomType::all();
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
@@ -161,7 +177,15 @@ class RoomController extends Controller
 
     public function editView($id)
     {
-        if (Session::has('employee') && Session::has('position_name')) {
+        if (Auth::check()) {
+            if (!Session::has('employee') && !Session::has('position_name')) {
+                $authId = Auth::id();
+                $employee = Employee::find($authId);
+                $employee_id = $employee->employee_id;
+                $position_name = Position::find($employee_id)->position_name;
+                Session::put('employee', $employee);
+                Session::put('position_name', $position_name);
+            }
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
 

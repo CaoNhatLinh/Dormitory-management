@@ -29,7 +29,8 @@ Route::GET('dashboard', [DashboardController::class, 'index'])->name('dashboard.
 //USER
 Route::get("/profile", [UserController::class, 'profileView'])->name("user.profileView");
 Route::get("/user", [UserController::class, 'index'])->name("user.index");
-
+Route::get("/user/createView", [UserController::class, 'createView'])->name("user.createView");
+Route::post("/user/create", [UserController::class, 'create'])->name("user.create");
 
 // EMPLOYEE
 Route::get('/employee', [EmployeeController::class, 'index'])->name('employee.index');

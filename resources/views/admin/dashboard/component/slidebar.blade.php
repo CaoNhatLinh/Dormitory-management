@@ -54,23 +54,41 @@
                 <a href="#"><i class="fa fa-desktop"></i> <span class="nav-label">Invoices</span><span class="fa arrow"></span></a>
 
                 <ul class="nav nav-second-level collapse">
-                    <li>
-                        <a href="#">New invoice <span class="fa arrow"></span></a>
-                        <ul class="nav nav-third-level">
-                            <li>
-                                <a href="#">New invoice electric and water</a>
-                            </li>
-                            <li>
-                                <a href="#">New invoice equiment</a>
-                            </li>
-                        </ul>
-                    <li><a href="contacts.html">Invoices list</a></li>
-                    <li><a href="contacts_2.html">Equipment invoice list</a></li>
-                    <li><a href="profile_2.html">Send invoice payment notification</a></li>
+                    <li><a href="#">Invoices list</a></li>
+                    <li><a href="#">New invoice </a></li>
+                    <li><a href="#">Payment Reminder</a></li>
 
                 </ul>
             </li>
 
+            <li>
+                <a href="#"><i class="fa fa-desktop"></i> <span class="nav-label">Costs</span><span class="fa arrow"></span></a>
+
+                <ul class="nav nav-second-level collapse">
+                    <li>
+                        <a href="#">Electricity and water<span class="fa arrow"></span></a>
+                        <ul class="nav nav-third-level">
+                            <li>
+                                <a href="{{route('bill.room.index')}}">List of E & W costs</a>
+                            </li>
+                            <li>
+                                <a href="{{route('bill.room.createView')}}">New costs</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">equipment rental<span class="fa arrow"></span></a>
+                        <ul class="nav nav-third-level">
+                            <li>
+                                <a href="#">List of equipment rental costs</a>
+                            </li>
+                            <li>
+                                <a href="#">New costs</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
             <li>
                 <a href="#"><i class="fa fa-files-o"></i> <span class="nav-label">Employees</span><span class="fa arrow"></span></a>
 
@@ -86,17 +104,11 @@
                 <a href="#"><i class="fa fa-flask"></i> <span class="nav-label">Users</span><span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse">
                     <li><a href="{{route('user.index')}}">Users list</a></li>
-                    <li><a href="icons.html">New user</a></li>
+                    <li><a href="{{route('user.createView')}}">New user</a></li>
                 </ul>
             </li>
             <li>
-                <a href="css_animation.html"><i class="fa fa-edit"></i> <span class="nav-label">Setting </span></a>
-            </li>
-
-
-
-            <li class="landing_link">
-                <a target="_blank" href="landing.html"><i class="fa fa-star"></i> <span class="nav-label">Landing Page</span> <span class="label label-warning pull-right">NEW</span></a>
+                <a href="#"><i class="fa fa-edit"></i> <span class="nav-label">Setting </span></a>
             </li>
 
         </ul>

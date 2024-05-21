@@ -8,7 +8,7 @@ use App\Models\User;
 use App\Models\Employee;
 use App\Models\Position;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Session;
 use function Laravel\Prompts\error;
 
 class UserController extends Controller
@@ -82,16 +82,21 @@ class UserController extends Controller
 
     public function index()
     {
-        if(Auth::check())
-        {
+       
+        if (Auth::check()) {
+            if (!Session::has('employee') && !Session::has('position_name')) {
+                $authId = Auth::id();
+                $employee = Employee::find($authId);
+                $employee_id = $employee->employee_id;
+                $position_name = Position::find($employee_id)->position_name;
+                Session::put('employee', $employee);
+                Session::put('position_name', $position_name);
+            }
+            $employee = Session::get('employee');
+            $position_name = Session::get('position_name');
             $users=User::with('permission', 'employee')->get();
             $data = ['users' => $users];
-            $id = Auth::id();
             $title = 'User list';
-            $employee = Employee::find($id);
-            $employee_id = $employee->employee_id;
-            $position_name = Position::find($employee_id)->position_name;
-    
             $config = $this->config();
             $template = 'admin.user.index';
     
@@ -111,14 +116,21 @@ class UserController extends Controller
     public function profileView()
     {
         if (Auth::check()) {
+            if (!Session::has('employee') && !Session::has('position_name')) {
+                $authId = Auth::id();
+                $employee = Employee::find($authId);
+                $employee_id = $employee->employee_id;
+                $position_name = Position::find($employee_id)->position_name;
+                Session::put('employee', $employee);
+                Session::put('position_name', $position_name);
+            }
+            $employee = Session::get('employee');
+            $position_name = Session::get('position_name');
             $user = Auth::user();
             $id = Auth::id();
             if ($user) {
                 $user = User::find($id);
                 $title = 'Profile';
-                $employee = Employee::find($id);
-                $employee_id = $employee->employee_id;
-                $position_name = Position::find($employee_id) -> position_name;
                 $config = $this->configProfile();
                 $template = 'admin.user.profile';
                 return view('admin.dashboard.layout', compact(
@@ -134,5 +146,36 @@ class UserController extends Controller
         }
     }
 
+    public function createView()
+    {
+        if (Auth::check()) {
+            if (!Session::has('employee') && !Session::has('position_name')) {
+                $authId = Auth::id();
+                $employee = Employee::find($authId);
+                $employee_id = $employee->employee_id;
+                $position_name = Position::find($employee_id)->position_name;
+                Session::put('employee', $employee);
+                Session::put('position_name', $position_name);
+            }
+            $employee = Session::get('employee');
+            $position_name = Session::get('position_name');
+
+            $title = 'Create user';
+
+            $config = $this->config();
+
+            $template = 'admin.user.create';
+
+            return view('admin.dashboard.layout', compact(
+                'template',
+                'config',
+                'title',
+                'employee',
+                'position_name'
+            ));
+        } else {
+            return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
+        }
+    }
     
 }
