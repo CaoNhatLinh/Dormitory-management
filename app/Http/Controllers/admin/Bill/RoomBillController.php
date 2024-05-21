@@ -14,6 +14,7 @@ use App\Models\Room;
 use App\Models\RoomBill;
 use App\Models\RoomType;
 use Illuminate\Support\Facades\Session;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class RoomBillController extends Controller
 {
@@ -107,6 +108,35 @@ class RoomBillController extends Controller
             ]
         ];
     }
+
+    // public function createExcelViewConfig()
+    // {
+    //     return $config = [
+    //         'js' => [
+    //             'js/plugins/jqGrid/jquery.jqGrid.min.js',
+    //             'js/plugins/jquery-ui/jquery-ui.min.js'
+    //         ],
+    //         'linkjs' => [
+    //             'https://cdn.tailwindcss.com'
+    //         ],
+    //         'css' => [
+    //             'css/plugins/jQueryUI/jquery-ui-1.10.4.custom.min.css',
+    //             'css/plugins/jqGrid/ui.jqgrid.css',
+    //         ],
+    //         'linkcss' => [],
+
+    //         'script' => [
+    //             '
+    //             tailwind.config = {
+    //                 prefix: \'tw-\',
+    //                 corePlugins: {
+    //                     preflight: false, // Set preflight to false to disable default styles
+    //                 },
+    //             }',
+
+    //         ]
+    //     ];
+    // }
 
     public function index()
     {
@@ -207,6 +237,29 @@ class RoomBillController extends Controller
         else return redirect()->route('bill.room.index')->with('error', 'Room bill created failed.');
     }
 
+    public function loadExcel(Request $request)
+    {
+        $request->validate([
+            'excel_room_bill' => 'required|file|mimes:xlsx,xls,csv',
+        ]);
+
+        if ($request->hasFile('excel_room_bill')) {
+            $file = $request->file('excel_room_bill');
+            $fileName = 'excel_' . time() . '.' . $file->getClientOriginalExtension();
+            $path = public_path('/uploads/excels/');
+            $file->move($path, $fileName);
+            $filePath = 'uploads/excels/' . $fileName;
+
+
+            Session::put('excel_room_bill_path', $filePath);
+
+            return redirect()->route('bill.room.createExcelView')->with('success', 'File uploaded successfully');
+        } else {
+            return redirect()->route('bill.room.createExcelView')->with('error', 'File not found');
+        }
+    }
+
+
     public function createExcelView(Request $request)
     {
         if (Auth::check()) {
@@ -226,7 +279,87 @@ class RoomBillController extends Controller
             $config = $this->config();
             $template = 'admin.bill.room.createExcel';
 
+
             $excel_room_bills = [];
+
+            // EXCEL HANDLER
+            $excel_file_path = Session::get('excel_room_bill_path');
+            $filePath = public_path($excel_file_path);
+
+            // Check if file exists
+            if (isset($excel_file_path) && file_exists($filePath)) {
+                // Read excel file and return array data using phpoffice/phpspreadsheet
+                $spreadsheet = IOFactory::load($filePath);
+                $sheet = $spreadsheet->getActiveSheet();
+                $highestRow = $sheet->getHighestRow();
+                $highestColumn = $sheet->getHighestColumn();
+
+
+
+                for ($row = 2; $row <= $highestRow; ++$row) {
+                    // Skipping the header row
+                    $excel_room_bills[] = [
+                        'room_id' => $sheet->getCell('A' . $row)->getValue(),
+                        'bill_date' => $sheet->getCell('B' . $row)->getValue(),
+                        'electricity_price' => $sheet->getCell('C' . $row)->getValue(),
+                        'electricity_index' => $sheet->getCell('D' . $row)->getValue(),
+                        'water_price' => $sheet->getCell('E' . $row)->getValue(),
+                        'water_index' => $sheet->getCell('F' . $row)->getValue(),
+                        'total_room_bills' => $sheet->getCell('G' . $row)->getValue(),
+                        'status' => $sheet->getCell('H' . $row)->getValue(),
+                    ];
+                }
+
+
+                $json = json_encode($excel_room_bills);
+
+                // CONFIG FOR JS
+                $config = [
+                    'js' => [
+                        'js/plugins/jqGrid/jquery.jqGrid.min.js',
+                        'js/plugins/jquery-ui/jquery-ui.min.js'
+                    ],
+                    'linkjs' => [
+                        'https://cdn.tailwindcss.com'
+                    ],
+                    'css' => [
+                        'css/plugins/jQueryUI/jquery-ui-1.10.4.custom.min.css',
+                        'css/plugins/jqGrid/ui.jqgrid.css',
+                    ],
+                    'linkcss' => [],
+
+                    'script' => [
+                        '
+                        tailwind.config = {
+                            prefix: \'tw-\',
+                            corePlugins: {
+                                preflight: false, // Set preflight to false to disable default styles
+                            },
+                        }',
+                        '
+                        $("#table_list_1").jqGrid({
+                            data:  JSON.parse(' . $json . '),
+                            datatype: "local",
+                            height: 250,
+                            autowidth: true,
+                            shrinkToFit: true,
+                            rowNum: 14,
+                            rowList: [10, 20, 30],
+                            colNames: [\'Room\', \'Date\', \'Electricity Price\', \'Electricity index\', \'Water price\', \'Water index \', \'total_room_bills\', \'status\'],
+                            colModel: JSON.parse(' . $json . '),
+                            pager: "#pager_list_1",
+                            viewrecords: true,
+                            caption: "Example jqGrid 1",
+                            hidegrid: false
+                        });
+                        '
+
+                    ]
+                ];
+            }
+
+
+
             return view('admin.dashboard.layout', compact(
                 'template',
                 'config',
@@ -250,14 +383,6 @@ class RoomBillController extends Controller
         return redirect()->route('bill.room.index');
     }
 
-    public function loadExcel(Request $request)
-    {
-        $request->validate([
-            'excel_room_bill' => 'required|file|mimes:xlsx,xls,csv',
-        ]);
-
-        return redirect()->route('bill.room.createExcelView')->with('excel_room_bill', $request->file('excel_room_bill'));
-    }
 
     public function editView($id)
     {
