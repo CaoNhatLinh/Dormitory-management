@@ -28,7 +28,7 @@ class UserController extends Controller
             ],
             'linkjs' => [],
             'css' => [
-                // 'css/plugins/footable/footable.core.css'
+                'css/plugins/footable/footable.core.css'
             ],
             'linkcss' => [],
 
@@ -36,7 +36,6 @@ class UserController extends Controller
                 '$(document).ready(function() {
 
                     $(\'.footable\').footable();
-                    $(\'.footable2\').footable();
         
                 });',
             ]

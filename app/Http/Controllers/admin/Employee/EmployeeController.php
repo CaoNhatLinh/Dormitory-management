@@ -41,13 +41,13 @@ class EmployeeController extends Controller
                 '
                 $(document).ready(function(){
                     $(\'.dataTables-example\').DataTable({
-                        pageLength: 1,
+                        pageLength: 10,
                         searching: true, 
                         ordering: true, 
                         responsive: true,
                         info: false,  
                         paging: true,
-                        lengthChange: false
+                        lengthChange: false,
                         dom: \'<"html5buttons"B>lTfgitp\',
                         buttons: [
         

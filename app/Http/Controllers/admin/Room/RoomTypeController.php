@@ -85,7 +85,6 @@ class RoomTypeController extends Controller
 
             $config = $this->config();
             $template = 'admin.room.type.index';
-
             return view('admin.dashboard.layout', compact(
                 'template',
                 'config',

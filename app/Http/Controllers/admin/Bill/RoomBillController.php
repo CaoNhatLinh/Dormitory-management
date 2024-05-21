@@ -300,7 +300,7 @@ class RoomBillController extends Controller
                     // Skipping the header row
                     $excel_room_bills[] = [
                         'room_id' => $sheet->getCell('A' . $row)->getValue(),
-                        'bill_date' => $sheet->getCell('B' . $row)->getValue(),
+                        'bill_date' => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($sheet->getCell('B' . $row)->getValue())->format('Y-m-d'),
                         'electricity_price' => $sheet->getCell('C' . $row)->getValue(),
                         'electricity_index' => $sheet->getCell('D' . $row)->getValue(),
                         'water_price' => $sheet->getCell('E' . $row)->getValue(),
@@ -312,7 +312,8 @@ class RoomBillController extends Controller
 
 
                 $json = json_encode($excel_room_bills);
-
+                 
+                // dd($json);
                 // CONFIG FOR JS
                 $config = [
                     'js' => [
@@ -338,7 +339,7 @@ class RoomBillController extends Controller
                         }',
                         '
                         $("#table_list_1").jqGrid({
-                            data:  JSON.parse(' . $json . '),
+                            data:  JSON.parse(\''. $json . '\'),
                             datatype: "local",
                             height: 250,
                             autowidth: true,
@@ -346,11 +347,25 @@ class RoomBillController extends Controller
                             rowNum: 14,
                             rowList: [10, 20, 30],
                             colNames: [\'Room\', \'Date\', \'Electricity Price\', \'Electricity index\', \'Water price\', \'Water index \', \'total_room_bills\', \'status\'],
-                            colModel: JSON.parse(' . $json . '),
+                            colModel:  [
+                                {name: \'room_id\', index: \'room_id\', width: 60},
+                                {name: \'bill_date\', index: \'bill_date\', width: 90, sorttype: "string", formatter: "string"},
+                                {name: \'electricity_price\', index: \'electricity_price\', width: 80},
+                                {name: \'electricity_index\', index: \'electricity_index\', width: 80, align: "right"},
+                                {name: \'water_price\', index: \'water_price\', width: 80, align: "right"},
+                                {name: \'water_index\', index: \'water_index\', width: 80, align: "right"},
+                                {name: \'total_room_bills\', index: \'total_room_bills\', width: 80,align: "right"},
+                                {name: \'status\', index: \'status\', width: 150, sortable: false}
+
+                            ],
                             pager: "#pager_list_1",
                             viewrecords: true,
                             caption: "Example jqGrid 1",
                             hidegrid: false
+                        });
+                        $(window).bind(\'resize\', function () {
+                            var width = $(\'.jqGrid_wrapper\').width();
+                            $(\'#table_list_1\').setGridWidth(width);
                         });
                         '
 

@@ -21,10 +21,10 @@
                 <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
                     <thead>
                         <tr>
-                            <th>Position ID</th>
+                            <th >Position ID</th>
                             <th>Position name</th>
                             <th >Total Employees</th>
-                            <th>Action</th>
+                            <th data-sort-ignore="true">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -37,6 +37,9 @@
                                 <div class="btn-group">
                                     <button class="btn btn-primary dim btn-sm" data-toggle="modal" data-target="#myModal" data-id="{{ $position->position_id }}" data-name="{{ $position->position_name }}">
                                         <i class="fa fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-danger dim btn-sm" data-toggle="modal" data-target="#deleteModal" data-id="{{ $position->position_id }}">
+                                        <i class="fa fa-trash"></i>
                                     </button>
                                 </div>
                             </td>
@@ -109,6 +112,20 @@
                             </div>
                         </form>
 
+                    </div>
+                </div>
+
+                <div class="modal inmodal" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog">
+                            <div class="modal-content animated bounceInRight">
+                                <div class="modal-body">
+                                    <h3>Are you sure you want to delete this position?</h3>
+                                </div>
+                                <div style="text-align: left" class="modal-footer">
+                                    <button type="button" class="btn btn-danger" >Yes</button>
+                                    <button type="submit" class="btn btn-white" data-dismiss="modal">Cancel</button>
+                                </div>
+                            </div>
                     </div>
                 </div>
             </div>

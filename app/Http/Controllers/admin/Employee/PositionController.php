@@ -26,7 +26,7 @@ class PositionController extends Controller
             ],
             'linkjs' => [],
             'css' => [
-                // 'css/plugins/footable/footable.core.css'
+                'css/plugins/footable/footable.core.css'
             ],
             'linkcss' => [],
 
@@ -34,7 +34,6 @@ class PositionController extends Controller
                 '$(document).ready(function() {
 
                     $(\'.footable\').footable();
-                    $(\'.footable2\').footable();
         
                 });',
                 'document.addEventListener("DOMContentLoaded", function() {
@@ -190,5 +189,17 @@ class PositionController extends Controller
         } else {
             return redirect()->back()->with('error', 'Failed to update position.');
         }
+    }
+    public function delete($id)
+    {
+        $device = Position::find($id);
+
+        if (!$device) {
+            return redirect()->route('position.index')->with('error', 'Position not found!');
+        }
+
+        $device->delete();
+
+        return redirect()->route('position.index')->with('success', 'Position deleted successfully!');
     }
 }
