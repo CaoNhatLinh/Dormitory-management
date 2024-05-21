@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Session;
 class RoomBillController extends Controller
 {
 
-    const STATUSES  = ['paid' => 'Đã thanh toán', 'unpaid' => 'Chưa thanh toán'];
+    const STATUSES = ['paid', 'unpaid'];
 
     public function __construct()
     {
@@ -85,6 +85,29 @@ class RoomBillController extends Controller
         ];
     }
 
+    public function tailwindConfig()
+    {
+        return $config = [
+            'js' => [],
+            'linkjs' => [
+                'https://cdn.tailwindcss.com'
+            ],
+            'css' => [],
+            'linkcss' => [],
+
+            'script' => [
+                '
+                tailwind.config = {
+                    prefix: \'tw-\',
+                    corePlugins: {
+                        preflight: false, // Set preflight to false to disable default styles
+                    },
+                }',
+
+            ]
+        ];
+    }
+
     public function index()
     {
         if (Auth::check()) {
@@ -106,7 +129,6 @@ class RoomBillController extends Controller
 
             // Get all room bill from database order by bill_date
             $roomBills = RoomBill::all();
-            $statuses = self::STATUSES;
 
             return view('admin.dashboard.layout', compact(
                 'template',
@@ -115,7 +137,6 @@ class RoomBillController extends Controller
                 'employee',
                 'position_name',
                 'roomBills',
-                'statuses'
             ));
         } else {
             return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
@@ -138,10 +159,9 @@ class RoomBillController extends Controller
             $title = 'Create room bill';
 
 
-            $config = $this->config();
+            $config = $this->tailwindConfig();
             $template = 'admin.bill.room.create';
 
-            $statuses = self::STATUSES;
             $rooms = Room::all();
 
             return view('admin.dashboard.layout', compact(
@@ -150,7 +170,6 @@ class RoomBillController extends Controller
                 'title',
                 'employee',
                 'position_name',
-                'statuses',
                 'rooms'
 
             ));
@@ -165,7 +184,6 @@ class RoomBillController extends Controller
             'room_id' => 'required|integer',
             'electricity_price' => 'required|numeric',
             'water_price' => 'required|numeric',
-            'status' => 'required|string|max:255',
             'water_index' => 'required|numeric',
             'electricity_index' => 'required|numeric',
         ]);
@@ -178,7 +196,7 @@ class RoomBillController extends Controller
 
         $roomBill->electricity_price = $request->electricity_price;
         $roomBill->water_price = $request->water_price;
-        $roomBill->status = $request->status;
+        $roomBill->status = "unpaid";
         $roomBill->water_index = $request->water_index;
         $roomBill->electricity_index = $request->electricity_index;
         $roomBill->total_room_bills = ($_electricity_price * $request->electricity_index) + ($_water_price * $request->water_index);
@@ -257,12 +275,12 @@ class RoomBillController extends Controller
 
             $title = 'Edit room bill';
 
-            $config = $this->config();
+            $config = $this->tailwindConfig();
             $template = 'admin.bill.room.edit';
 
-            $statuses = self::STATUSES;
             $rooms = Room::all();
             $roomBill = RoomBill::find($id);
+            $statuses = self::STATUSES;
 
             return view('admin.dashboard.layout', compact(
                 'template',
@@ -270,9 +288,9 @@ class RoomBillController extends Controller
                 'title',
                 'employee',
                 'position_name',
-                'statuses',
                 'rooms',
-                'roomBill'
+                'roomBill',
+                'statuses'
             ));
         } else {
             return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');

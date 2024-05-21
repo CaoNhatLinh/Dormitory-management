@@ -4,17 +4,21 @@
             <div class="col-lg-12">
                 <div class="ibox">
                     <div class="ibox-title">
-                        <h5>Danh sách các loại phòng</h5>
+                        <h5>Room type list</h5>
                     </div>
                     <div class="ibox-content">
+                        <div class="tw-my-4">
+                            <a href="{{route('roomType.createView')}}" class="btn btn-primary">Create room type</a>
+                        </div>
                         <div class="table-responsive">
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Loại phòng</th>
-                                        <th>Giá tiền</th>
-                                        <th>Thao tác</th>
+                                        <th>Room Type</th>
+                                        <th>Price</th>
+                                        <th>Action</th>
+                                    </tr>
                                     </tr>
                                 </thead>
                                 <tbody>

@@ -29,9 +29,9 @@
     
                         <div>
                             <div class="tw-flex tw-justify-between tw-items-center tw-mb-3">
-                                <h2>Danh sách hợp đồng</h2>
+                                <h2>Contract list</h2>
                                 @if ($isAvailableCreateContract)
-                                    <a href="{{ route('contract.createView', $student->student_id) }}" class="btn btn-primary">Tạo hợp đồng</a>
+                                    <a href="{{ route('contract.createView', $student->student_id) }}" class="btn btn-primary">Create contract</a>
                                 @endif
                                
                             </div>
@@ -39,12 +39,13 @@
                                 <table class="table table-striped">
                                     <thead>
                                         <tr>
-                                            <th>Mã hợp đồng</th>
-                                            <th>Phòng</th>
-                                            <th>Ngày bắt đầu</th>
-                                            <th>Ngày kết thúc</th>
-                                            <th>Trạng thái</th>
-                                            <th>Thao tác</th>
+                                            <th>Contract ID</th>
+                                            <th>Room</th>
+                                            <th>Start Date</th>
+                                            <th>End Date</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -54,12 +55,19 @@
                                                 <td>{{ $contract->room->room_name }}</td>
                                                 <td>{{ $contract->start_date }}</td>
                                                 <td>{{ $contract->end_date }}</td>
-                                                <td>{{ $statuses[$contract->status] }}</td>
+                                                <td>
+                                                    @if ($contract->status == 'renting')
+                                                        <label class="label label-success">{{ $contract->status }}</label>
+                                                    @elseif ($contract->status == 'expired')
+                                                        <label class="label label-warning">{{ $contract->status }}</label>
+                                                    @else 
+                                                        <label class="label label-danger">{{ $contract->status }}</label>
+                                                    @endif
+                                                </td>
                                                 <td>
                                                     <a class="text-size-lg me-2" href="{{route('contract.editView', $contract->contract_id)}}">
                                                         <i class="fa fa-edit"></i>
                                                     </a>
-                                                </td>
                                                 </td>
                                             </tr>
                                         @endforeach
