@@ -8512,6 +8512,12 @@ body.md-skin {
     background-color: #f3f3f4;
   }
 }
+.scroll::-webkit-scrollbar {
+  width: 0.1px;
+}
+.scroll ::-webkit-scrollbar-thumb {
+  background-color:transparent;     
+}
 @media (max-width: 350px) {
   .timeline-item .date {
     text-align: left;

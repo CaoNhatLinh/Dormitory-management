@@ -1,5 +1,5 @@
-<nav class="navbar-default navbar-static-side" role="navigation">
-    <div class="sidebar-collapse">
+<nav style="position:fixed;z-index:1; top:0; bottom:0;overflow:auto; height: 100vh" class="scroll navbar-default navbar-static-side" role="navigation">
+    <div  class="sidebar-collapse ">
         <ul class="nav metismenu" id="side-menu">
             <li class="nav-header">
                 <div class="dropdown profile-element"> <span>
@@ -25,8 +25,7 @@
             <li>
                 <a href="#"><i class="fa fa-bar-chart-o"></i> <span class="nav-label">Contracts</span><span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse">
-                    <li><a href="#">Contracts list</a></li>
-                    <li><a href="#">New contract</a></li>
+                    <li><a href="{{route('contract.index')}}">Contracts list</a></li>
                     <li><a href="{{route('student.index')}}">Students list</a></li>
                     <li><a href="{{route('student.createView')}}">New student</a></li>
                 </ul>

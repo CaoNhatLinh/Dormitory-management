@@ -9,6 +9,7 @@
         "google/apiclient": "*",
         "laravel/framework": "^11.0",
         "laravel/tinker": "^2.9",
+        "phpoffice/phpspreadsheet": "^2.1",
         "yoeunes/toastr": "^2.3"
     },
     "require-dev": {

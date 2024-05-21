@@ -13,9 +13,6 @@
             </div>
             
             <div class="ibox-content">
-                <div class=" tw-my-4">
-                    <a href="{{route('student.createView')}}" class="btn btn-primary">Create contract</a>
-                </div>  
                 <div class="table-responsive">
                     <table id="contractTable" class="dataTables_wrapper footable table table-stripped toggle-arrow-tiny dataTables-example">
                         <thead>
