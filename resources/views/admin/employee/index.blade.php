@@ -12,9 +12,11 @@
                     </div>
                 </div>
                 <div class="ibox-content">
-                <button class="btn btn-primary btn-sm dim" >
-                        <a class="btn-link font-bold" href="{{ route('employee.createView') }}">New Employee</a>
+                <a class="btn-link font-bold" href="{{ route('employee.createView') }}">
+                    <button class="btn btn-primary btn-sm dim">
+                       New Employee
                     </button>
+                    </a>
                     <table class="footable table table-stripped toggle-arrow-tiny dataTables-example" data-page-size="15">
                         <thead>
                             <tr>
@@ -52,18 +54,18 @@
                                 <td>{{ $employee->address }}</td>
                                 <td>{{ $employee->date_of_birth }}</td>
                                 <td>{{ $employee->nationality }}</td>
-                                <td >
+                                <td>
                                     <div class="btn-group">
-                                        <button class="btn btn-outline btn-primary dim btn-sm">
-                                            <a class="me-2" href="{{route('employee.detailView', $employee->employee_id)}}">
+                                        <a class="me-2" href="{{route('employee.detailView', $employee->employee_id)}}">
+                                            <button class="btn btn-outline btn-primary dim btn-sm">
                                                 <i class="fa fa-eye"></i>
-                                            </a>
-                                        </button>
-                                        <button class="btn btn-outline btn-primary dim btn-sm">
-                                            <a class=" me-2" href="{{route('employee.editView', $employee->employee_id)}}">
+                                            </button>
+                                        </a>
+                                        <a class=" me-2" href="{{route('employee.editView', $employee->employee_id)}}">
+                                            <button class="btn btn-outline btn-primary dim btn-sm">
                                                 <i class="fa fa-edit"></i>
-                                            </a>
-                                        </button>
+                                            </button>
+                                        </a>
                                     </div>
                                 </td>
 

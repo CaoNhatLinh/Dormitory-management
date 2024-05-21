@@ -17,9 +17,6 @@ class PositionController extends Controller
     public function config()
     {
 
-
-
-
         return $config = [
             'js' => [
 

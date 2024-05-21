@@ -1,57 +1,67 @@
-<div class="tw-mt-5">
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="ibox">
-                <div class="ibox-title d-flex justify-content-between align-items-center">
-                    <h5>Danh sách thiết bị</h5>
-                    <div class="search-container">
-                        <form class="search-bar" action="{{ route('device.search') }}" method="GET">
-                            <input type="text" name="keyword" class="form-control"
-                                placeholder="Search user...">
-                            <button type="submit" class="search-icon fa fa-search"></button>
-                        </form>
-                    </div>
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>The list of users</h5>
+
+                <div class="ibox-tools">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
                 </div>
-                <div class="ibox-content">
-                    <div class="table-responsive">
-                        <table id="deviceTable"
-                            class="dataTables_wrapper footable table table-stripped toggle-arrow-tiny dataTables-example">
-                            <thead>
-                                <tr class="title">
-                                    <th onclick="sortTable(0)">User ID <i class="fa fa-sort"></i></th>
-                                    <th onclick="sortTable(1)">Email <i class="fa fa-sort"></i></th>
-                                    <th onclick="sortTable(2)">Full name<i class="fa fa-sort"></i></th>
-                                    <th onclick="sortTable(3)">Permission name <i class="fa fa-sort"></i></th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($data['users'] as $user)
-                                <tr>
-                                    <td>{{ $user->user_id }}</td>
-                                    <td>{{ $user->email }}</td>
-                                    <td>{{ $user->employee->name }}</td>
-                                    <td>{{ $user->permission->permission_name }}</td>
-                                    <td>
-                                        <a class="text-size-lg me-2"
-                                            href="#">
-                                            <i class="fa fa-edit"></i>
-                                        </a>
-                                        <a class="text-size-lg me-2"
-                                            href="#"
-                                            onclick="return confirm('Bạn có chắc chắn muốn xóa thiết bị này không?');">
-                                            <i class="fa  fa-trash"></i>
-                                        </a>
-                                        <a class="text-size-lg me-2" href="#">
-                                            <img style="width:24px;height:24px;margin-bottom:8px"
-                                                src="{{ asset('images/rent.png') }}" alt="">
-                                        </a>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+            </div>
+            <div class="ibox-content">
+                <div class="form-group">
+                    <a href="{{ route('user.createView') }}"><button class="btn btn-primary dim btn-sm">
+                        New User
+                    </button></a>
+                    
+                    <input type="text" class="form-control input-sm m-b-xs " id="filter" placeholder="Search in table">
+                </div>
+
+                <table class="footable table table-stripped dataTables-example" data-page-size="8" data-filter=#filter>
+                    <thead>
+                        <tr>
+                            <th>User ID </th>
+                            <th>Email</th>
+                            <th >Full name</th>
+                            <th>Permission name</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($data['users'] as $user)
+                        <tr class="gradeA">
+                            <td>{{ $user->user_id }}</td>
+                            <td>{{ $user->email }}</td>
+                            <td> {{ $user->employee->name }}</td>
+                            <td>{{ $user->permission->permission_name }}</td>
+                            <td>
+                                <div class="btn-group">
+                                    <a href="#"><button class="btn btn-primary dim btn-sm" >
+                                        <i class="fa fa-eye"></i>
+                                    </button></a>
+                                <a href="#"><button class="btn btn-primary dim btn-sm" >
+                                        <i class="fa fa-edit"></i>
+                                    </button></a>
+                                    
+                                </div>
+                            </td>
+                        </tr>
+                        @endforeach
+
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="5">
+                                <ul class="pagination pull-right"></ul>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+
             </div>
         </div>
     </div>

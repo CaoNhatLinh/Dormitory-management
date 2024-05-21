@@ -18,40 +18,30 @@ class UserController extends Controller
     }
     public function config()
     {
+
         return $config = [
             'js' => [
-                'js/device.js',
-                'js/plugins/dataTables/datatables.min.js',
+
                 'js/plugins/pace/pace.min.js',
-                'js/plugins/footable/footable.all.min.js',
+                'js/plugins/footable/footable.all.min.js'
+
             ],
-            'linkjs' => [
-              
-            ],
+            'linkjs' => [],
             'css' => [
-                'css/device.css',
-            ],  
-            'linkcss' => [
-               
+                // 'css/plugins/footable/footable.core.css'
             ],
-            
+            'linkcss' => [],
+
             'script' => [
-                
-                '
-                $(document).ready(function(){
-                    $(\'.dataTables-example\').DataTable({
-                        pageLength: 4,
-                        searching: false, 
-                        ordering: false, 
-                        responsive: true,
-                        info: false,  
-                        paging: true,
-                        lengthChange: false
-                    });
+                '$(document).ready(function() {
+
+                    $(\'.footable\').footable();
+                    $(\'.footable2\').footable();
         
-                });
-                ',
+                });',
             ]
+
+
         ];
     }
     public function configProfile()
