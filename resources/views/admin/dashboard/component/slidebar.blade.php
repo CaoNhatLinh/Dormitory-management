@@ -28,7 +28,7 @@
                     <li><a href="#">Contracts list</a></li>
                     <li><a href="#">New contract</a></li>
                     <li><a href="{{route('student.index')}}">Students list</a></li>
-                    <li><a href="{{route('student.createView')}}">Students list</a></li>
+                    <li><a href="{{route('student.createView')}}">New student</a></li>
                 </ul>
             </li>
 
