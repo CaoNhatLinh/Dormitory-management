@@ -27,7 +27,7 @@
                 <ul class="nav nav-second-level collapse">
                     <li><a href="{{route('contract.index')}}">Contracts list</a></li>
                     <li><a href="{{route('student.index')}}">Students list</a></li>
-                    <li><a href="{{route('student.createView')}}">New student</a></li>
+                    <li><a href="{{route('student.createView')}}">New student</a></li> 
                 </ul>
             </li>
 
