@@ -52,6 +52,8 @@ class DeviceTypeController extends Controller
                 Session::put('employee', $employee);
                 Session::put('position_name', $position_name);
             }
+            $employee = Session::get('employee');
+            $position_name = Session::get('position_name');
             $deviceTypes = DeviceType::all();
             $data = ['deviceTypes' => $deviceTypes];
             $title = 'Device Type';
@@ -81,6 +83,8 @@ class DeviceTypeController extends Controller
                 Session::put('employee', $employee);
                 Session::put('position_name', $position_name);
             }
+            $employee = Session::get('employee');
+            $position_name = Session::get('position_name');
             $title = 'Create device type';
             $config = $this->config();
 
@@ -122,6 +126,8 @@ class DeviceTypeController extends Controller
                 Session::put('employee', $employee);
                 Session::put('position_name', $position_name);
             }
+            $employee = Session::get('employee');
+            $position_name = Session::get('position_name');
             $title = 'Edit device type';
             $config = $this->config();
 

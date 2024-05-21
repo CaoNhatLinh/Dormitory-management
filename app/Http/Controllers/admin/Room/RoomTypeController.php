@@ -54,6 +54,8 @@ class RoomTypeController extends Controller
                 Session::put('employee', $employee);
                 Session::put('position_name', $position_name);
             }
+            $employee = Session::get('employee');
+            $position_name = Session::get('position_name');
             $roomTypes = RoomType::all();
             $data = ['roomTypes' => $roomTypes];
             $title = 'Room type list';
