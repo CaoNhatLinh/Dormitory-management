@@ -8,7 +8,7 @@
                 </div>
                 
                 <div class="ibox-content">
-                    <form class="tw-mt-5 tw-mb-10" action="{{route('bill.room.loadExcel')}}" method="POST">
+                    <form class="tw-mt-5 tw-mb-10" action="{{route('bill.room.loadExcel')}}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
                             <label for="excel_room_bill">Upload excel file</label>
@@ -20,6 +20,12 @@
                         
                     </form>
                     @if(!empty($excel_room_bills)) 
+                        <div class="table-responsive">
+                            <table id="table_list_1"></table>
+                            <div id="pager_list_1"></div>
+                        </div>
+                    @endif
+                    {{-- @if(!empty($excel_room_bills)) 
                         <div class="table-responsive">
                             <table class="table table-striped">
                                 <thead>
@@ -48,7 +54,7 @@
                                 </tbody>
                             </table>
                         </div>
-                    @endif
+                    @endif --}}
                 </div>
             </div>
         </div>
