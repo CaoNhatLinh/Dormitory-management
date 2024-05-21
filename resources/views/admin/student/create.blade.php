@@ -1,7 +1,7 @@
 
 
     <div class="tw-flex tw-items-center tw-justify-between tw-my-4">
-        <h3>Thêm sinh viên</h3>
+        <h3>Create student</h3>
     </div>
     <form method="POST" action="{{ route('student.create') }}" enctype="multipart/form-data" class="w-full max-w-md mx-auto">
         @csrf

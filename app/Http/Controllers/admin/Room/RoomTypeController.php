@@ -43,6 +43,29 @@ class RoomTypeController extends Controller
         ];
     }
 
+    public function tailwindConfig()
+    {
+        return $config = [
+            'js' => [],
+            'linkjs' => [
+                'https://cdn.tailwindcss.com'
+            ],
+            'css' => [],
+            'linkcss' => [],
+
+            'script' => [
+                '
+                tailwind.config = {
+                    prefix: \'tw-\',
+                    corePlugins: {
+                        preflight: false, // Set preflight to false to disable default styles
+                    },
+                }',
+
+            ]
+        ];
+    }
+
     public function index()
     {
         if (Auth::check()) {
@@ -54,6 +77,9 @@ class RoomTypeController extends Controller
                 Session::put('employee', $employee);
                 Session::put('position_name', $position_name);
             }
+            $employee = Session::get('employee');
+            $position_name = Session::get('position_name');
+
             $roomTypes = RoomType::all();
             $data = ['roomTypes' => $roomTypes];
             $title = 'Room type list';
@@ -89,7 +115,7 @@ class RoomTypeController extends Controller
             $position_name = Session::get('position_name');
 
             $title = 'Create room type';
-            $config = $this->config();
+            $config = $this->tailwindConfig();
 
             $template = 'admin.room.type.create';
 
@@ -136,7 +162,7 @@ class RoomTypeController extends Controller
             $position_name = Session::get('position_name');
 
             $title = 'Edit room type';
-            $config = $this->config();
+            $config = $this->tailwindConfig();
 
             $template = 'admin.room.type.edit';
 

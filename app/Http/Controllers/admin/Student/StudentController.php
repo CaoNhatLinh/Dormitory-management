@@ -49,8 +49,11 @@ class StudentController extends Controller
                 '
                 $(document).ready(function(){
                     $(\'.dataTables-example\').DataTable({
-                        pageLength: 25,
+                        pageLength: 10,
+                        lengthChange: true,
                         responsive: true,
+                        info: false,
+                        paging: true,
                         dom: \'<"html5buttons"B>lTfgitp\',
                         buttons: [
         
@@ -70,14 +73,30 @@ class StudentController extends Controller
         
                 });
                 ',
+
+            ]
+        ];
+    }
+
+    public function tailwindConfig()
+    {
+        return $config = [
+            'js' => [],
+            'linkjs' => [
+                'https://cdn.tailwindcss.com'
+            ],
+            'css' => [],
+            'linkcss' => [],
+
+            'script' => [
                 '
-                $(document).ready(function() {
-        
-                    $(\'.footable\').footable();
-                    $(\'.footable2\').footable();
-        
-                });
-                '
+                tailwind.config = {
+                    prefix: \'tw-\',
+                    corePlugins: {
+                        preflight: false, // Set preflight to false to disable default styles
+                    },
+                }',
+
             ]
         ];
     }
@@ -140,7 +159,7 @@ class StudentController extends Controller
 
             $title = 'Create student';
 
-            $config = $this->config();
+            $config = $this->tailwindConfig();
 
             $template = 'admin.student.create';
 
@@ -213,7 +232,7 @@ class StudentController extends Controller
             // Config - template
             $title = 'Edit student';
 
-            $config = $this->config();
+            $config = $this->tailwindConfig();
             $template = 'admin.student.edit';
 
 
@@ -333,8 +352,6 @@ class StudentController extends Controller
 
             $contracts = Contract::where('student_id', $id)->get();
 
-            $statuses = ['renting' => 'Đang thuê', 'expired' => 'Hết hạn', 'canceled' => 'Đã hủy'];
-
 
             return view('admin.dashboard.layout', compact(
                 'template',
@@ -345,7 +362,6 @@ class StudentController extends Controller
                 'student',
                 'contracts',
                 'isAvailableCreateContract',
-                'statuses'
             ));
         } else {
             return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');

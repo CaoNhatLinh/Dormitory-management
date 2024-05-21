@@ -24,15 +24,64 @@ class ContractController extends Controller
     {
         return $config = [
             'js' => [
-
-                'js/jquery-3.1.1.min.js',
-                'js/bootstrap.min.js',
-                'js/plugins/metisMenu/jquery.metisMenu.js',
-                'js/plugins/slimscroll/jquery.slimscroll.min.js',
                 'js/plugins/dataTables/datatables.min.js',
-                'js/inspinia.js',
                 'js/plugins/pace/pace.min.js',
+                'js/plugins/footable/footable.all.min.js',
             ],
+            'linkjs' => [
+                'https://cdn.tailwindcss.com'
+            ],
+            'css' => [
+                'css/plugins/dataTables/datatables.min.css',
+                'css/plugins/footable/footable.core.css',
+            ],
+            'linkcss' => [],
+
+            'script' => [
+                '
+                tailwind.config = {
+                    prefix: \'tw-\',
+                    corePlugins: {
+                        preflight: false, // Set preflight to false to disable default styles
+                    },
+                }',
+                '
+                $(document).ready(function(){
+                    $(\'.dataTables-example\').DataTable({
+                        pageLength: 10,
+                        lengthChange: true,
+                        responsive: true,
+                        info: false,
+                        paging: true,
+                        dom: \'<"html5buttons"B>lTfgitp\',
+                        buttons: [
+        
+                            {extend: \'print\',
+                             customize: function (win){
+                                    $(win.document.body).addClass(\'white-bg\');
+                                    $(win.document.body).css(\'font-size\', \'10px\');
+        
+                                    $(win.document.body).find(\'table\')
+                                            .addClass(\'compact\')
+                                            .css(\'font-size\', \'inherit\');
+                            }
+                            }
+                        ]
+        
+                    });
+        
+                });
+                ',
+            ]
+
+
+        ];
+    }
+
+    public function tailwindConfig()
+    {
+        return $config = [
+            'js' => [],
             'linkjs' => [
                 'https://cdn.tailwindcss.com'
             ],
@@ -47,11 +96,11 @@ class ContractController extends Controller
                         preflight: false, // Set preflight to false to disable default styles
                     },
                 }',
+
             ]
-
-
         ];
     }
+
     public function index()
     {
         if (Session::has('employee') && Session::has('position_name')) {
@@ -59,7 +108,7 @@ class ContractController extends Controller
             $position_name = Session::get('position_name');
 
             $contracts = Contract::all();
-            $data = ['contracts' => $contracts];
+
             $title = 'Contract List';
 
 
@@ -69,7 +118,7 @@ class ContractController extends Controller
             return view('admin.dashboard.layout', compact(
                 'template',
                 'config',
-                'data',
+                'contracts',
                 'title',
                 'employee',
                 'position_name'
@@ -91,7 +140,7 @@ class ContractController extends Controller
                 ->update(['status' => 'expired']);
 
 
-            $config = $this->config();
+            $config = $this->tailwindConfig();
 
             $student_id = $id;
             // Check if current student_id has contract and status = 'renting' then redirect to student detail page
@@ -153,7 +202,7 @@ class ContractController extends Controller
                 ->update(['status' => 'expired']);
 
 
-            $config = $this->config();
+            $config = $this->tailwindConfig();
 
             $contract = Contract::find($id);
             $rooms = Room::all()->where('quantity', '<', 'occupancy');

@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Session;
 
 class RoomController extends Controller
 {
-    const STATUSES  = ['active' => 'Hoạt động', 'inactive' => 'Không hoạt động', 'repaired' => 'Đang sửa chữa'];
+    const STATUSES  = ['active', 'inactive', 'repaired'];
 
     public function __construct()
     {
@@ -50,8 +50,11 @@ class RoomController extends Controller
                 '
                 $(document).ready(function(){
                     $(\'.dataTables-example\').DataTable({
-                        pageLength: 25,
+                        pageLength: 10,
+                        lengthChange: true,
                         responsive: true,
+                        info: false,
+                        paging: true,
                         dom: \'<"html5buttons"B>lTfgitp\',
                         buttons: [
         
@@ -71,14 +74,29 @@ class RoomController extends Controller
         
                 });
                 ',
+            ]
+        ];
+    }
+
+    public function tailwindConfig()
+    {
+        return $config = [
+            'js' => [],
+            'linkjs' => [
+                'https://cdn.tailwindcss.com'
+            ],
+            'css' => [],
+            'linkcss' => [],
+
+            'script' => [
                 '
-                $(document).ready(function() {
-        
-                    $(\'.footable\').footable();
-                    $(\'.footable2\').footable();
-        
-                });
-                '
+                tailwind.config = {
+                    prefix: \'tw-\',
+                    corePlugins: {
+                        preflight: false, // Set preflight to false to disable default styles
+                    },
+                }',
+
             ]
         ];
     }
@@ -136,7 +154,7 @@ class RoomController extends Controller
 
             $title = 'Create Room';
 
-            $config = $this->config();
+            $config = $this->tailwindConfig();
             $template = 'admin.room.create';
             $statuses = self::STATUSES;
 
@@ -195,7 +213,7 @@ class RoomController extends Controller
 
             $title = 'Update room';
 
-            $config = $this->config();
+            $config = $this->tailwindConfig();
             $template = 'admin.room.edit';
 
             $statuses = self::STATUSES;
