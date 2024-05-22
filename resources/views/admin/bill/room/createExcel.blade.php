@@ -19,12 +19,23 @@
                         </div>
                         
                     </form>
-                    @if(!empty($excel_room_bills)) 
-                        <div class="table-responsive">
-                            <table id="table_list_1"></table>
-                            <div id="pager_list_1"></div>
-                        </div>
-                    @endif
+                    <div>
+                        @if(!empty($excel_room_bills)) 
+                            <div class="table-responsive">
+                                <table id="table_list_1"></table>
+                                <div id="pager_list_1"></div>
+                            </div>
+                            <div>
+                                <form method="POST" action="{{route('bill.room.createExcel')}}">
+                                    @csrf
+                                    <input type="hidden" name="excel_file_path" value="{{$excel_file_path}}">
+                                    <button type="submit" class="btn btn-primary tw-w-full">Import</button>
+                                </form>
+                            </div>
+                        @endif
+
+                        
+                    </div>
                     {{-- @if(!empty($excel_room_bills)) 
                         <div class="table-responsive">
                             <table class="table table-striped">

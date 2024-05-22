@@ -13,6 +13,9 @@ use App\Models\Position;
 use App\Models\Room;
 use App\Models\RoomBill;
 use App\Models\RoomType;
+use DateTime;
+use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
@@ -251,9 +254,9 @@ class RoomBillController extends Controller
             $filePath = 'uploads/excels/' . $fileName;
 
 
-            Session::put('excel_room_bill_path', $filePath);
 
-            return redirect()->route('bill.room.createExcelView')->with('success', 'File uploaded successfully');
+
+            return redirect()->route('bill.room.createExcelView', ['excel_file_path' => $filePath])->with('success', 'File uploaded successfully');
         } else {
             return redirect()->route('bill.room.createExcelView')->with('error', 'File not found');
         }
@@ -283,7 +286,8 @@ class RoomBillController extends Controller
             $excel_room_bills = [];
 
             // EXCEL HANDLER
-            $excel_file_path = Session::get('excel_room_bill_path');
+            // $excel_file_path = Session::get('excel_room_bill_path');
+            $excel_file_path = $request->query('excel_file_path');
             $filePath = public_path($excel_file_path);
 
             // Check if file exists
@@ -298,21 +302,23 @@ class RoomBillController extends Controller
 
                 for ($row = 2; $row <= $highestRow; ++$row) {
                     // Skipping the header row
+                    $bill_date_cell = $sheet->getCell('B' . $row)->getValue();
+                    $bill_date = $bill_date_cell ? \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($bill_date_cell)->format('Y-m-d') : null;
                     $excel_room_bills[] = [
                         'room_id' => $sheet->getCell('A' . $row)->getValue(),
-                        'bill_date' => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($sheet->getCell('B' . $row)->getValue())->format('Y-m-d'),
+                        'bill_date' => $bill_date,
                         'electricity_price' => $sheet->getCell('C' . $row)->getValue(),
                         'electricity_index' => $sheet->getCell('D' . $row)->getValue(),
                         'water_price' => $sheet->getCell('E' . $row)->getValue(),
                         'water_index' => $sheet->getCell('F' . $row)->getValue(),
-                        'total_room_bills' => $sheet->getCell('G' . $row)->getValue(),
-                        'status' => $sheet->getCell('H' . $row)->getValue(),
+                        // 'total_room_bills' => $sheet->getCell('G' . $row)->getValue(),
+                        // 'status' => $sheet->getCell('H' . $row)->getValue(),
                     ];
                 }
 
 
                 $json = json_encode($excel_room_bills);
-                 
+
                 // dd($json);
                 // CONFIG FOR JS
                 $config = [
@@ -339,14 +345,14 @@ class RoomBillController extends Controller
                         }',
                         '
                         $("#table_list_1").jqGrid({
-                            data:  JSON.parse(\''. $json . '\'),
+                            data:  JSON.parse(\'' . $json . '\'),
                             datatype: "local",
                             height: 250,
                             autowidth: true,
                             shrinkToFit: true,
                             rowNum: 14,
                             rowList: [10, 20, 30],
-                            colNames: [\'Room\', \'Date\', \'Electricity Price\', \'Electricity index\', \'Water price\', \'Water index \', \'total_room_bills\', \'status\'],
+                            colNames: [\'Room\', \'Date\', \'Electricity Price\', \'Electricity index\', \'Water price\', \'Water index \'],
                             colModel:  [
                                 {name: \'room_id\', index: \'room_id\', width: 60},
                                 {name: \'bill_date\', index: \'bill_date\', width: 90, sorttype: "string", formatter: "string"},
@@ -354,13 +360,11 @@ class RoomBillController extends Controller
                                 {name: \'electricity_index\', index: \'electricity_index\', width: 80, align: "right"},
                                 {name: \'water_price\', index: \'water_price\', width: 80, align: "right"},
                                 {name: \'water_index\', index: \'water_index\', width: 80, align: "right"},
-                                {name: \'total_room_bills\', index: \'total_room_bills\', width: 80,align: "right"},
-                                {name: \'status\', index: \'status\', width: 150, sortable: false}
 
                             ],
                             pager: "#pager_list_1",
                             viewrecords: true,
-                            caption: "Example jqGrid 1",
+                            caption: "Room bills",
                             hidegrid: false
                         });
                         $(window).bind(\'resize\', function () {
@@ -381,7 +385,8 @@ class RoomBillController extends Controller
                 'title',
                 'employee',
                 'position_name',
-                'excel_room_bills'
+                'excel_room_bills',
+                'excel_file_path'
             ));
         } else {
             return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
@@ -390,12 +395,97 @@ class RoomBillController extends Controller
 
     public function createExcel(Request $request)
     {
-        if (Session::has('employee') && Session::has('position_name')) {
-            $employee = Session::get('employee');
-            $position_name = Session::get('position_name');
+
+        // EXCEL HANDLER
+        $excel_file_path = $request->excel_file_path;
+        $filePath = public_path($excel_file_path);
+
+        // Check if file exists
+        if (!isset($excel_file_path) && !file_exists($filePath)) {
+            return redirect()->route('bill.room.createExcelView')->with('error', 'File not found');
         }
 
-        return redirect()->route('bill.room.index');
+        $excel_room_bills = [];
+
+        // Retrieve existing room bills from the database
+        $existingRoomBills = DB::table('room_bills')
+            ->select('room_id', DB::raw('MAX(bill_date) as latest_bill_date'))
+            ->groupBy('room_id')
+            ->get()
+            ->keyBy('room_id');
+
+
+        $spreadsheet = IOFactory::load($filePath);
+        $sheet = $spreadsheet->getActiveSheet();
+        $highestRow = $sheet->getHighestRow();
+        $highestColumn = $sheet->getHighestColumn();
+
+
+        for ($row = 2; $row <= $highestRow; ++$row) {
+
+            $room_id = $sheet->getCell('A' . $row)->getValue();
+
+            $bill_date_cell = $sheet->getCell('B' . $row)->getValue();
+            $bill_date = $bill_date_cell ? \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($bill_date_cell)->format('Y-m-d') : null;
+
+            $electricity_price = $sheet->getCell('C' . $row)->getValue();
+            $electricity_index = $sheet->getCell('D' . $row)->getValue();
+            $water_price = $sheet->getCell('E' . $row)->getValue();
+            $water_index = $sheet->getCell('F' . $row)->getValue();
+
+
+            $_electricity_price = $electricity_price / 1000;
+            $_water_price = $water_price / 1000;
+            $total_room_bills = ($_electricity_price * $electricity_index) + ($_water_price * $water_index);
+
+
+            $latestBillDate = isset($existingRoomBills[$room_id]) ? $existingRoomBills[$room_id]->latest_bill_date : null;
+
+            $betweenDate = $latestBillDate ? round((strtotime($bill_date) - strtotime($latestBillDate)) / (60 * 60 * 24)) : 0;
+
+            if ((is_null($latestBillDate))) {
+                $excel_room_bills[] = [
+                    'room_id' => $room_id,
+                    'bill_date' => $bill_date,
+                    'electricity_price' => $electricity_price,
+                    'electricity_index' => $electricity_index,
+                    'water_price' => $water_price,
+                    'water_index' => $water_index,
+                    'total_room_bills' => $total_room_bills,
+                    'status' => 'unpaid'
+                ];
+            } else if (!is_null($latestBillDate) && $betweenDate >= 30 && $betweenDate > 0) {
+                $excel_room_bills[] = [
+                    'room_id' => $room_id,
+                    'bill_date' => $bill_date,
+                    'electricity_price' => $electricity_price,
+                    'electricity_index' => $electricity_index,
+                    'water_price' => $water_price,
+                    'water_index' => $water_index,
+                    'total_room_bills' => $total_room_bills,
+                    'status' => 'unpaid'
+                ];
+            } else {
+                return redirect()->route('bill.room.createExcelView')->with('error', 'The bill date must be at least 30 days apart from the latest bill date');
+            }
+        }
+
+
+        try {
+            // Insert data into the room_bills table
+            DB::table('room_bills')->insert($excel_room_bills);
+
+            // remove the excel file in public folder
+            unlink($filePath);
+
+            return redirect()->route('bill.room.index')->with('success', 'Room bills created successfully');
+        } catch (Exception $e) {
+            dd($e->getMessage());
+            return redirect()->route('bill.room.createExcelView')->with('error', $e->getMessage());
+        }
+
+
+        return redirect()->route('bill.room.createExcelView')->with('error', 'Room bills created failed');
     }
 
 
