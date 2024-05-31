@@ -56,8 +56,8 @@
                 <a href="#"><i class="fa fa-desktop"></i> <span class="nav-label">Invoices</span><span class="fa arrow"></span></a>
 
                 <ul class="nav nav-second-level collapse">
-                    <li><a href="#">Invoices list</a></li>
-                    <li><a href="#">New invoice </a></li>
+                    <li><a href="{{route('bill.index')}}">Invoices list</a></li>
+                    <li><a href="{{route('bill.createView')}}">New invoice </a></li>
                     <li><a href="#">Payment Reminder</a></li>
 
                 </ul>
