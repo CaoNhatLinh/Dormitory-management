@@ -1,15 +1,16 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Employee;
+namespace App\Http\Controllers\Admin\User;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Employee;
+use App\Models\Permission;
 use App\Models\Position;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
-class PositionController extends Controller
+class PermissionController extends Controller
 {
     public function __construct()
     {
@@ -41,12 +42,12 @@ class PositionController extends Controller
                     $(\'#myModal\').on(\'show.bs.modal\', function(event) {
                        
                         var button = $(event.relatedTarget);
-                        var positionId = button.data(\'id\');
-                        var positionName = button.data(\'name\');
+                        var permissionId = button.data(\'id\');
+                        var permissionName = button.data(\'name\');
                         
                         var modal = $(this);
-                        modal.find(\'.modal-body input[name="position_id"]\').val(positionId);
-                        modal.find(\'.modal-body input[name="position_name"]\').val(positionName);
+                        modal.find(\'.modal-body input[name="permission_id"]\').val(permissionId);
+                        modal.find(\'.modal-body input[name="permission_name"]\').val(permissionName);
                     });
                 });'
             ]
@@ -106,13 +107,13 @@ class PositionController extends Controller
                 Session::put('position_name', $position_name);
             }
             $config = $this->config();
-            $title = 'Position list';
+            $title = 'Permission list';
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
-            $template = 'admin.position.index';
+            $template = 'admin.permission.index';
             
-            $positions = Position::withCount('employees')->get();
-            $data = ['positions' => $positions];
+            $permissions = Permission::withCount('users')->get();
+            $data = ['permissions' => $permissions];
             return view('admin.dashboard.layout', compact(
                 'template',
                 'config',
@@ -136,11 +137,11 @@ class PositionController extends Controller
                 Session::put('employee', $employee);
                 Session::put('position_name', $position_name);
             }
-            $title = 'Create position';
+            $title = 'Create permission';
             $config = $this->configCreateView();
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
-            $template = 'admin.position.create';
+            $template = 'admin.permission.create';
 
             return view('admin.dashboard.layout', compact(
                 'template',
@@ -158,19 +159,19 @@ class PositionController extends Controller
     public function create(Request $request)
     {
         $request->validate([
-            'position_name' => 'required|unique:positions',
+            'permission_name' => 'required|unique:permissions',
 
         ]);
 
 
-        $position = new Position();
-        $position->position_name = $request->position_name;
-        $result = $position->save();
+        $permission = new Permission();
+        $permission->permission_name = $request->permission_name;
+        $result = $permission->save();
 
         if ($result) {
-            return redirect()->route('position.index')->with('success', 'position created successfully.');
+            return redirect()->route('permission.index')->with('success', 'permission created successfully.');
         } else {
-            return redirect()->back()->with('error', 'Failed to create position.');
+            return redirect()->back()->with('error', 'Failed to create permission.');
         }
     }
 
@@ -178,28 +179,28 @@ class PositionController extends Controller
     public function edit(Request $request)
     {
         $request->validate([
-            'position_name' => 'required|unique:positions'
+            'permission_name' => 'required|unique:permissions'
         ]);
 
-        $position = Position::find($request->position_id);
-        $position->position_name = $request->position_name;
-        $result = $position->save();
+        $permission = Permission::find($request->permission_id);
+        $permission->permission_name = $request->permission_name;
+        $result = $permission->save();
         if ($result) {
-            return redirect()->route('position.index')->with('success', 'position edited successfully.');
+            return redirect()->route('permission.index')->with('success', 'Permission edited successfully.');
         } else {
-            return redirect()->back()->with('error', 'Failed to update position.');
+            return redirect()->back()->with('error', 'Failed to update Permission.');
         }
     }
     public function delete($id)
     {
-        $position = Position::find($id);
+        $permission = Permission::find($id);
 
-        if (!$position) {
-            return redirect()->route('position.index')->with('error', 'Position not found!');
+        if (!$permission) {
+            return redirect()->route('permission.index')->with('error', 'Permission not found!');
         }
 
-        $position->delete();
+        $permission->delete();
 
-        return redirect()->route('position.index')->with('success', 'Position deleted successfully!');
+        return redirect()->route('permission.index')->with('success', 'Permission deleted successfully!');
     }
 }

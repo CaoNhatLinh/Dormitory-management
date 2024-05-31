@@ -111,8 +111,8 @@
                                 <option value="{{ $position->position_id }}">{{ $position->position_name }}</option>
                             @endforeach   
                             </select>
-                            @if ($errors->has('gender'))
-                            <span class="help-block m-b-none label label-warning">{{ $errors->first('gender') }}</span>
+                            @if ($errors->has('position'))
+                            <span class="help-block m-b-none label label-warning">{{ $errors->first('position') }}</span>
                             @endif
                         </div>
                     </div>

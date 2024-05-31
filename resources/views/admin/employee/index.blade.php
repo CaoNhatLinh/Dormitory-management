@@ -8,14 +8,13 @@
                         <a class="collapse-link">
                             <i class="fa fa-chevron-up"></i>
                         </a>
-
                     </div>
                 </div>
                 <div class="ibox-content">
-                <a class="btn-link font-bold" href="{{ route('employee.createView') }}">
-                    <button class="btn btn-primary btn-sm dim">
-                       New Employee
-                    </button>
+                    <a class="btn-link font-bold" href="{{ route('employee.createView') }}">
+                        <button class="btn btn-primary btn-sm dim">
+                            New Employee
+                        </button>
                     </a>
                     <table class="footable table table-stripped toggle-arrow-tiny dataTables-example" data-page-size="15">
                         <thead>
@@ -34,6 +33,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @if($data['employees']!=null)
                             @foreach ($data['employees'] as $employee)
                             <tr>
                                 <td>{{ $employee->employee_id }}</td>
@@ -71,9 +71,7 @@
 
                             </tr>
                             @endforeach
-
-
-
+                            @endif
                         </tbody>
                         <tfoot>
                             <tr>

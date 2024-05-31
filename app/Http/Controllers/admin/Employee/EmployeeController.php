@@ -172,7 +172,7 @@ class EmployeeController extends Controller
                 'data',
             ));
         } else {
-            return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
+            return redirect()->route('auth.admin')->with('error', 'Please log in first');
         }
     }
     public function createView()
@@ -204,7 +204,7 @@ class EmployeeController extends Controller
                 'positions',
             ));
         } else {
-            return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
+            return redirect()->route('auth.admin')->with('error', 'Please log in first');
         }
     }
 
@@ -278,7 +278,7 @@ class EmployeeController extends Controller
                 'statuses'
             ));
         } else {
-            return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
+            return redirect()->route('auth.admin')->with('error', 'Please log in first');
         }
     }
     public function editView($id)
@@ -311,7 +311,7 @@ class EmployeeController extends Controller
                 'statuses'
             ));
         } else {
-            return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
+            return redirect()->route('auth.admin')->with('error', 'Please log in first');
         }
     }
 

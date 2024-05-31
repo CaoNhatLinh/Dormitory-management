@@ -139,7 +139,7 @@ class StudentController extends Controller
                 'position_name'
             ));
         } else {
-            return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
+            return redirect()->route('auth.admin')->with('error', 'Please log in first');
         }
     }
 
@@ -171,7 +171,7 @@ class StudentController extends Controller
                 'position_name'
             ));
         } else {
-            return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
+            return redirect()->route('auth.admin')->with('error', 'Please log in first');
         }
     }
 
@@ -248,7 +248,7 @@ class StudentController extends Controller
                 'student'
             ));
         } else {
-            return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
+            return redirect()->route('auth.admin')->with('error', 'Please log in first');
         }
     }
 
@@ -364,7 +364,7 @@ class StudentController extends Controller
                 'isAvailableCreateContract',
             ));
         } else {
-            return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
+            return redirect()->route('auth.admin')->with('error', 'Please log in first');
         }
     }
 }

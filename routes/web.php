@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\Student\StudentController;
 use App\Http\Controllers\Admin\Employee\PositionController;
 use App\Http\Controllers\Admin\Device\DeviceController; 
 use App\Http\Controllers\Admin\Device\DeviceTypeController;
+use App\Http\Controllers\Admin\User\PermissionController;
 use App\Http\Controllers\Admin\User\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -31,6 +32,17 @@ Route::get("/profile", [UserController::class, 'profileView'])->name("user.profi
 Route::get("/user", [UserController::class, 'index'])->name("user.index");
 Route::get("/user/createView", [UserController::class, 'createView'])->name("user.createView");
 Route::post("/user/create", [UserController::class, 'create'])->name("user.create");
+Route::post("/user/edit/{id}", [UserController::class, 'edit'])->name("user.edit");
+Route::get("/user/editView/{id}", [UserController::class, 'editView'])->name("user.editView");
+Route::get("/user/delete/{id}", [UserController::class, 'delete'])->name("user.delete");
+Route::get("/user/resetpassword/{id}", [UserController::class, 'resetpassword'])->name("user.resetpassword");
+
+//PERMISSION
+Route::get('/permission', [PermissionController::class, 'index'])->name('permission.index');
+Route::get("/permission/createView", [PermissionController::class, 'createView'])->name("permission.createView");
+Route::post("/permission/create", [PermissionController::class, 'create'])->name("permission.create");
+Route::post("/permission/edit", [PermissionController::class, 'edit'])->name("permission.edit");
+Route::get("/permission/delete/{id}", [PermissionController::class, 'delete'])->name("permission.delete");
 
 // EMPLOYEE
 Route::get('/employee', [EmployeeController::class, 'index'])->name('employee.index');
@@ -45,7 +57,7 @@ Route::get('/position', [PositionController::class, 'index'])->name('position.in
 Route::get("/position/createView", [PositionController::class, 'createView'])->name("position.createView");
 Route::post("/position/create", [PositionController::class, 'create'])->name("position.create");
 Route::post("/position/edit", [PositionController::class, 'edit'])->name("position.edit");
-
+Route::get("/position/delete/{id}", [PositionController::class, 'delete'])->name("position.delete");
 // STUDENT
 Route::get("/student", [StudentController::class, 'index'])->name("student.index");
 Route::get("/student/createView", [StudentController::class, 'createView'])->name("student.createView");

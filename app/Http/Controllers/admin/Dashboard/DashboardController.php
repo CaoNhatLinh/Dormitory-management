@@ -187,7 +187,7 @@ class DashboardController extends Controller
                 'employee'
             ));
         } else {
-            return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
+            return redirect()->route('auth.admin')->with('error', 'Please log in first');
         }
     }
 }

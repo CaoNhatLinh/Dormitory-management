@@ -20,6 +20,8 @@ class User extends Authenticatable
      */
     protected $table = 'users';
     protected $primaryKey = 'user_id';
+    public $timestamps = false;
+    
     protected $fillable = [
         
         'name',
@@ -28,7 +30,6 @@ class User extends Authenticatable
         'employee_id',
         'permission_id'
     ];
-
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -61,5 +62,5 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Employee::class, 'employee_id');
     }
-   
+    
 }

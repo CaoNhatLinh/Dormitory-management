@@ -69,7 +69,7 @@ class DeviceTypeController extends Controller
                 'position_name'
             ));
         } else {
-            return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
+            return redirect()->route('auth.admin')->with('error', 'Please log in first');
         }
     }
     public function createView()
@@ -99,7 +99,7 @@ class DeviceTypeController extends Controller
                 'position_name'
             ));
         } else {
-            return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
+            return redirect()->route('auth.admin')->with('error', 'Please log in first');
         }
     }
 
@@ -144,7 +144,7 @@ class DeviceTypeController extends Controller
                 'deviceType'
             ));
         } else {
-            return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');
+            return redirect()->route('auth.admin')->with('error', 'Please log in first');
         }
     }
 
