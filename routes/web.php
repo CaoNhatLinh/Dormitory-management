@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\Employee\PositionController;
 use App\Http\Controllers\Admin\Device\DeviceController; 
 use App\Http\Controllers\Admin\Device\DeviceTypeController;
 use App\Http\Controllers\Admin\Bill\BillController;
+use App\Http\Controllers\Admin\Device\DeviceRentalController;
 use App\Http\Controllers\Admin\User\PermissionController;
 use App\Http\Controllers\Admin\User\UserController;
 use Illuminate\Support\Facades\Route;
@@ -113,6 +114,12 @@ Route::post("/device/devicetype/edit/{id}", [DeviceTypeController::class, 'edit'
 Route::get("/bill", [BillController::class, 'index'])->name("bill.index");
 Route::get("/bill/createView", [BillController::class, 'createView'])->name("bill.createView");
 Route::post("/bill/create", [RoomBillController::class, 'create'])->name("bill.create");
+
+//DEVICE RENTAL
+Route::get("/device/devicerental", [DeviceRentalController::class, 'index'])->name("deviceRental.index");
+Route::get('/api/rooms', [DeviceRentalController::class, 'getRooms']);
+
+
 // ROOM BILL
 Route::get("/bill/room", [RoomBillController::class, 'index'])->name("bill.room.index");
 Route::get("/bill/room/createView", [RoomBillController::class, 'createView'])->name("bill.room.createView");

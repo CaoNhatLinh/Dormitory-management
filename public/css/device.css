@@ -1,4 +1,4 @@
-.ibox-title {
+/* .ibox-title {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -35,7 +35,42 @@ align-items: center;
     transform: translateY(-50%);
     cursor: pointer;
     margin-right: 8px; 
-}
+} */
 .title th{
     user-select: none;
+}
+.tw-my-4
+{
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+.table-bordered td,
+.table-bordered th {
+    border: 1px solid #dee2e6;
+}
+
+.table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.table th,
+.table td {
+    padding: .75rem;
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+}
+.quantity-input
+{
+    width: 70px;
+}
+.form-inline-end {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+}
+
+.form-inline-end select {
+    max-width: 200px;
 }
