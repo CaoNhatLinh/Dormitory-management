@@ -30,25 +30,45 @@ class DeviceController extends Controller
             'linkjs' => [],
             'css' => [
                 'css/device.css',
+                'css/plugins/dataTables/datatables.min.css',
+                'css/plugins/footable/footable.core.css',
             ],
             'linkcss' => [],
 
             'script' => [
-
                 '
                 $(document).ready(function(){
-                    $(\'.dataTables-example\').DataTable({
-                        pageLength: 4,
-                        searching: false, 
-                        ordering: false, 
+                    var table = $(\'.dataTables-example\').DataTable({
+                        pageLength: 10,
+                        lengthChange: true,
                         responsive: true,
-                        info: false,  
+                        info: false,
+                        ordering: true,
                         paging: true,
-                        lengthChange: false
+                        dom: \'<"html5buttons"B>lTfgitp\',
+                        buttons: [
+                            {
+                                extend: \'print\',
+                                customize: function (win){
+                                    $(win.document.body).addClass(\'white-bg\');
+                                    $(win.document.body).css(\'font-size\', \'10px\');
+            
+                                    $(win.document.body).find(\'table\')
+                                        .addClass(\'compact\')
+                                        .css(\'font-size\', \'inherit\');
+                                },
+                                exportOptions: {
+                                    columns: \':not(:last-child)\'
+                                }
+                            }
+                        ],
+                        columnDefs: [{
+                            orderable: false,
+                            targets: -1
+                        }]
                     });
-        
                 });
-                ',
+                '
             ]
         ];
     }
@@ -212,7 +232,7 @@ class DeviceController extends Controller
             }
 
             $data = ['devices' => $devices];
-            $title = 'Search Results'; // Tiêu đề có thể thay đổi tùy thuộc vào yêu cầu của bạn
+            $title = 'Search Results'; 
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
             $config = $this->config();
