@@ -48,7 +48,8 @@
                     <li><a href="{{route('device.createView')}}">New device</a></li>
                     <li><a href="{{route('deviceType.index')}}">Device types list</a></li>
                     <li><a href="{{route('deviceType.createView')}}">New device type</a></li>
-
+                    <li><a href="{{route('deviceRental.index')}}">Device rental</a></li>
+                    <li><a href="{{route('deviceType.createView')}}">Device rental detail</a></li>
                 </ul>
             </li>
             <li>
