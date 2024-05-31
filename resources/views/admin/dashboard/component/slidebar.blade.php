@@ -101,11 +101,20 @@
 
                 </ul>
             </li>
+           
             <li>
                 <a href="#"><i class="fa fa-flask"></i> <span class="nav-label">Users</span><span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse">
                     <li><a href="{{route('user.index')}}">Users list</a></li>
                     <li><a href="{{route('user.createView')}}">New user</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#"><i class="fa fa-files-o"></i> <span class="nav-label">Permission</span><span class="fa arrow"></span></a>
+
+                <ul class="nav nav-second-level collapse">
+                    <li><a href="{{route('permission.index')}}">Permission list</a></li>
+                    <li><a href="{{route('permission.createView')}}">New Permission</a></li>
                 </ul>
             </li>
             <li>

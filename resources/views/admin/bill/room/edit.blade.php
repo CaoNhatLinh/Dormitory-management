@@ -38,8 +38,8 @@
                     <div class="form-group">
                         <label for="status">Status</label>
                         <select id="status" name="status" class="form-control">
-                            @foreach($statuses => $status)
-                                <option value="{{ $status }}" {{ $status == $roomBill->status ? 'selected' : '' }}>
+                            @foreach($statuses as $status)
+                                <option value="{{ $status }}" {{  $roomBill->status==$status ? 'selected' : '' }}> 
                                     {{ $status }}
                                 </option>
                             @endforeach 
