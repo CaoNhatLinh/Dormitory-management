@@ -102,6 +102,7 @@ Route::get('/device/delete/{id}', [DeviceController::class, 'delete'])->name('de
 Route::get("/device/createExcelView", [DeviceController::class, 'createExcelView'])->name("device.createExcelView");
 Route::post("/device/createExcel", [DeviceController::class, 'createExcel'])->name("device.createExcel");
 Route::post("/device/loadExcel", [DeviceController::class, 'loadExcel'])->name("device.loadExcel");
+Route::post('/device/rent', [DeviceRentalController::class, 'rent'])->name('device.rent');
 
 
 

@@ -20,7 +20,7 @@
                                     <th>Quantity</th>
                                     <th>Original Price</i></th>
                                     <th>Device Type</i></th>
-                                    <th>Rental Quantity</i></th>
+                                    <th>Quantity Rented</i></th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -32,7 +32,7 @@
                                     <td>{{ $device->quantity }}</td>
                                     <td>{{ number_format($device->original_price, 0, ',', '.') }} VNĐ</td>
                                     <td>{{ $device->deviceType->device_type_name }}</td>
-                                    <td>ddddđ</td>
+                                    <td>{{ $device->rental_quantity }}</td>
                                     <td>
                                         <a class="text-size-lg me-2"
                                             href="{{route('device.editView', $device->device_id)}}">

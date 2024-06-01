@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin\Device;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Device;
+use App\Models\DeviceRentalDetail;
+use App\Models\DeviceRental;
 use App\Models\DeviceType;
 use App\Models\Employee;
 use App\Models\Position;
@@ -96,6 +98,10 @@ class DeviceController extends Controller
                 Session::put('position_name', $position_name);
             }
             $devices = Device::with('deviceType')->get();
+            foreach ($devices as $device) {
+                $rentalQuantity = DeviceRentalDetail::where('device_id', $device->device_id)->count();
+                $device->rental_quantity = $rentalQuantity;
+            }
             $data = ['devices' => $devices];
             $title = 'Device list';
             $employee = Session::get('employee');

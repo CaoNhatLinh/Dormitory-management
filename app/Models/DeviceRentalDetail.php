@@ -5,14 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class RentalDetail extends Model
+class DeviceRentalDetail extends Model
 {
     use HasFactory;
     protected $primaryKey = 'rental_detail_id';
     protected $table = 'device_rental_details';
+    public $timestamps = false;
     protected $fillable = [
         'rental_detail_id',
-        'status'
+        'status',
+        'rental_price'
     ];
 
     public function deviceRental()

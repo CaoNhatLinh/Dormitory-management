@@ -10,6 +10,7 @@ class DeviceRental extends Model
     use HasFactory;
     protected $primaryKey = 'device_rental_id';
     protected $table = 'device_rentals';
+    public $timestamps = false;
     protected $fillable = [
         'room_id',
         'total_rental_price',
