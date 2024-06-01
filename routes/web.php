@@ -99,6 +99,9 @@ Route::get("/device/editView/{id}", [DeviceController::class, 'editView'])->name
 Route::post("/device/edit/{id}", [DeviceController::class, 'edit'])->name("device.edit");
 Route::get('/device/search', [DeviceController::class, 'search'])->name('device.search');
 Route::get('/device/delete/{id}', [DeviceController::class, 'delete'])->name('device.delete');
+Route::get("/device/createExcelView", [DeviceController::class, 'createExcelView'])->name("device.createExcelView");
+Route::post("/device/createExcel", [DeviceController::class, 'createExcel'])->name("device.createExcel");
+Route::post("/device/loadExcel", [DeviceController::class, 'loadExcel'])->name("device.loadExcel");
 
 
 

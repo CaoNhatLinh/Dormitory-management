@@ -11,6 +11,8 @@ use App\Models\Position;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class DeviceController extends Controller
 {
@@ -27,7 +29,9 @@ class DeviceController extends Controller
                 'js/plugins/pace/pace.min.js',
                 'js/plugins/footable/footable.all.min.js',
             ],
-            'linkjs' => [],
+            'linkjs' => [
+                'https://cdn.tailwindcss.com'
+            ],
             'css' => [
                 'css/device.css',
                 'css/plugins/dataTables/datatables.min.css',
@@ -36,6 +40,13 @@ class DeviceController extends Controller
             'linkcss' => [],
 
             'script' => [
+                '
+                tailwind.config = {
+                    prefix: \'tw-\',
+                    corePlugins: {
+                        preflight: false, // Set preflight to false to disable default styles
+                    },
+                }',
                 '
                 $(document).ready(function(){
                     var table = $(\'.dataTables-example\').DataTable({
@@ -261,5 +272,163 @@ class DeviceController extends Controller
         $device->delete();
 
         return redirect()->route('device.index')->with('success', 'Device deleted successfully!');
+    }
+    public function loadExcel(Request $request)
+    {
+        $request->validate([
+            'excel_device' => 'required|file|mimes:xlsx,xls,csv',
+        ]);
+
+        if ($request->hasFile('excel_device')) {
+            $file = $request->file('excel_device');
+            $fileName = 'excel_' . time() . '.' . $file->getClientOriginalExtension();
+            $path = public_path('/uploads/excels/');
+            $file->move($path, $fileName);
+            $filePath = 'uploads/excels/' . $fileName;
+
+            return redirect()->route('device.createExcelView', ['excel_file_path' => $filePath])->with('success', 'File uploaded successfully');
+        } else {
+            return redirect()->route('device.createExcelView')->with('error', 'File not found');
+        }
+    }
+
+    public function createExcelView(Request $request)
+    {
+        if (Auth::check()) {
+            if (!Session::has('employee') && !Session::has('position_name')) {
+                $authId = Auth::id();
+                $employee = Employee::find($authId);
+                $employee_id = $employee->employee_id;
+                $position_name = Position::find($employee_id)->position_name;
+                Session::put('employee', $employee);
+                Session::put('position_name', $position_name);
+            }
+            $employee = Session::get('employee');
+            $position_name = Session::get('position_name');
+            $title = 'Create device from excel';
+
+            $config = $this->config();
+            $template = 'admin.device.importExcel';
+
+            $excel_devices = [];
+
+            $excel_file_path = $request->query('excel_file_path');
+            $filePath = public_path($excel_file_path);
+
+            if (isset($excel_file_path) && file_exists($filePath)) {
+                $spreadsheet = IOFactory::load($filePath);
+                $sheet = $spreadsheet->getActiveSheet();
+                $highestRow = $sheet->getHighestRow();
+
+                for ($row = 2; $row <= $highestRow; ++$row) {
+                    $excel_devices[] = [
+                        'device_name' => $sheet->getCell('A' . $row)->getValue(),
+                        'quantity' => $sheet->getCell('B' . $row)->getValue(),
+                        'original_price' => $sheet->getCell('C' . $row)->getValue(),    
+                        'device_type_id' => $sheet->getCell('D' . $row)->getValue(),
+                    ];
+                }
+
+                $json = json_encode($excel_devices);
+
+                $config = [
+                    'js' => [
+                        'js/plugins/jqGrid/jquery.jqGrid.min.js',
+                        'js/plugins/jquery-ui/jquery-ui.min.js'
+                    ],
+                    'linkjs' => [
+                        'https://cdn.tailwindcss.com'
+                    ],
+                    'css' => [
+                        'css/plugins/jQueryUI/jquery-ui-1.10.4.custom.min.css',
+                        'css/plugins/jqGrid/ui.jqgrid.css',
+                    ],
+                    'linkcss' => [],
+
+                    'script' => [
+                        '
+                        tailwind.config = {
+                            prefix: \'tw-\',
+                            corePlugins: {
+                                preflight: false,
+                            },
+                        }',
+                        '
+                        $("#table_list_1").jqGrid({
+                            data:  JSON.parse(\'' . $json . '\'),
+                            datatype: "local",
+                            height: 250,
+                            autowidth: true,
+                            shrinkToFit: true,
+                            rowNum: 14,
+                            rowList: [10, 20, 30],
+                            colNames: [\'Device Name\', \'Quantity\',\'Original Price\', \'Device Type\'],
+                            colModel:  [
+                                {name: \'device_name\', index: \'device_name\', width: 150},
+                                {name: \'quantity\', index: \'quantity\', width: 150},
+                                {name: \'original_price\', index: \'original_price\', width: 150},
+                                {name: \'device_type_id\', index: \'device_type_id\', width: 150},
+                            ],
+                            pager: "#pager_list_1",
+                            viewrecords: true,
+                            caption: "Device List",
+                            hidegrid: false
+                        });
+                        $(window).bind(\'resize\', function () {
+                            var width = $(\'.jqGrid_wrapper\').width();
+                            $(\'#table_list_1\').setGridWidth(width);
+                        });
+                        '
+                    ]
+                ];
+            }
+
+            return view('admin.dashboard.layout', compact(
+                'template',
+                'config',
+                'title',
+                'employee',
+                'position_name',
+                'excel_devices',
+                'excel_file_path'
+            ));
+        } else {
+            return redirect()->route('auth.admin')->with('error', 'Please log in first');
+        }
+    }
+
+    public function createExcel(Request $request)
+    {
+        $excel_file_path = $request->excel_file_path;
+        $filePath = public_path($excel_file_path);
+
+        if (!isset($excel_file_path) && !file_exists($filePath)) {
+            return redirect()->route('device.createExcelView')->with('error', 'File not found');
+        }
+
+        $excel_devices = [];
+
+        $spreadsheet = IOFactory::load($filePath);
+        $sheet = $spreadsheet->getActiveSheet();
+        $highestRow = $sheet->getHighestRow();
+
+        for ($row = 2; $row <= $highestRow; ++$row) {
+            $excel_devices[] = [
+                'device_name' => $sheet->getCell('A' . $row)->getValue(),
+                'quantity' => $sheet->getCell('B' . $row)->getValue(),
+                'original_price' => $sheet->getCell('C' . $row)->getValue(),    
+                'device_type_id' => $sheet->getCell('D' . $row)->getValue(),
+            ];
+        }
+
+        try {
+            DB::table('devices')->insert($excel_devices);
+            unlink($filePath);
+            return redirect()->route('device.index')->with('success', 'Devices created successfully');
+        } catch (Exception $e) {
+            return redirect()->route('device.createExcelView')->with('error', $e->getMessage());
+        }
+
+        return redirect()->route('device.createExcelView')->with('error', 'Device creation failed');
     }
 }

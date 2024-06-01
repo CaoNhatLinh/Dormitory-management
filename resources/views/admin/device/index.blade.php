@@ -9,6 +9,7 @@
                     <div class="table-responsive">
                         <div class="tw-my-4">
                             <a href="{{route('device.createView')}}" class="btn btn-primary">Create device</a>
+                            <a href="{{route('device.createExcelView')}}" class="btn btn-primary">Import by excel</a>
                         </div>
                         <table id="deviceTable"
                             class="dataTables_wrapper footable table table-stripped toggle-arrow-tiny dataTables-example">

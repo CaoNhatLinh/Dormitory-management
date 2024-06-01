@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Device;
 use App\Models\DeviceType;
 use App\Models\DeviceRental;
+use App\Models\DeviceRentalDetail;
 use App\Models\Employee;
 use App\Models\Position;
 use App\Models\Room;
@@ -110,5 +111,5 @@ class DeviceRentalController extends Controller
     {
         $rooms = Room::all(['room_id', 'room_name']);
         return response()->json(['rooms' => $rooms]);
-    }    
+    }  
 }
