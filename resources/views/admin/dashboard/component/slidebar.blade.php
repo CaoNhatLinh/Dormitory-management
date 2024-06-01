@@ -83,7 +83,7 @@
                                 <a href="#">List of equipment rental costs</a>
                             </li>
                             <li>
-                                <a href="{{route('deviceRental.index')}}">New costs</a>
+                                <a href="{{route('deviceRental.createDeviceRental')}}">New costs</a>
                             </li>
                         </ul>
                     </li>

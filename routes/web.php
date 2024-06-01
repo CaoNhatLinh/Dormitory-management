@@ -121,6 +121,7 @@ Route::post("/bill/create", [RoomBillController::class, 'create'])->name("bill.c
 
 //DEVICE RENTAL
 Route::get("/device/devicerental", [DeviceRentalController::class, 'index'])->name("deviceRental.index");
+Route::get("/device/devicerental", [DeviceRentalController::class, 'createDeviceRental'])->name("deviceRental.createDeviceRental");
 Route::get('/api/rooms', [DeviceRentalController::class, 'getRooms']);
 
 

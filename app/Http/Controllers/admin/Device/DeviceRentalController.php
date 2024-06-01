@@ -108,7 +108,41 @@ class DeviceRentalController extends Controller
             return redirect()->route('auth.admin')->with('error', 'Vui lòng đăng nhập');
         }
     }
+    public function createDeviceRental()
+    {
+        if (Auth::check()) {
+            if (!Session::has('employee') && !Session::has('position_name')) {
+                $authId = Auth::id();
+                $employee = Employee::find($authId);
+                $employee_id = $employee->employee_id;
+                $position_name = Position::find($employee_id)->position_name;
+                Session::put('employee', $employee);
+                Session::put('position_name', $position_name);
+            }
+            $devices = Device::with('deviceType')->get();
+            foreach ($devices as $device) {
+                $rentalQuantity = DeviceRentalDetail::where('device_id', $device->device_id)->count();
+                $device->rental_quantity = $rentalQuantity;
+            }
+            $data = ['devices' => $devices];
+            $title = 'Device rental list';
+            $employee = Session::get('employee');
+            $position_name = Session::get('position_name');
+            $config = $this->config();
+            $template = 'admin.device.devicerental.createDeviceRental';
     
+            return view('admin.dashboard.layout', compact(
+                'template',
+                'config',
+                'data',
+                'title',
+                'employee',
+                'position_name'
+            ));
+        } else {
+            return redirect()->route('auth.admin')->with('error', 'Vui lòng đăng nhập');
+        }
+    }
     public function getRooms()
     {
         $rooms = Room::all(['room_id', 'room_name']);
