@@ -101,8 +101,6 @@ Route::get('/device/search', [DeviceController::class, 'search'])->name('device.
 Route::get('/device/delete/{id}', [DeviceController::class, 'delete'])->name('device.delete');
 
 
-
-
 //DEVICE TYPE
 Route::get("/device/devicetype", [DeviceTypeController::class, 'index'])->name("deviceType.index");
 Route::get("/device/devicetype/createView", [DeviceTypeController::class, 'createView'])->name("deviceType.createView");
@@ -113,8 +111,14 @@ Route::post("/device/devicetype/edit/{id}", [DeviceTypeController::class, 'edit'
 //BILL
 Route::get("/bill", [BillController::class, 'index'])->name("bill.index");
 Route::get("/bill/createView", [BillController::class, 'createView'])->name("bill.createView");
-Route::post("/bill/create", [RoomBillController::class, 'create'])->name("bill.create");
-
+Route::post('/bill/create', [BillController::class, 'create'])->name('bill.create');
+Route::get("/bill/billroomView/{id}/{student_id}", [BillController::class, 'billroomView'])->name("bill.billroomView");
+Route::get("/bill/eawView/{id}", [BillController::class, 'eawView'])->name("bill.eawView");
+Route::get("/bill/equipmentView/{id}", [BillController::class, 'equipmentView'])->name("bill.equipmentView");
+Route::get("/bill/pay/billroom/{id}", [BillController::class, 'billroomPay'])->name("bill.billroomPay");
+Route::get("/bill/pay/eaw/{id}", [BillController::class, 'eawPay'])->name("bill.eawPay");
+Route::get("/bill/pay/equipment/{id}", [BillController::class, 'equipmentPay'])->name("bill.equipmentPay");
+Route::get("/api/student/{id}", [BillController::class, 'getstudentbyid']);
 //DEVICE RENTAL
 Route::get("/device/devicerental", [DeviceRentalController::class, 'index'])->name("deviceRental.index");
 Route::get('/api/rooms', [DeviceRentalController::class, 'getRooms']);

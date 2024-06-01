@@ -10,6 +10,7 @@ class DeviceRental extends Model
     use HasFactory;
     protected $primaryKey = 'device_rental_id';
     protected $table = 'device_rentals';
+    public $timestamps = false;
     protected $fillable = [
         'room_id',
         'total_rental_price',
@@ -27,4 +28,9 @@ class DeviceRental extends Model
     {
         return $this->hasMany(DeviceRentalDetail::class, 'rental_id');
     }
+    public function rentalDetails()
+    {
+        return $this->hasMany(DeviceRentalDetail::class, 'device_rental_id', 'device_rental_id');
+    }
+    
 }

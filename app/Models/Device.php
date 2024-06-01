@@ -22,4 +22,8 @@ class Device extends Model
     {
         return $this-> belongsTo(DeviceType::class,'device_type_id');
     }
+    public function rentalDetails()
+    {
+        return $this->hasMany(DeviceRentalDetail::class, 'device_id', 'device_id');
+    }
 }

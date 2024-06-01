@@ -10,6 +10,7 @@ use App\Models\DeviceRental;
 use App\Models\Employee;
 use App\Models\Position;
 use App\Models\Room;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Session;
@@ -80,17 +81,20 @@ class DeviceRentalController extends Controller
         if (Auth::check()) {
             if (!Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
-                $employee = Employee::find($authId);
-                $employee_id = $employee->employee_id;
+                $user = User::find($authId)->with('employee');
+                $employee = Employee::find($user->employee_id);
+                $employee_id = $user->employee->employee_id;
                 $position_name = Position::find($employee_id)->position_name;
                 Session::put('employee', $employee);
+                Session::put('user', $user);
                 Session::put('position_name', $position_name);
             }
+                $employee = Session::get('employee');
+                $position_name = Session::get('position_name');
+                $user = Session::get('user');
             $devices = Device::with('deviceType')->get();
             $data = ['devices' => $devices];
             $title = 'Device rental list';
-            $employee = Session::get('employee');
-            $position_name = Session::get('position_name');
             $config = $this->config();
             $template = 'admin.device.devicerental.index';
 
@@ -101,6 +105,7 @@ class DeviceRentalController extends Controller
                 'title',
                 'employee',
                 'position_name',
+                'user'
             ));
         } else {
             return redirect()->route('auth.admin')->with('error', 'vui lòng đăng nhập');

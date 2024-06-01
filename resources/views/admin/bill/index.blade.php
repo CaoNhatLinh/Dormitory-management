@@ -12,9 +12,10 @@
             </div>
             <div class="ibox-content">
                 <div class="form-group">
-                    <button class="btn btn-primary dim btn-sm" data-toggle="modal" data-target="#modalCreate">
+                    <a href="{{ route('bill.createView')}}">
+                        <button class="btn btn-primary dim btn-sm" >
                         New Bill
-                    </button>
+                    </button></a>
                     <input type="text" class="form-control input-sm m-b-xs " id="filter" placeholder="Search in table">
                 </div>
 
@@ -24,6 +25,7 @@
                             <th>Bill ID</th>
                             <th>Room</th>
                             <th>cashier</th>
+                            <th>Type payment</th>
                             <th>Total bill</th>
                             <th>Date bill</th>
                             <th data-sort-ignore="true">Action</th>
@@ -35,7 +37,7 @@
                             <td>{{ $bill->bill_id }}</td>
                             <td>{{ $bill->room->room_name }}</td>
                             <td>{{ $bill->employee->name }}</td>
-
+                            <td>{{ $bill->type_payment }}</td>
                             <td class="center">{{ number_format($bill->total_bill, 0, ',', '.') }} VNĐ</td>
                             <td class="center">{{ $bill->date_bill }}</td>
                             <td>

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Employee;
 use App\Models\Position;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
@@ -168,14 +169,17 @@ class DashboardController extends Controller
         if (Auth::check()) {
             if (!Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
-                $employee = Employee::find($authId);
-                $employee_id = $employee->employee_id;
+                $user = User::find($authId)->with('employee');
+                $employee =Employee::find($user->employee_id);
+                $employee_id = $user->employee->employee_id;
                 $position_name = Position::find($employee_id)->position_name;
                 Session::put('employee', $employee);
+                Session::put('user', $user);
                 Session::put('position_name', $position_name);
             }
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
+            $user = Session::get('user');
             $title = 'Dormitory management';
             $config = $this->config();
             $template = 'admin.dashboard.home.index';
@@ -184,7 +188,8 @@ class DashboardController extends Controller
                 'config',
                 'title',
                 'position_name',
-                'employee'
+                'employee',
+                'user'
             ));
         } else {
             return redirect()->route('auth.admin')->with('error', 'Please log in first');

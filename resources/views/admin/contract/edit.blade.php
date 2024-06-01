@@ -27,14 +27,14 @@
                                 <div class="form-group">
                                     <label for="room_id">Change new room</label>
                                     @if ($contract->status != "renting")
-                                        <select id="room_id" name="room_id" class="form-control">
+                                        <select id="room_id" name="room_id" class="form-control" disabled>
                                             <option value="">Select room</option>
                                             @foreach($rooms as $room)
                                                 <option value="{{ $room->room_id }}">{{ $room->room_name }} - {{ number_format($room->roomType->room_type_price, 0, ',', '.') }} VNĐ</option>
                                             @endforeach
                                         </select>
                                     @else
-                                        <select id="room_id" name="room_id" class="form-control" disabled>
+                                        <select id="room_id" name="room_id" class="form-control">
                                             <option value="">Select room</option>
                                             @foreach($rooms as $room)
                                                 <option value="{{ $room->room_id }}">{{ $room->room_name }} - {{ number_format($room->roomType->room_type_price, 0, ',', '.') }} VNĐ</option>
@@ -65,12 +65,12 @@
                        
                         
                         <div class="tw-flex tw-items-center tw-justify-between">
-                            @if ($contract->status != "renting")
+                            @if ($contract->status == "renting")
                                 <button type="submit" class="btn btn-primary" value="edit" name="action">Edit contract</button>
                                 <button type="submit" class="btn btn-danger tw-mt-3" value="cancel" name="action">Cancel contract</button>
                             @endif
 
-                            @if ($contract->status == "renting")
+                            @if ($contract->status != "renting")
                                 <button type="button" class="btn btn-primary"  disabled>Edit contract</button>
                                 <button type="button" class="btn btn-danger tw-mt-3" disabled>Cancel contract</button>
                             @endif

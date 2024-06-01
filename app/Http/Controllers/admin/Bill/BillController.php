@@ -4,13 +4,23 @@ namespace App\Http\Controllers\Admin\Bill;
 
 use App\Http\Controllers\Controller;
 use App\Models\Bill;
+use App\Models\Contract;
+use App\Models\DeviceRental;
 use Illuminate\Http\Request;
 use App\Models\Employee;
 use App\Models\Permission;
 use App\Models\Position;
+use App\Models\DeviceRentalDetail;
 use App\Models\Room;
+use App\Models\RoomBill;
+use App\Models\RoomRental;
+use App\Models\RoomType;
+use App\Models\Student;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use Carbon\Carbon;
 
 class BillController extends Controller
 {
@@ -66,7 +76,7 @@ class BillController extends Controller
                 'js/plugins/pace/pace.min.js',
                 'js/plugins/steps/jquery.steps.min.js',
                 'js/plugins/validate/jquery.validate.min.js'
-                
+
             ],
             'linkjs' => [],
             'css' => [
@@ -76,91 +86,55 @@ class BillController extends Controller
             'linkcss' => [],
 
             'script' => [
-                ' $(document).ready(function(){
-                $(\'#data_1 .input-group.date\').datepicker({
-                    todayBtn: "linked",
-                    keyboardNavigation: false,
-                    forceParse: false,
-                    calendarWeeks: true,
-                    autoclose: true
-                });
-            })
-            ',
-                '$(document).ready(function(){
-                    $("#form").steps({
-                        bodyTag: "fieldset",
-                        onStepChanging: function (event, currentIndex, newIndex)
-                        {
-                            // Always allow going backward even if the current step contains invalid fields!
-                            if (currentIndex > newIndex)
-                            {
-                                return true;
-                            }
-        
-                            // Forbid suppressing "Warning" step if the user is to young
-                            if (newIndex === 3 && Number($("#age").val()) < 18)
-                            {
-                                return false;
-                            }
-        
-                            var form = $(this);
-        
-                            // Clean up if user went backward before
-                            if (currentIndex < newIndex)
-                            {
-                                // To remove error styles
-                                $(".body:eq(" + newIndex + ") label.error", form).remove();
-                                $(".body:eq(" + newIndex + ") .error", form).removeClass("error");
-                            }
-        
-                            // Disable validation on fields that are disabled or hidden.
-                            form.validate().settings.ignore = ":disabled,:hidden";
-        
-                            // Start validation; Prevent going forward if false
-                            return form.valid();
+                '
+            function initializePage() {
+                function fetchStudents(roomId) {
+                    $.ajax({
+                        url: \'/dormitory-management/public/api/student/\' + roomId, 
+                        method: \'GET\',
+                        data: {
+                            room_id: roomId
                         },
-                        onStepChanged: function (event, currentIndex, priorIndex)
-                        {
-                            // Suppress (skip) "Warning" step if the user is old enough.
-                            if (currentIndex === 2 && Number($("#age").val()) >= 18)
-                            {
-                                $(this).steps("next");
-                            }
-                            
-                            if (currentIndex === 2 && priorIndex === 3)
-                            {
-                                $(this).steps("previous");
-                            }
+                        success: function(data){
+                            $(\'#studentDropdownContainer\').show();
+                            $(\'select[name="student_id"]\').html(data);
+                            $(\'#studentErrorBlock\').text(\'\');
                         },
-                        onFinishing: function (event, currentIndex)
-                        {
-                            var form = $(this);
-                            
-                            form.validate().settings.ignore = ":disabled";
-        
-                            // Start validation; Prevent form submission if false
-                            return form.valid();
-                        },
-                        onFinished: function (event, currentIndex)
-                        {
-                            var form = $(this);
-        
-                            // Submit form input
-                            form.submit();
+                        error: function(xhr, status, error){
+                            console.error(error);
+                            $(\'#studentDropdownContainer\').hide(); 
+                            $(\'#studentErrorBlock\').text(\'Error occurred while fetching students.\'); 
                         }
-                    }).validate({
-                                errorPlacement: function (error, element)
-                                {
-                                    element.before(error);
-                                },
-                                rules: {
-                                    confirm: {
-                                        equalTo: "#password"
-                                    }
-                                }
-                            });
-               });'
-
+                    });
+                }
+                var selectedType = $(\'select[name="typePayment"]\').val();
+                if(selectedType == \'billroom\'){
+                    var roomId = $(\'select[name="room_id"]\').val();
+                    fetchStudents(roomId);
+                }
+                $(\'select[name="typePayment"]\').change(function(){
+                    var selectedType = $(this).val();
+                    if(selectedType == \'billroom\'){
+                        var roomId = $(\'select[name="room_id"]\').val();
+                        fetchStudents(roomId);
+                    } else {
+                        $(\'#studentDropdownContainer\').hide(); 
+                        $(\'select[name="student_id"]\').html(\'\'); 
+                        $(\'#studentErrorBlock\').text(\'\'); 
+                    }
+                });
+                $(\'select[name="room_id"]\').change(function(){
+                    var selectedType = $(\'select[name="typePayment"]\').val();
+                    if(selectedType == \'billroom\'){
+                        var roomId = $(this).val();
+                        fetchStudents(roomId);
+                    }
+                });
+            }
+            $(document).ready(function(){
+                initializePage();
+            });
+            '
             ]
 
 
@@ -174,16 +148,19 @@ class BillController extends Controller
         if (Auth::check()) {
             if (!Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
-                $employee = Employee::find($authId);
-                $employee_id = $employee->employee_id;
+                $user = User::find($authId)->with('employee');
+                $employee =Employee::find($user->employee_id);
+                $employee_id = $user->employee->employee_id;
                 $position_name = Position::find($employee_id)->position_name;
                 Session::put('employee', $employee);
+                Session::put('user', $user);
                 Session::put('position_name', $position_name);
             }
-            $config = $this->config();
-            $title = 'Bill list';
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
+            $user = Session::get('user');
+            $config = $this->config();
+            $title = 'Bill list';
             $template = 'admin.bill.index';
             $bills = Bill::with(['employee', 'room'])->get();
             $data = ['bills' => $bills];
@@ -193,6 +170,7 @@ class BillController extends Controller
                 'title',
                 'position_name',
                 'employee',
+                'user',
                 'data',
             ));
         } else {
@@ -204,15 +182,18 @@ class BillController extends Controller
         if (Auth::check()) {
             if (!Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
-                $employee = Employee::find($authId);
-                $employee_id = $employee->employee_id;
+                $user = User::find($authId)->with('employee');
+                $employee =Employee::find($user->employee_id);
+                $employee_id = $user->employee->employee_id;
                 $position_name = Position::find($employee_id)->position_name;
                 Session::put('employee', $employee);
+                Session::put('user', $user);
                 Session::put('position_name', $position_name);
             }
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
-            $title = 'Create invoice';
+            $user = Session::get('user');
+            $title = 'Select invoice';
             $config = $this->configCreateView();
             $rooms = Room::all();
             $template = 'admin.bill.create';
@@ -222,58 +203,298 @@ class BillController extends Controller
                 'title',
                 'employee',
                 'position_name',
-                'rooms'
+                'rooms',
+                'user'
             ));
         } else {
             return redirect()->route('auth.admin')->with('error', 'Please log in first');
         }
     }
 
-    // public function create(Request $request)
-    // {
-    //     $request->validate([
-    //         'permission_name' => 'required|unique:permissions',
+    public function create(Request $request)
+    {
+        $request->validate([
+            'room_id' => 'required',
+            'typePayment' => 'required|in:billroom,EaW,equipment'
+        ]);
+        $room_id = $request->room_id;
+        $student_id = $request->has('student_id') ? $request->student_id : null;
+        $typePayment = $request->typePayment;
+        if ($typePayment == 'billroom')
+            return redirect()->route('bill.billroomView', ['id' => $room_id, 'student_id' => $student_id]);
+        else if ($typePayment == 'EaW') return redirect()->route('bill.eawView', $room_id);
+        else  return redirect()->route('bill.equipmentView', $room_id);
+    }
+    public function billroomView($id, $student_id)
+    {
+        if (Auth::check()) {
+            if (!Session::has('employee') && !Session::has('position_name')) {
+                $authId = Auth::id();
+                $user = User::find($authId)->with('employee');
+                $employee =Employee::find($user->employee_id);
+                $employee_id = $user->employee->employee_id;
+                $position_name = Position::find($employee_id)->position_name;
+                Session::put('employee', $employee);
+                Session::put('user', $user);
+                Session::put('position_name', $position_name);
+            }
+            $employee = Session::get('employee');
+            $position_name = Session::get('position_name');
+            $user = Session::get('user');
+            $title = 'room invoice';
+            $config = $this->configCreateView();
+            $rooms = Room::with('roomType')->get();
+            $billroom = RoomRental::where('room_id', $id)
+                ->where('status', 'unpaid')
+                ->where('student_id', $student_id)
+                ->with(['student', 'room' => function ($query) {
+                    $query->select('room_id', 'room_name', 'room_type_id');
+                }, 'room.roomType' => function ($query) {
+                    $query->select('room_type_id', 'room_type_name', 'room_type_price');
+                }])
+                ->first();
 
-    //     ]);
+            $template = 'admin.bill.showbillroom';
+            return view('admin.dashboard.layout', compact(
+                'template',
+                'config',
+                'title',
+                'employee',
+                'position_name',
+                'rooms',
+                'user',
+                'billroom'
+            ));
+        } else {
+            return redirect()->route('auth.admin')->with('error', 'Please log in first');
+        }
+    }
+    public function eawView($id)
+    {
+        if (Auth::check()) {
+            if (!Session::has('employee') && !Session::has('position_name')) {
+                $authId = Auth::id();
+                $user = User::find($authId)->with('employee');
+                $employee =Employee::find($user->employee_id);
+                $employee_id = $user->employee->employee_id;
+                $position_name = Position::find($employee_id)->position_name;
+                Session::put('employee', $employee);
+                Session::put('user', $user);
+                Session::put('position_name', $position_name);
+            }
+            $employee = Session::get('employee');
+            $position_name = Session::get('position_name');
+            $user = Session::get('user');
+            $title = 'Electric and Water invoice';
+            $config = $this->configCreateView();
+            $rooms = Room::with('roomType')->get();
+            $billEaWs = RoomBill::where('room_id', $id)->where('status', 'unpaid')->get();
+            $template = 'admin.bill.showbilleaw';
+            return view('admin.dashboard.layout', compact(
+                'template',
+                'config',
+                'title',
+                'employee',
+                'position_name',
+                'rooms',
+                'billEaWs',
+                'user'
+            ));
+        } else {
+            return redirect()->route('auth.admin')->with('error', 'Please log in first');
+        }
+    }
+    public function equipmentView($id)
+    {
+        if (Auth::check()) {
+            if (!Session::has('employee') && !Session::has('position_name')) {
+                $authId = Auth::id();
+                $user = User::find($authId)->with('employee');
+                $employee =Employee::find($user->employee_id);
+                $employee_id = $user->employee->employee_id;
+                $position_name = Position::find($employee_id)->position_name;
+                Session::put('employee', $employee);
+                Session::put('user', $user);
+                Session::put('position_name', $position_name);
+            }
+            $employee = Session::get('employee');
+            $position_name = Session::get('position_name');
+            $user = Session::get('user');
+            $title = 'EquipmentView rental invoice';
+            $config = $this->configCreateView();
+            $rooms = Room::with('roomType')->get();
+            $deviceRentails = DeviceRentalDetail::with('device')->get();
+            $billEquiments = DeviceRental::where('room_id', $id)
+                ->where('status', 'renting')
+                ->where(DB::raw('DATEDIFF(CURDATE(), date_device_rental)'), '>=', 30)
+                ->with('rentalDetails')
+                ->get();
+            $template = 'admin.bill.showbillequipment';
+            return view('admin.dashboard.layout', compact(
+                'template',
+                'config',
+                'title',
+                'employee',
+                'position_name',
+                'rooms',
+                'user',
+                'deviceRentails',
+                'billEquiments'
+            ));
+        } else {
+            return redirect()->route('auth.admin')->with('error', 'Please log in first');
+        }
+    }
+    public function billroomPay($id)
+    {
+        if (Auth::check()) {
+            $room_rental = RoomRental::find($id);
+            if ($room_rental && $room_rental->room && $room_rental->room->roomType) {
+                $roomTypePrice = $room_rental->room->roomType->room_type_price;
+                $room_rental->status = 'paid';
+                $room_rental->save();
+                $employee = Session::get('employee');
+                $bill = new Bill();
+                $bill->room_id = $room_rental->room_id;
+                $bill->employee_id = $employee->employee_id;
+                $bill->date_bill = now()->format('Y-m-d');
+                $bill->total_bill = $roomTypePrice;
+                $bill->type_payment = 'Room';
+                $bill->save();
+                $date = date('Y-m-d', strtotime($room_rental->due_date . ' +1 month'));
+                $contract = Contract::where('student_id', $room_rental->student_id)->latest('end_date')->first();
+                if ($date <= date('Y-m-d', strtotime($contract->end_date . ' +1 day'))) {
+                    $newRoomRental = new RoomRental();
+                    $newRoomRental->room_id = $room_rental->room_id;
+                    $newRoomRental->student_id = $room_rental->student_id;
+                    $newRoomRental->status = 'unpaid';
+                    $newRoomRental->due_date = $date;
+                    $newRoomRental->save();
+                }
+            }
+            return redirect()->route('bill.index')->with('succes', 'Make payment successfully');
+        } else {
+            return redirect()->route('auth.admin')->with('error', 'Please log in first');
+        }
+    }
+    public function eawPay($id)
+    {
+        if (Auth::check()) {
+            $eawbills = RoomBill::where('room_id', $id)->where('status', 'unpaid')->get();
+            $totalEaWBill = 0;
+            foreach ($eawbills as $eawbill) {
+                $eawbill->status = 'paid';
+                $eawbill->save();
+                $totalEaWBill += $eawbill->total_room_bills;
+            }
+            $employee = Session::get('employee');
+            $bill = new Bill();
+            $bill->room_id = $id;
+            $bill->employee_id = $employee->employee_id;
+            $bill->date_bill = now()->format('Y-m-d');
+            $bill->total_bill = $totalEaWBill;
+            $bill->type_payment = 'Electricity and water';
+            $bill->save();
+            return redirect()->route('bill.index')->with('succes', 'Make payment successfully');
+        } else {
+            return redirect()->route('auth.admin')->with('error', 'Please log in first');
+        }
+    }
+    public function equipmentPay($id)
+    {
+        if (Auth::check()) {
 
+            if ($id) {
+                $billEquiments = DeviceRental::where('room_id', $id)
+                    ->where('status', 'renting')
+                    ->where(DB::raw('DATEDIFF(CURDATE(), date_device_rental)'), '>=', 29)
+                    ->with('rentalDetails')
+                    ->get();
+                foreach ($billEquiments as $billEquiment) {
+                    $DeviceRental = DeviceRental::find($billEquiment->device_rental_id);
+                    $DeviceRental->status = 'complete';
+                    $DeviceRental->save();
+                }
+                $totalEquipmentBill = 0;
+                foreach ($billEquiments as $billEquiment) {
+                    $newDeviceRental = new DeviceRental();
+                    $newDeviceRental->room_id = $id;
+                    $newDeviceRental->status = 'renting';
+                    $newDeviceRental->total_rental_price = $billEquiment->total_rental_price;
+                    $newDeviceRental->quantity = $billEquiment->quantity;
+                    $newDeviceRental->date_device_rental = now()->format('Y-m-d');
+                    $newDeviceRental->save();
+                    $device_rental_id = $newDeviceRental->device_rental_id;
+                    foreach ($billEquiment->rentalDetails as $device_rental_details) {
+                        $newDeviceRentalDetails = new DeviceRentalDetail();
+                        $newDeviceRentalDetails->device_id = $device_rental_details->device_id;
+                        $newDeviceRentalDetails->device_rental_id = $device_rental_id;
+                        $newDeviceRentalDetails->status = 'good';
+                        $newDeviceRentalDetails->rental_price = $device_rental_details->rental_price;
+                        $newDeviceRentalDetails->save();
+                    }
+                    $totalEquipmentBill += $billEquiment->total_rental_price;
+                }
+                $employee = Session::get('employee');
+                $bill = new Bill();
+                $bill->room_id = $id;
+                $bill->employee_id = $employee->employee_id;
+                $bill->date_bill = now()->format('Y-m-d');
+                $bill->total_bill = $totalEquipmentBill;
+                $bill->type_payment = 'Equipment';
+                $bill->save();
+                return redirect()->route('bill.index')->with('succes', 'Make payment successfully');
+            } else return redirect()->route('bill.index')->with('error', 'ID not found');
+        } else {
+            return redirect()->route('auth.admin')->with('error', 'Please log in first');
+        }
+    }
+    public function equipmentPayCancle($id)
+    {
+        if (Auth::check()) {
 
-    //     $permission = new Permission();
-    //     $permission->permission_name = $request->permission_name;
-    //     $result = $permission->save();
-
-    //     if ($result) {
-    //         return redirect()->route('permission.index')->with('success', 'permission created successfully.');
-    //     } else {
-    //         return redirect()->back()->with('error', 'Failed to create permission.');
-    //     }
-    // }
-
-
-    // public function edit(Request $request)
-    // {
-    //     $request->validate([
-    //         'permission_name' => 'required|unique:permissions'
-    //     ]);
-
-    //     $permission = Permission::find($request->permission_id);
-    //     $permission->permission_name = $request->permission_name;
-    //     $result = $permission->save();
-    //     if ($result) {
-    //         return redirect()->route('permission.index')->with('success', 'Permission edited successfully.');
-    //     } else {
-    //         return redirect()->back()->with('error', 'Failed to update Permission.');
-    //     }
-    // }
-    // public function delete($id)
-    // {
-    //     $permission = Permission::find($id);
-
-    //     if (!$permission) {
-    //         return redirect()->route('permission.index')->with('error', 'Permission not found!');
-    //     }
-
-    //     $permission->delete();
-
-    //     return redirect()->route('permission.index')->with('success', 'Permission deleted successfully!');
-    // }
+            if ($id) {
+                $billEquiments = DeviceRental::where('room_id', $id)
+                    ->where('status', 'renting')
+                    ->where(DB::raw('DATEDIFF(CURDATE(), date_device_rental)'), '>=', 29)
+                    ->with('rentalDetails')
+                    ->get();
+                $totalEquipmentBill = 0;
+                foreach ($billEquiments as $billEquiment) {
+                    $DeviceRental = DeviceRental::find($billEquiment->device_rental_id);
+                    $DeviceRental->status = 'complete';
+                    $DeviceRental->save();
+                    $totalEquipmentBill += $billEquiment->total_rental_price;
+                }
+                $employee = Session::get('employee');
+                $bill = new Bill();
+                $bill->room_id = $id;
+                $bill->employee_id = $employee->employee_id;
+                $bill->date_bill = now()->format('Y-m-d');
+                $bill->total_bill = $totalEquipmentBill;
+                $bill->type_payment = 'Equipment';
+                $bill->save();
+                return redirect()->route('bill.index')->with('succes', 'Make payment successfully');
+            } else return redirect()->route('bill.index')->with('error', 'ID not found');
+        } else {
+            return redirect()->route('auth.admin')->with('error', 'Please log in first');
+        }
+    }
+    public function getRooms()
+    {
+        $rooms = Room::all(['room_id', 'room_name']);
+        return response()->json(['rooms' => $rooms]);
+    }
+    public function getstudentbyid(Request $request)
+    {
+        $roomId = $request->room_id;
+        $students = Student::whereHas('contract', function ($query) use ($roomId) {
+            $query->where('room_id', $roomId);
+        })->get();
+        $options = '';
+        foreach ($students as $student) {
+            $options .= '<option value="' . $student->student_id . '">' . $student->name . '</option>';
+        }
+        return $options;
+    }
 }

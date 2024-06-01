@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Contract;
 use App\Models\Room;
+use App\Models\RoomRental;
+use App\Models\User;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -103,10 +106,20 @@ class ContractController extends Controller
 
     public function index()
     {
-        if (Session::has('employee') && Session::has('position_name')) {
+        if (Auth::check()){
+        if (!Session::has('employee') && !Session::has('position_name')) {
+            $authId = Auth::id();
+            $user = User::find($authId)->with('employee');
+            $employee = Employee::find($user->employee_id);
+            $employee_id = $user->employee->employee_id;
+            $position_name = Position::find($employee_id)->position_name;
+            Session::put('employee', $employee);
+            Session::put('user', $user);
+            Session::put('position_name', $position_name);
+        }
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
-
+            $user = Session::get('user');
             $contracts = Contract::all();
 
             $title = 'Contract List';
@@ -121,7 +134,8 @@ class ContractController extends Controller
                 'contracts',
                 'title',
                 'employee',
-                'position_name'
+                'position_name',
+                'user'
             ));
         } else {
             return redirect()->route('auth.admin')->with('error', 'Please log in first');
@@ -130,9 +144,20 @@ class ContractController extends Controller
 
     public function createView($id)
     {
-        if (Session::has('employee') && Session::has('position_name')) {
+        if (Auth::check()){
+        if (!Session::has('employee') && !Session::has('position_name')) {
+            $authId = Auth::id();
+            $user = User::find($authId)->with('employee');
+            $employee = Employee::find($user->employee_id);
+            $employee_id = $user->employee->employee_id;
+            $position_name = Position::find($employee_id)->position_name;
+            Session::put('employee', $employee);
+            Session::put('user', $user);
+            Session::put('position_name', $position_name);
+        }
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
+            $user = Session::get('user');
 
             DB::table('contracts')
                 ->where('end_date', '<=', date('Y-m-d'))
@@ -162,7 +187,8 @@ class ContractController extends Controller
                 'employee',
                 'position_name',
                 'student_id',
-                'rooms'
+                'rooms',
+                'user'
             ));
         } else {
             return redirect()->route('auth.admin')->with('error', 'Please log in first');
@@ -184,16 +210,32 @@ class ContractController extends Controller
         $contract->end_date = $request->end_date;
         $contract->status = "renting";
         $contract->save();
-
-
+        $roomRental = new RoomRental();
+        $roomRental->room_id = $request->room_id;
+        $roomRental->student_id = $id;
+        $roomRental->status = 'unpaid';
+        $roomRental->due_date = date('Y-m-d', strtotime($request->start_date . ' +1 month'));
+        $roomRental->save();
         return redirect()->route('student.detailView', ['id' => $id]);
     }
 
+
     public function editView($id)
     {
-        if (Session::has('employee') && Session::has('position_name')) {
+        if (Auth::check()){
+        if (!Session::has('employee') && !Session::has('position_name')) {
+            $authId = Auth::id();
+            $user = User::find($authId)->with('employee');
+            $employee = Employee::find($user->employee_id);
+            $employee_id = $user->employee->employee_id;
+            $position_name = Position::find($employee_id)->position_name;
+            Session::put('employee', $employee);
+            Session::put('user', $user);
+            Session::put('position_name', $position_name);
+        }
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
+            $user = Session::get('user');
 
 
             DB::table('contracts')
@@ -217,7 +259,8 @@ class ContractController extends Controller
                 'employee',
                 'position_name',
                 'contract',
-                'rooms'
+                'rooms',
+                'user'
             ));
         } else {
             return redirect()->route('auth.admin')->with('error', 'Please log in first');
@@ -233,6 +276,12 @@ class ContractController extends Controller
             case 'edit':
                 $contract->room_id = $request->room_id ?? $contract->room_id;
                 $contract->save();
+                $roomRental = RoomRental::where('student_id', $contract->student_id)->latest('due_date')->first();;
+                if ($roomRental) {
+                    $roomRental->room_id = $contract->room_id;
+                    $roomRental->save();
+                }
+
                 break;
 
             case 'cancel':
@@ -243,7 +292,6 @@ class ContractController extends Controller
             default:
                 break;
         }
-
 
         return redirect()->route('student.detailView', ['id' => $contract->student_id]);
     }

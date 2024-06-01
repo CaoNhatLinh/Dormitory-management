@@ -13,6 +13,7 @@ use App\Models\Position;
 use App\Models\Room;
 use App\Models\RoomBill;
 use App\Models\RoomType;
+use App\Models\User;
 use DateTime;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -27,7 +28,7 @@ class RoomBillController extends Controller
     public function __construct()
     {
     }
-
+   
     public function config()
     {
         return $config = [
@@ -146,14 +147,17 @@ class RoomBillController extends Controller
         if (Auth::check()) {
             if (!Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
-                $employee = Employee::find($authId);
-                $employee_id = $employee->employee_id;
+                $user = User::find($authId)->with('employee');
+                $employee =Employee::find($user->employee_id);
+                $employee_id = $user->employee->employee_id;
                 $position_name = Position::find($employee_id)->position_name;
                 Session::put('employee', $employee);
+                Session::put('user', $user);
                 Session::put('position_name', $position_name);
             }
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
+            $user = Session::get('user');
 
             $title = 'Room bill';
 
@@ -169,6 +173,7 @@ class RoomBillController extends Controller
                 'title',
                 'employee',
                 'position_name',
+                'user',
                 'roomBills',
             ));
         } else {
@@ -181,14 +186,17 @@ class RoomBillController extends Controller
         if (Auth::check()) {
             if (!Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
-                $employee = Employee::find($authId);
-                $employee_id = $employee->employee_id;
+                $user = User::find($authId)->with('employee');
+                $employee =Employee::find($user->employee_id);
+                $employee_id = $user->employee->employee_id;
                 $position_name = Position::find($employee_id)->position_name;
                 Session::put('employee', $employee);
+                Session::put('user', $user);
                 Session::put('position_name', $position_name);
             }
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
+            $user = Session::get('user');
             $title = 'Create room bill';
 
 
@@ -203,6 +211,7 @@ class RoomBillController extends Controller
                 'title',
                 'employee',
                 'position_name',
+                'user',
                 'rooms'
 
             ));
@@ -268,14 +277,17 @@ class RoomBillController extends Controller
         if (Auth::check()) {
             if (!Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
-                $employee = Employee::find($authId);
-                $employee_id = $employee->employee_id;
+                $user = User::find($authId)->with('employee');
+                $employee =Employee::find($user->employee_id);
+                $employee_id = $user->employee->employee_id;
                 $position_name = Position::find($employee_id)->position_name;
                 Session::put('employee', $employee);
+                Session::put('user', $user);
                 Session::put('position_name', $position_name);
             }
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
+            $user = Session::get('user');
             $title = 'Create room bill by excel';
 
 
@@ -386,7 +398,8 @@ class RoomBillController extends Controller
                 'employee',
                 'position_name',
                 'excel_room_bills',
-                'excel_file_path'
+                'excel_file_path',
+                'user'
             ));
         } else {
             return redirect()->route('auth.admin')->with('error', 'Please log in first');
@@ -494,12 +507,17 @@ class RoomBillController extends Controller
         if (Auth::check()) {
             if (!Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
-                $employee = Employee::find($authId);
-                $employee_id = $employee->employee_id;
+                $user = User::find($authId)->with('employee');
+                $employee =Employee::find($user->employee_id);
+                $employee_id = $user->employee->employee_id;
                 $position_name = Position::find($employee_id)->position_name;
                 Session::put('employee', $employee);
+                Session::put('user', $user);
                 Session::put('position_name', $position_name);
             }
+            $employee = Session::get('employee');
+            $position_name = Session::get('position_name');
+            $user = Session::get('user');
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
 
@@ -520,7 +538,8 @@ class RoomBillController extends Controller
                 'position_name',
                 'rooms',
                 'roomBill',
-                'statuses'
+                'statuses',
+                'user'
             ));
         } else {
             return redirect()->route('auth.admin')->with('error', 'Please log in first');
