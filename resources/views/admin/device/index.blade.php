@@ -9,6 +9,7 @@
                     <div class="table-responsive">
                         <div class="tw-my-4">
                             <a href="{{route('device.createView')}}" class="btn btn-primary">Create device</a>
+                            <a href="{{route('device.createExcelView')}}" class="btn btn-primary">Import by excel</a>
                         </div>
                         <table id="deviceTable"
                             class="dataTables_wrapper footable table table-stripped toggle-arrow-tiny dataTables-example">
@@ -19,7 +20,7 @@
                                     <th>Quantity</th>
                                     <th>Original Price</i></th>
                                     <th>Device Type</i></th>
-                                    <th>Rental Quantity</i></th>
+                                    <th>Quantity Rented</i></th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -31,7 +32,7 @@
                                     <td>{{ $device->quantity }}</td>
                                     <td>{{ number_format($device->original_price, 0, ',', '.') }} VNĐ</td>
                                     <td>{{ $device->deviceType->device_type_name }}</td>
-                                    <td>ddddđ</td>
+                                    <td>{{ $device->rental_quantity }}</td>
                                     <td>
                                         <a class="text-size-lg me-2"
                                             href="{{route('device.editView', $device->device_id)}}">

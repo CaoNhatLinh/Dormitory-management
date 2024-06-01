@@ -13,7 +13,8 @@ class DeviceRentalDetail extends Model
     public $timestamps = false;
     protected $fillable = [
         'rental_detail_id',
-        'status'
+        'status',
+        'rental_price'
     ];
 
     public function deviceRental()

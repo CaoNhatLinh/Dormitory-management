@@ -99,6 +99,10 @@ Route::get("/device/editView/{id}", [DeviceController::class, 'editView'])->name
 Route::post("/device/edit/{id}", [DeviceController::class, 'edit'])->name("device.edit");
 Route::get('/device/search', [DeviceController::class, 'search'])->name('device.search');
 Route::get('/device/delete/{id}', [DeviceController::class, 'delete'])->name('device.delete');
+Route::get("/device/createExcelView", [DeviceController::class, 'createExcelView'])->name("device.createExcelView");
+Route::post("/device/createExcel", [DeviceController::class, 'createExcel'])->name("device.createExcel");
+Route::post("/device/loadExcel", [DeviceController::class, 'loadExcel'])->name("device.loadExcel");
+Route::post('/device/rent', [DeviceRentalController::class, 'rent'])->name('device.rent');
 
 
 //DEVICE TYPE
@@ -121,6 +125,7 @@ Route::get("/bill/pay/equipment/{id}", [BillController::class, 'equipmentPay'])-
 Route::get("/api/student/{id}", [BillController::class, 'getstudentbyid']);
 //DEVICE RENTAL
 Route::get("/device/devicerental", [DeviceRentalController::class, 'index'])->name("deviceRental.index");
+Route::get("/device/devicerental", [DeviceRentalController::class, 'createDeviceRental'])->name("deviceRental.createDeviceRental");
 Route::get('/api/rooms', [DeviceRentalController::class, 'getRooms']);
 
 
