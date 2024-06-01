@@ -123,9 +123,10 @@ Route::get("/bill/pay/billroom/{id}", [BillController::class, 'billroomPay'])->n
 Route::get("/bill/pay/eaw/{id}", [BillController::class, 'eawPay'])->name("bill.eawPay");
 Route::get("/bill/pay/equipment/{id}", [BillController::class, 'equipmentPay'])->name("bill.equipmentPay");
 Route::get("/api/student/{id}", [BillController::class, 'getstudentbyid']);
+
 //DEVICE RENTAL
 Route::get("/device/devicerental", [DeviceRentalController::class, 'index'])->name("deviceRental.index");
-Route::get("/device/devicerental", [DeviceRentalController::class, 'createDeviceRental'])->name("deviceRental.createDeviceRental");
+Route::get("/device/devicerental/createDeviceRental", [DeviceRentalController::class, 'createDeviceRental'])->name("deviceRental.createDeviceRental");
 Route::get('/api/rooms', [DeviceRentalController::class, 'getRooms']);
 
 

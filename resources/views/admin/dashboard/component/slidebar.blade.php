@@ -80,7 +80,7 @@
                         <a href="#">equipment rental<span class="fa arrow"></span></a>
                         <ul class="nav nav-third-level">
                             <li>
-                                <a href="#">List of equipment rental costs</a>
+                                <a href="{{route('deviceRental.index')}}">List of equipment rental costs</a>
                             </li>
                             <li>
                                 <a href="{{route('deviceRental.createDeviceRental')}}">New costs</a>

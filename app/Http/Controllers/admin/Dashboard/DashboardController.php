@@ -169,9 +169,9 @@ class DashboardController extends Controller
         if (Auth::check()) {
             if (!Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
-                $user = User::find($authId)->with('employee');
-                $employee =Employee::find($user->employee_id);
-                $employee_id = $user->employee->employee_id;
+                $user = User::find($authId);
+                $employee = $user->employee;
+                $employee_id = $employee->employee_id;
                 $position_name = Position::find($employee_id)->position_name;
                 Session::put('employee', $employee);
                 Session::put('user', $user);
