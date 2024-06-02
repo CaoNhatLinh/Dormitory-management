@@ -12,6 +12,8 @@
 
     <link href="{{asset('css/login.css')}}" rel="stylesheet">
 
+
+
 </head>
 
 <body class="gray-bg">
@@ -26,27 +28,12 @@
          
             <div class="login">
                 
-                <form method="POST" role="form" action="{{route('auth.login')}}">
-                   
+                <form method="POST" action="{{route('auth.sendResetLinkEmail')}}">
+                @csrf
                     <input type="text" name="email" placeholder="email" required="required" />
-                    @if ($errors->has('email'))
-                    <span class="error-message">*{{$errors->first('email')}}</span>
-
-                    @endif
-                    <input type="password" name="password" placeholder="Password" required="required" />
-                    @if ($errors->has('password'))
-                    <span class="error-message">*{{$errors->first('password')}}</span>
-
-                    @endif
-                    <label>
-                        <input style="width:max-content" type="checkbox" checked="checked" name="remember"> Remember me
-                    </label>
-                    @csrf
-                    <button type="submit" class="btn btn-primary btn-block btn-large">Login</button>
-                    <a href="{{ route('auth.forgetPass')}}" style="color:red">Forget password</a>
+                    <button type="submit" class="btn btn-primary btn-block btn-large">Sending OTP</button>
                 </form>
             </div>
-
     <!-- Mainly scripts -->
     <script src="{{asset('js/jquery-3.1.1.min.js')}}"></script>
     <script src="{{asset('js/bootstrap.min.js')}}"></script>

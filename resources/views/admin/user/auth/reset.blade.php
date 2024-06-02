@@ -12,6 +12,8 @@
 
     <link href="{{asset('css/login.css')}}" rel="stylesheet">
 
+
+
 </head>
 
 <body class="gray-bg">
@@ -28,22 +30,20 @@
                 
                 <form method="POST" role="form" action="{{route('auth.login')}}">
                    
-                    <input type="text" name="email" placeholder="email" required="required" />
+                     <input type="text" name="email" value="{{ $email }}">
                     @if ($errors->has('email'))
                     <span class="error-message">*{{$errors->first('email')}}</span>
-
                     @endif
-                    <input type="password" name="password" placeholder="Password" required="required" />
+                    <input type="password" name="password" placeholder="Enter a new password" required="required" />
                     @if ($errors->has('password'))
                     <span class="error-message">*{{$errors->first('password')}}</span>
-
                     @endif
-                    <label>
-                        <input style="width:max-content" type="checkbox" checked="checked" name="remember"> Remember me
-                    </label>
+                    <input type="password" name="repassword" placeholder="re-enter password" required="required" />
+                    @if ($errors->has('repassword'))
+                    <span class="error-message">*{{$errors->first('repassword')}}</span>
+                    @endif
                     @csrf
-                    <button type="submit" class="btn btn-primary btn-block btn-large">Login</button>
-                    <a href="{{ route('auth.forgetPass')}}" style="color:red">Forget password</a>
+                    <button type="submit" class="btn btn-primary btn-block btn-large">Change password</button>
                 </form>
             </div>
 
