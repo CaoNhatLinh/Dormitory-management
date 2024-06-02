@@ -23,14 +23,6 @@ Route::get('/', function () {
     return redirect()->route('dashboard.index');
 });
 
-
-Route::get('/test-email', function () {
-    Mail::raw('This is a test email', function ($message) {
-        $message->to('caonhatlinh4@gmail.com')
-                ->subject('Test Email');
-    });
-    return 'Email sent';
-});
 //AUTH
 Route::GET('admin', [AuthController::class, 'index'])->name('auth.admin');
 Route::post('login', [AuthController::class, 'login'])->name('auth.login');
@@ -38,9 +30,10 @@ Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');
 Route::GET('forgetPass', [AuthController::class, 'forgetPass'])->name('auth.forgetPass');
 Route::POST('password/email', [AuthController::class, 'sendResetLinkEmail'])->name('auth.sendResetLinkEmail');
 Route::GET('password/show-otp', [AuthController::class, 'showOTP'])->name('password.otp');
-Route::post('password/verify-otp', [AuthController::class, 'verifyOTP'])->name('password.verify');
+Route::post('password/verify-otp', [AuthController::class, 'verifyOtp'])->name('password.verify');
 Route::get('password/resetView', [AuthController::class, 'resetView'])->name('password.resetView');
 Route::post('password/reset', [AuthController::class, 'reset'])->name('password.reset');
+Route::post('password/updatePassword', [AuthController::class, 'updatePassword'])->name('password.updatePassword');
 //DASHBOARD
 Route::GET('dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 Route::get('/bill-Total/{year}', [DashboardController::class, 'getMonthlyBillStatistics']);

@@ -26,9 +26,10 @@
          
             <div class="login">
                 
-                <form method="POST" role="form" action="{{ route('password.verify') }}}">
+                <form method="POST" role="form" action="{{ route('password.verify') }}">
+                @csrf
                     <input type="text" name="otp" placeholder="enter OTP" required="required" />
-                    <input type="text" name="email" value="{{ $email }}">
+                    <input type="hidden" name="email" value="{{ $email }}">
                     @if ($errors->has('otp'))
                     <span class="error-message">*{{$errors->first('otp')}}</span>
                     @endif

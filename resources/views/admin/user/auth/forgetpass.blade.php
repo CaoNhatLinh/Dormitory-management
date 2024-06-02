@@ -30,7 +30,7 @@
                 
                 <form method="POST" action="{{route('auth.sendResetLinkEmail')}}">
                 @csrf
-                    <input type="text" name="email" placeholder="email" required="required" />
+                    <input type="email" name="email" placeholder="email" required="required" />
                     <button type="submit" class="btn btn-primary btn-block btn-large">Sending OTP</button>
                 </form>
             </div>

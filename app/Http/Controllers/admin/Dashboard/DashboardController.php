@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\Employee;
 use App\Models\Position;
 use App\Models\Room;
+use App\Models\RoomRental;
 use App\Models\Student;
 use App\Models\User;
 use Carbon\Carbon;
@@ -26,6 +27,9 @@ class DashboardController extends Controller
     {
         return $config = [
             'js' => [
+                'js/plugins/dataTables/datatables.min.js',
+                'js/plugins/pace/pace.min.js',
+                'js/plugins/footable/footable.all.min.js',
                 'js/plugins/flot/jquery.flot.js',
                 'js/plugins/flot/jquery.flot.tooltip.min.js',
                 'js/plugins/flot/jquery.flot.spline.js',
@@ -37,6 +41,8 @@ class DashboardController extends Controller
             ],
             'linkjs' => [],
             'css' => [
+                'css/plugins/dataTables/datatables.min.css',
+                'css/plugins/footable/footable.core.css',
                 'css/dashboard.css'
             ],
             'linkcss' => [],
@@ -53,6 +59,21 @@ class DashboardController extends Controller
                         toastr.success(\'domitory management system\', \'Welcome\');
         
                     }, 1300);
+                });
+                ',
+                '
+                $(document).ready(function(){
+                    $(\'.dataTables-example\').DataTable({
+                        pageLength: 10,
+                        searching: true, 
+                        ordering: true, 
+                        responsive: true,
+                        info: false,  
+                        paging: true,
+                        lengthChange: false,
+                        dom: \'<"html5buttons"B>lTfgitp\',
+                    });
+        
                 });
                 ',
                 '
@@ -207,7 +228,15 @@ class DashboardController extends Controller
             $totalBills = Bill::whereYear('date_bill', $currentYear)
                 ->whereMonth('date_bill', $currentMonth)
                 ->sum('total_bill');
-
+            $fifteenDaysAgo = Carbon::now()->addDays(15)->toDateString();
+            $listStudentNotPaid = RoomRental::where('status', 'unpaid')
+                ->whereDate('due_date', '<=', $fifteenDaysAgo)
+                ->with(['student', 'room' => function ($query) {
+                    $query->select('room_id', 'room_name', 'room_type_id');
+                }, 'room.roomType' => function ($query) {
+                    $query->select('room_type_id', 'room_type_name', 'room_type_price');
+                }])
+                ->get();
             $config = $this->config();
             $template = 'admin.dashboard.home.index';
             return view('admin.dashboard.layout', compact(
@@ -222,7 +251,8 @@ class DashboardController extends Controller
                 'totalContracts',
                 'totalBills',
                 'totalDevices',
-                'totalEmployees'
+                'totalEmployees',
+                'listStudentNotPaid',
             ));
         } else {
             return redirect()->route('auth.admin')->with('error', 'Please log in first');
