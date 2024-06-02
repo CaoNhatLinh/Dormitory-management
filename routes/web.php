@@ -128,6 +128,8 @@ Route::get("/api/student/{id}", [BillController::class, 'getstudentbyid']);
 Route::get("/device/devicerental", [DeviceRentalController::class, 'index'])->name("deviceRental.index");
 Route::get("/device/devicerental/createDeviceRental", [DeviceRentalController::class, 'createDeviceRental'])->name("deviceRental.createDeviceRental");
 Route::get('/api/rooms', [DeviceRentalController::class, 'getRooms']);
+Route::get("/device/devicerental/editView/{id}", [DeviceRentalController::class, 'editView'])->name("deviceRental.editView");
+Route::post("/device/devicerental/edit/{id}", [DeviceRentalController::class, 'edit'])->name("deviceRental.edit");
 
 
 // ROOM BILL

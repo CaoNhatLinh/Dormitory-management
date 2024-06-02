@@ -229,7 +229,7 @@ class DeviceController extends Controller
         $device->original_price = $request->original_price;
         $device->save();
 
-        return redirect()->route('device.index');
+        return redirect()->route('device.index')->with('success', 'Device  updated successfully.');;
     }
     public function search(Request $request)
     {
@@ -283,15 +283,18 @@ class DeviceController extends Controller
     public function delete($id)
     {
         $device = Device::find($id);
-
+    
         if (!$device) {
             return redirect()->route('device.index')->with('error', 'Device not found!');
         }
-
-        $device->delete();
-
-        return redirect()->route('device.index')->with('success', 'Device deleted successfully!');
-    }
+    
+        try {
+            $device->delete();
+            return redirect()->route('device.index')->with('success', 'Device deleted successfully!');
+        } catch (\Illuminate\Database\QueryException $e) {
+            return redirect()->route('device.index')->with('error', 'Error deleting device: ' . $e->getMessage());
+        }
+    }    
     public function loadExcel(Request $request)
     {
         $request->validate([

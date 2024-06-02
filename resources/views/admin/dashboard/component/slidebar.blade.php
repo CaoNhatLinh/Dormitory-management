@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <nav style="position:fixed;z-index:1; top:0; bottom:0;overflow:auto; height: 100vh" class="scroll navbar-default navbar-static-side" role="navigation">
     <div  class="sidebar-collapse ">
         <ul class="nav metismenu" id="side-menu">
@@ -23,7 +24,7 @@
             </li>
 
             <li>
-                <a href="#"><i class="fa fa-bar-chart-o"></i> <span class="nav-label">Contracts</span><span class="fa arrow"></span></a>
+                <a href="#"><i class="fa fa-file-signature"></i> <span class="nav-label">Contracts</span><span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse">
                     <li><a href="{{route('contract.index')}}">Contracts list</a></li>
                     <li><a href="{{route('student.index')}}">Students list</a></li>
@@ -32,7 +33,7 @@
             </li>
 
             <li>
-                <a href="#"><i class="fa fa-edit"></i> <span class="nav-label">Rooms</span><span class="fa arrow"></span></a>
+                <a href="#"><i class="fa fa-bed"></i> <span class="nav-label">Rooms</span><span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse">
                     <li><a href="{{route('room.index')}}">Rooms list</a></li>
                     <li><a href="{{route('room.createView')}}">New room</a></li>
@@ -42,7 +43,7 @@
             </li>
 
             <li>
-                <a href="#"><i class="fa fa-edit"></i> <span class="nav-label">Devices</span><span class="fa arrow"></span></a>
+                <a href="#"><i class="fa fa-lightbulb"></i> <span class="nav-label">Devices</span><span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse">
                     <li><a href="{{route('device.index')}}">Devices list</a></li>
                     <li><a href="{{route('device.createView')}}">New device</a></li>
@@ -51,7 +52,7 @@
                 </ul>
             </li>
             <li>
-                <a href="#"><i class="fa fa-desktop"></i> <span class="nav-label">Invoices</span><span class="fa arrow"></span></a>
+                <a href="#"><i class="fa fa-file-invoice-dollar"></i> <span class="nav-label">Invoices</span><span class="fa arrow"></span></a>
 
                 <ul class="nav nav-second-level collapse">
                     <li><a href="{{route('bill.index')}}">Invoices list</a></li>
@@ -62,7 +63,7 @@
             </li>
 
             <li>
-                <a href="#"><i class="fa fa-desktop"></i> <span class="nav-label">Costs</span><span class="fa arrow"></span></a>
+                <a href="#"><i class="fa fa-money-check-dollar"></i> <span class="nav-label">Costs</span><span class="fa arrow"></span></a>
 
                 <ul class="nav nav-second-level collapse">
                     <li>
@@ -91,7 +92,7 @@
             </li>
             
             <li>
-                <a href="#"><i class="fa fa-files-o"></i> <span class="nav-label">Employees</span><span class="fa arrow"></span></a>
+                <a href="#"><i class="fa fa-user-tag"></i> <span class="nav-label">Employees</span><span class="fa arrow"></span></a>
 
                 <ul class="nav nav-second-level collapse">
                     <li><a href="{{route('employee.index')}}">Employees list</a></li>
@@ -103,14 +104,14 @@
             </li>
            
             <li>
-                <a href="#"><i class="fa fa-flask"></i> <span class="nav-label">Users</span><span class="fa arrow"></span></a>
+                <a href="#"><i class="fa fa-users"></i> <span class="nav-label">Users</span><span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse">
                     <li><a href="{{route('user.index')}}">Users list</a></li>
                     <li><a href="{{route('user.createView')}}">New user</a></li>
                 </ul>
             </li>
             <li>
-                <a href="#"><i class="fa fa-files-o"></i> <span class="nav-label">Permission</span><span class="fa arrow"></span></a>
+                <a href="#"><i class="fa fa-user-shield"></i> <span class="nav-label">Permission</span><span class="fa arrow"></span></a>
 
                 <ul class="nav nav-second-level collapse">
                     <li><a href="{{route('permission.index')}}">Permission list</a></li>
@@ -118,7 +119,7 @@
                 </ul>
             </li>
             <li>
-                <a href="#"><i class="fa fa-edit"></i> <span class="nav-label">Setting </span></a>
+                <a href="#"><i class="fa fa-gear"></i> <span class="nav-label">Setting </span></a>
             </li>
 
         </ul>
