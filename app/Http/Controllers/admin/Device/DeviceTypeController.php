@@ -164,6 +164,6 @@ class DeviceTypeController extends Controller
         ]);
         $deviceType->device_type_name = $request->device_type_name;
         $result = $deviceType->save();
-        return redirect()->route('deviceType.index');
+        return redirect()->route('deviceType.index')->with('success', 'Device type updated successfully.');;
     }
 }

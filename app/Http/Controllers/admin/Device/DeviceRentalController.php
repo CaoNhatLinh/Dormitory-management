@@ -102,6 +102,10 @@ class DeviceRentalController extends Controller
                         ordering: true,
                         searching:false,
                         paging: true,
+                        columnDefs: [{
+                            orderable: false,
+                            targets: -1
+                        }]
                     });
                 });
                 '   
@@ -111,6 +115,7 @@ class DeviceRentalController extends Controller
     }
     public function index()
     {
+
         if (Auth::check()) {
             if (!Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
@@ -120,14 +125,14 @@ class DeviceRentalController extends Controller
                 Session::put('employee', $employee);
                 Session::put('position_name', $position_name);
             }
-            $devices = Device::with('deviceType')->get();
-            $data = ['devices' => $devices];
-            $title = 'Device rental list';
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
+            $deviceRentals = DeviceRental::all();
+            $data = ['deviceRentals' => $deviceRentals];
+            $title = 'Device Rental';
             $config = $this->configIndex();
             $template = 'admin.device.devicerental.index';
-    
+
             return view('admin.dashboard.layout', compact(
                 'template',
                 'config',
@@ -137,7 +142,7 @@ class DeviceRentalController extends Controller
                 'position_name'
             ));
         } else {
-            return redirect()->route('auth.admin')->with('error', 'Vui lòng đăng nhập');
+            return redirect()->route('auth.admin')->with('error', 'Please log in first');
         }
     }
     public function createDeviceRental()
@@ -208,5 +213,62 @@ class DeviceRentalController extends Controller
             }
         }
         return redirect()->back()->with('success', 'Thiết bị đã được cho thuê thành công.');
+    }
+    public function edit(Request $request, $id)
+    {
+        $deviceRental = deviceRental::find($id);
+        $request->validate([
+            'room_id' => 'required|exists:rooms,room_id',
+            'total_rental_price' => 'required|numeric|min:0',
+            'quantity' => 'required|integer|min:0',
+            'status' => 'required|max:30',
+            'date_device_rental' => 'required|date',
+        ]);
+
+        $deviceRental->room_id = $request->room_id;
+        $deviceRental->total_rental_price = $request->total_rental_price;
+        $deviceRental->quantity = $request->quantity;
+        $deviceRental->status = $request->status;
+        $deviceRental->date_device_rental = $request->date_device_rental;
+        $deviceRental->save();
+
+        return redirect()->route('deviceRental.index')->with('success', 'Device rental updated successfully.');
+    }
+    public function editView($id)
+    {
+        if (Auth::check()) {
+            if (!Session::has('employee') && !Session::has('position_name')) {
+                $authId = Auth::id();
+                $user = User::find($authId)->with('employee');
+                $employee = Employee::find($user->employee_id);
+                $employee_id = $user->employee->employee_id;
+                $position_name = Position::find($employee_id)->position_name;
+                Session::put('employee', $employee);
+                Session::put('user', $user);
+                Session::put('position_name', $position_name);
+            }
+            $employee = Session::get('employee');
+            $position_name = Session::get('position_name');
+            $user = Session::get('user');
+            $deviceRental = deviceRental::find($id);
+            $rooms = Room::all();
+
+            $title = 'Update Device Rental';
+            $config = $this->config();
+            $template = 'admin.device.devicerental.edit';
+
+            return view('admin.dashboard.layout', compact(
+                'template',
+                'config',
+                'deviceRental',
+                'rooms',
+                'title',
+                'employee',
+                'position_name',
+                'user'
+            ));
+        } else {
+            return redirect()->route('auth.admin')->with('error', 'Please log in first');
+        }
     }
 }
