@@ -28,9 +28,9 @@
          
             <div class="login">
                 
-                <form method="POST" role="form" action="{{route('auth.login')}}">
+                <form method="POST" role="form" action="{{route('password.updatePassword')}}">
                    
-                     <input type="text" name="email" value="{{ $email }}">
+                     <input type="hidden" name="email" value="{{ $email }}">
                     @if ($errors->has('email'))
                     <span class="error-message">*{{$errors->first('email')}}</span>
                     @endif

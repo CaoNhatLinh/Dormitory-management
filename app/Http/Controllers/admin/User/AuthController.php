@@ -91,7 +91,7 @@ class AuthController extends Controller
     {
         $email = session('email');
         if (!$email) {
-            return redirect()->route('password.request')->with('error', 'Email not found in session.');
+            return redirect()->route('auth.forgetPass')->with('error', 'Email not found in session.');
         }
         return view('admin.user.auth.otp', compact('email'));
     }
@@ -102,35 +102,41 @@ class AuthController extends Controller
             'email' => 'required|email',
         ]);
         $user = User::where('email', $request->email)->where('otp', $request->otp)->first();
-
         if ($user) {
             return redirect()->route('password.resetView')->with('email', $request->email);
         } else {
             return redirect()->back()->withErrors(['otp' => 'Invalid OTP']);
         }
     }
+    public function resetView(Request $request)
+    {
+        $email = session('email');
+        if (!$email) {
+            return redirect()->route('auth.forgetPass')->with('error', 'Email not found in session.');
+        }
+        return view('admin.user.auth.reset', compact('email'));
+    }
     public function updatePassword(Request $request)
     {
-        // Validate input
+    
         $request->validate([
             'email' => 'required|email|exists:users,email',
-            'password' => 'required|string|min:6|confirmed',
-            'repassword' => 'required|string|min:6|confirmed',
+            'password' => 'required|string|min:6|',
+            'repassword' => 'required|string|min:6|',
         ]);
         $password = $request->password;
         $repassword = $request->repassword;
         if ($password != $repassword) {
-            return redirect()->back()->withErrors(['repassword' => 'Re-password do not match']);
+            return redirect()->back()->with('error', 'Re-password do not match');
         }
         $user = User::where('email', $request->email)->first();
 
         if (!$user) {
-            return redirect()->back()->withErrors(['email' => 'No user found with this email address.']);
+            return redirect()->back()->with('error','No user found with this email address.');
         }
         $user->password = Hash::make($request->password);
         $user->otp = null;
         $user->save();
-
-        return redirect()->route('auth.admin')->with('message', 'Your password has been reset successfully. Please log in with your new password.');
+        return redirect()->route('auth.admin')->with('succes', 'Your password has been reset successfully. Please log in with your new password.');
     }
 }
