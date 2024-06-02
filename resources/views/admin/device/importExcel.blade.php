@@ -1,4 +1,3 @@
-
 <div class="tw-mt-5">
     <div class="row">
         <div class="col-lg-12">
@@ -29,7 +28,7 @@
                         <div>
                             <form method="POST" action="{{ route('device.createExcel') }}">
                                 @csrf
-                                <input type="hidden" name="excel_file_path" value="{{ $excel_file_path }}">
+                                <input type="hidden" name="excel_devices" value="{{ json_encode($excel_devices) }}">
                                 <button type="submit" class="btn btn-primary tw-w-full">Import</button>
                             </form>
                         </div>

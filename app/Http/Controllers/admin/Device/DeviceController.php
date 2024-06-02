@@ -91,7 +91,7 @@ class DeviceController extends Controller
     public function index()
     {
         if (Auth::check()) {
-            if (!Session::has('user')&& !Session::has('employee') && !Session::has('position_name')) {
+            if (!Session::has('user')|| !Session::has('employee') || !Session::has('position_name')) {
                 $authId = Auth::id();
                 $user = User::find($authId);
                 $employee = $user->employee;
@@ -130,7 +130,7 @@ class DeviceController extends Controller
     public function createView()
     {
         if (Auth::check()) {
-            if (!Session::has('user')&& !Session::has('employee') && !Session::has('position_name')) {
+            if (!Session::has('user')|| !Session::has('employee') || !Session::has('position_name')) {
                 $authId = Auth::id();
                 $user = User::find($authId);
                 $employee = $user->employee;
@@ -183,7 +183,7 @@ class DeviceController extends Controller
     public function editView($id)
     {
         if (Auth::check()) {
-            if (!Session::has('user')&& !Session::has('employee') && !Session::has('position_name')) {
+            if (!Session::has('user')|| !Session::has('employee') || !Session::has('position_name')) {
                 $authId = Auth::id();
                 $user = User::find($authId);
                 $employee = $user->employee;
@@ -240,7 +240,7 @@ class DeviceController extends Controller
     {
 
         if (Auth::check()) {
-            if (!Session::has('user')&& !Session::has('employee') && !Session::has('position_name')) {
+            if (!Session::has('user')|| !Session::has('employee') || !Session::has('position_name')) {
                 $authId = Auth::id();
                 $user = User::find($authId);
                 $employee = $user->employee;
@@ -305,24 +305,33 @@ class DeviceController extends Controller
         $request->validate([
             'excel_device' => 'required|file|mimes:xlsx,xls,csv',
         ]);
-
+    
         if ($request->hasFile('excel_device')) {
             $file = $request->file('excel_device');
-            $fileName = 'excel_' . time() . '.' . $file->getClientOriginalExtension();
-            $path = public_path('/uploads/excels/');
-            $file->move($path, $fileName);
-            $filePath = 'uploads/excels/' . $fileName;
-
-            return redirect()->route('device.createExcelView', ['excel_file_path' => $filePath])->with('success', 'File uploaded successfully');
+            $spreadsheet = IOFactory::load($file->getRealPath());
+            $sheet = $spreadsheet->getActiveSheet();
+            $highestRow = $sheet->getHighestRow();
+            $excel_devices = json_decode($request->query('excel_devices', '[]'), true);
+    
+            for ($row = 2; $row <= $highestRow; ++$row) {
+                $excel_devices[] = [
+                    'device_name' => $sheet->getCell('A' . $row)->getValue(),
+                    'quantity' => $sheet->getCell('B' . $row)->getValue(),
+                    'original_price' => $sheet->getCell('C' . $row)->getValue(),    
+                    'device_type_id' => $sheet->getCell('D' . $row)->getValue(),
+                ];
+            }
+    
+            return redirect()->route('device.createExcelView', ['excel_devices' => json_encode($excel_devices)])->with('success', 'File processed successfully');
         } else {
             return redirect()->route('device.createExcelView')->with('error', 'File not found');
         }
-    }
+    }    
 
     public function createExcelView(Request $request)
     {
         if (Auth::check()) {
-            if (!Session::has('user')&& !Session::has('employee') && !Session::has('position_name')) {
+            if (!Session::has('user')|| !Session::has('employee') || !Session::has('position_name')) {
                 $authId = Auth::id();
                 $user = User::find($authId);
                 $employee = $user->employee;
@@ -336,83 +345,65 @@ class DeviceController extends Controller
             $position_name = Session::get('position_name');
             $user = Session::get('user');
             $title = 'Create device from excel';
-
+    
             $config = $this->config();
             $template = 'admin.device.importExcel';
-
-            $excel_devices = [];
-
-            $excel_file_path = $request->query('excel_file_path');
-            $filePath = public_path($excel_file_path);
-
-            if (isset($excel_file_path) && file_exists($filePath)) {
-                $spreadsheet = IOFactory::load($filePath);
-                $sheet = $spreadsheet->getActiveSheet();
-                $highestRow = $sheet->getHighestRow();
-
-                for ($row = 2; $row <= $highestRow; ++$row) {
-                    $excel_devices[] = [
-                        'device_name' => $sheet->getCell('A' . $row)->getValue(),
-                        'quantity' => $sheet->getCell('B' . $row)->getValue(),
-                        'original_price' => $sheet->getCell('C' . $row)->getValue(),    
-                        'device_type_id' => $sheet->getCell('D' . $row)->getValue(),
-                    ];
-                }
-
-                $json = json_encode($excel_devices);
-
-                $config = [
-                    'js' => [
-                        'js/plugins/jqGrid/jquery.jqGrid.min.js',
-                        'js/plugins/jquery-ui/jquery-ui.min.js'
-                    ],
-                    'linkjs' => [
-                        'https://cdn.tailwindcss.com'
-                    ],
-                    'css' => [
-                        'css/plugins/jQueryUI/jquery-ui-1.10.4.custom.min.css',
-                        'css/plugins/jqGrid/ui.jqgrid.css',
-                    ],
-                    'linkcss' => [],
-
-                    'script' => [
-                        '
-                        tailwind.config = {
-                            prefix: \'tw-\',
-                            corePlugins: {
-                                preflight: false,
-                            },
-                        }',
-                        '
-                        $("#table_list_1").jqGrid({
-                            data:  JSON.parse(\'' . $json . '\'),
-                            datatype: "local",
-                            height: 250,
-                            autowidth: true,
-                            shrinkToFit: true,
-                            rowNum: 14,
-                            rowList: [10, 20, 30],
-                            colNames: [\'Device Name\', \'Quantity\',\'Original Price\', \'Device Type\'],
-                            colModel:  [
-                                {name: \'device_name\', index: \'device_name\', width: 150},
-                                {name: \'quantity\', index: \'quantity\', width: 150},
-                                {name: \'original_price\', index: \'original_price\', width: 150},
-                                {name: \'device_type_id\', index: \'device_type_id\', width: 150},
-                            ],
-                            pager: "#pager_list_1",
-                            viewrecords: true,
-                            caption: "Device List",
-                            hidegrid: false
-                        });
-                        $(window).bind(\'resize\', function () {
-                            var width = $(\'.jqGrid_wrapper\').width();
-                            $(\'#table_list_1\').setGridWidth(width);
-                        });
-                        '
-                    ]
-                ];
-            }
-
+    
+            $excel_devices = json_decode($request->query('excel_devices', '[]'), true);
+    
+            $json = json_encode($excel_devices);
+    
+            $config = [
+                'js' => [
+                    'js/plugins/jqGrid/jquery.jqGrid.min.js',
+                    'js/plugins/jquery-ui/jquery-ui.min.js'
+                ],
+                'linkjs' => [
+                    'https://cdn.tailwindcss.com'
+                ],
+                'css' => [
+                    'css/plugins/jQueryUI/jquery-ui-1.10.4.custom.min.css',
+                    'css/plugins/jqGrid/ui.jqgrid.css',
+                ],
+                'linkcss' => [],
+    
+                'script' => [
+                    '
+                    tailwind.config = {
+                        prefix: \'tw-\',
+                        corePlugins: {
+                            preflight: false,
+                        },
+                    }',
+                    '
+                    $("#table_list_1").jqGrid({
+                        data:  JSON.parse(\'' . $json . '\'),
+                        datatype: "local",
+                        height: 250,
+                        autowidth: true,
+                        shrinkToFit: true,
+                        rowNum: 14,
+                        rowList: [10, 20, 30],
+                        colNames: [\'Device Name\', \'Quantity\',\'Original Price\', \'Device Type\'],
+                        colModel:  [
+                            {name: \'device_name\', index: \'device_name\', width: 150},
+                            {name: \'quantity\', index: \'quantity\', width: 150},
+                            {name: \'original_price\', index: \'original_price\', width: 150},
+                            {name: \'device_type_id\', index: \'device_type_id\', width: 150},
+                        ],
+                        pager: "#pager_list_1",
+                        viewrecords: true,
+                        caption: "Device List",
+                        hidegrid: false
+                    });
+                    $(window).bind(\'resize\', function () {
+                        var width = $(\'.jqGrid_wrapper\').width();
+                        $(\'#table_list_1\').setGridWidth(width);
+                    });
+                    '
+                ]
+            ];
+    
             return view('admin.dashboard.layout', compact(
                 'template',
                 'config',
@@ -420,46 +411,27 @@ class DeviceController extends Controller
                 'employee',
                 'position_name',
                 'excel_devices',
-                'excel_file_path',
                 'user'
             ));
         } else {
             return redirect()->route('auth.admin')->with('error', 'Please log in first');
         }
     }
+    
 
     public function createExcel(Request $request)
     {
-        $excel_file_path = $request->excel_file_path;
-        $filePath = public_path($excel_file_path);
-
-        if (!isset($excel_file_path) && !file_exists($filePath)) {
-            return redirect()->route('device.createExcelView')->with('error', 'File not found');
+        $excel_devices = json_decode($request->input('excel_devices', '[]'), true);
+    
+        if (empty($excel_devices)) {
+            return redirect()->route('device.createExcelView')->with('error', 'No devices to create');
         }
-
-        $excel_devices = [];
-
-        $spreadsheet = IOFactory::load($filePath);
-        $sheet = $spreadsheet->getActiveSheet();
-        $highestRow = $sheet->getHighestRow();
-
-        for ($row = 2; $row <= $highestRow; ++$row) {
-            $excel_devices[] = [
-                'device_name' => $sheet->getCell('A' . $row)->getValue(),
-                'quantity' => $sheet->getCell('B' . $row)->getValue(),
-                'original_price' => $sheet->getCell('C' . $row)->getValue(),    
-                'device_type_id' => $sheet->getCell('D' . $row)->getValue(),
-            ];
-        }
-
+    
         try {
             DB::table('devices')->insert($excel_devices);
-            unlink($filePath);
             return redirect()->route('device.index')->with('success', 'Devices created successfully');
         } catch (Exception $e) {
             return redirect()->route('device.createExcelView')->with('error', $e->getMessage());
         }
-
-        return redirect()->route('device.createExcelView')->with('error', 'Device creation failed');
     }
 }

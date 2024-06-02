@@ -168,7 +168,7 @@ class DashboardController extends Controller
     {
         
         if (Auth::check()) {
-            if (!Session::has('user')&& !Session::has('employee') && !Session::has('position_name')) {
+            if (!Session::has('user')|| !Session::has('employee') || !Session::has('position_name')) {
                 $authId = Auth::id();
                 $user = User::find($authId);
                 $employee = $user->employee;

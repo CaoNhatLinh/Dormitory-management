@@ -45,7 +45,7 @@ class DeviceTypeController extends Controller
     {
 
         if (Auth::check()) {
-            if (!Session::has('user') && !Session::has('employee') && !Session::has('position_name')) {
+            if (!Session::has('user')|| !Session::has('employee') || !Session::has('position_name')) {
                 $authId = Auth::id();
                 $user = User::find($authId);
                 $employee = $user->employee;
@@ -80,7 +80,7 @@ class DeviceTypeController extends Controller
     public function createView()
     {
         if (Auth::check()) {
-            if (!Session::has('user') && !Session::has('employee') && !Session::has('position_name')) {
+            if (!Session::has('user')|| !Session::has('employee') || !Session::has('position_name')) {
                 $authId = Auth::id();
                 $user = User::find($authId);
                 $employee = $user->employee;
@@ -127,7 +127,7 @@ class DeviceTypeController extends Controller
     public function editView($id)
     {
         if (Auth::check()) {
-            if (!Session::has('user')&& !Session::has('employee') && !Session::has('position_name')) {
+            if (!Session::has('user')|| !Session::has('employee') || !Session::has('position_name')) {
                 $authId = Auth::id();
                 $user = User::find($authId);
                 $employee = $user->employee;
