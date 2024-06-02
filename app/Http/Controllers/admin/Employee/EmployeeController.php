@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Employee;
 use App\Models\Position;
+use App\Models\User;
 use DateTime;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -148,16 +149,19 @@ class EmployeeController extends Controller
     {
 
         if (Auth::check()) {
-            if (!Session::has('employee') && !Session::has('position_name')) {
+            if (!Session::has('user')&& !Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
-                $employee = Employee::find($authId);
+                $user = User::find($authId);
+                $employee = $user->employee;
                 $employee_id = $employee->employee_id;
                 $position_name = Position::find($employee_id)->position_name;
                 Session::put('employee', $employee);
+                Session::put('user', $user);
                 Session::put('position_name', $position_name);
             }
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
+            $user = Session::get('user');
             $title = 'Employeee list';
             $employees = Employee::with('position')->get();
             $data = ['employees' => $employees];
@@ -169,7 +173,7 @@ class EmployeeController extends Controller
                 'title',
                 'position_name',
                 'employee',
-                'data',
+                'data','user'
             ));
         } else {
             return redirect()->route('auth.admin')->with('error', 'Please log in first');
@@ -178,16 +182,19 @@ class EmployeeController extends Controller
     public function createView()
     {
         if (Auth::check()) {
-            if (!Session::has('employee') && !Session::has('position_name')) {
+            if (!Session::has('user')&& !Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
-                $employee = Employee::find($authId);
+                $user = User::find($authId);
+                $employee = $user->employee;
                 $employee_id = $employee->employee_id;
                 $position_name = Position::find($employee_id)->position_name;
                 Session::put('employee', $employee);
+                Session::put('user', $user);
                 Session::put('position_name', $position_name);
             }
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
+            $user = Session::get('user');
             $title = 'Create employee';
 
             $config = $this->configCreateView();
@@ -201,7 +208,7 @@ class EmployeeController extends Controller
                 'title',
                 'employee',
                 'position_name',
-                'positions',
+                'positions','user'
             ));
         } else {
             return redirect()->route('auth.admin')->with('error', 'Please log in first');
@@ -253,16 +260,19 @@ class EmployeeController extends Controller
     public function detailView($id)
     {
         if (Auth::check()) {
-            if (!Session::has('employee') && !Session::has('position_name')) {
+            if (!Session::has('user')&& !Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
-                $employee = Employee::find($authId);
+                $user = User::find($authId);
+                $employee = $user->employee;
                 $employee_id = $employee->employee_id;
                 $position_name = Position::find($employee_id)->position_name;
                 Session::put('employee', $employee);
+                Session::put('user', $user);
                 Session::put('position_name', $position_name);
             }
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
+            $user = Session::get('user');
             $title = 'Edit student';
             $config = $this->configDetail();
             $template = 'admin.employee.detail';
@@ -275,7 +285,7 @@ class EmployeeController extends Controller
                 'employee',
                 'position_name',
                 'employeeDetails',
-                'statuses'
+                'statuses','user'
             ));
         } else {
             return redirect()->route('auth.admin')->with('error', 'Please log in first');
@@ -284,16 +294,19 @@ class EmployeeController extends Controller
     public function editView($id)
     {
         if (Auth::check()) {
-            if (!Session::has('employee') && !Session::has('position_name')) {
+            if (!Session::has('user')&& !Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
-                $employee = Employee::find($authId);
+                $user = User::find($authId);
+                $employee = $user->employee;
                 $employee_id = $employee->employee_id;
                 $position_name = Position::find($employee_id)->position_name;
                 Session::put('employee', $employee);
+                Session::put('user', $user);
                 Session::put('position_name', $position_name);
             }
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
+            $user = Session::get('user');
             $title = 'Edit employee';
             $config = $this->configCreateView();
             $template = 'admin.employee.edit';
@@ -308,7 +321,7 @@ class EmployeeController extends Controller
                 'position_name',
                 'employeeEdit',
                 'positions',
-                'statuses'
+                'statuses','user'
             ));
         } else {
             return redirect()->route('auth.admin')->with('error', 'Please log in first');
@@ -321,7 +334,7 @@ class EmployeeController extends Controller
         $request->validate([
 
             'name' => 'required|string',
-            'avatar' => 'required|image|mimes:jpg,png,jpeg',
+            'avatar' => 'image|mimes:jpg,png,jpeg',
             'gender' => 'required|string',
             'address' => 'required|string',
             'nationality' => 'required|string',

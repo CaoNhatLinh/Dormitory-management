@@ -1,97 +1,85 @@
-<div class="wrapper wrapper-content animated fadeInRight"><div class="row1 g-6 mb-6">
-    <div class="col-xl-3 col-sm-6 col-12">
-        <div class="card shadow border-0">
-            <div class="card-body">
-                <div class="row1">
-                    <div class="col">
-                        <span class="h6 font-semibold text-muted text-sm d-block mb-2">Sinh viên đang ở</span>
-                        <span class="h3 font-bold mb-0">400</span>
-                    </div>
-                    <div class="col-auto">
-                        <div class="icon icon-shape bg-tertiary text-white text-lg rounded-circle">
-                            <i class="bi bi-credit-card"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-2 mb-0 text-sm">
-                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                        <i class="bi bi-arrow-up me-1"></i>13%
-                    </span>
-                    <span class="text-nowrap text-xs text-muted">ssssssssss</span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-3 col-sm-6 col-12">
-        <div class="card shadow border-0">
-            <div class="card-body">
+<div class="app-body-main-content">
+    <section class="service-section">
+        <div class="tiles">
+            <article class="tile">
+                <div class="tile-header">
                 
-                <div class="row1">
-                    <div class="col">
-                        <span class="h6 font-semibold text-muted text-sm d-block mb-2">Số lượng nhân viên</span>
-                        <span class="h3 font-bold mb-0">215</span>
-                    </div>
-                    <div class="col-auto">
-                        <div class="icon icon-shape bg-primary text-white text-lg rounded-circle">
-                            <i class="bi bi-people"></i>
-                        </div>
-                    </div>
+                    <h3>
+                        <span>2</span>
+                        <span>Total Contracts</span>
+                    </h3>
+                    <i class="fa fa-file-signature"></i>
                 </div>
-                <div class="mt-2 mb-0 text-sm">
-                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                        <i class="bi bi-arrow-up me-1"></i>30%
+                <a href="#">
+                    <span>Go to Contracts</span>
+                    <span class="icon-button">
+                        <i class="fa fa-arrow-right"></i>
                     </span>
-                    <span class="text-nowrap text-xs text-muted">Since last month</span>
+                </a>
+            </article>
+            <article class="tile">
+                <div class="tile-header">
+                    
+                    <h3>
+                        <span>2</span>
+                        <span>Total Students</span>
+                    </h3>
+                    <i class="fa fa-graduation-cap"></i>
                 </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-3 col-sm-6 col-12">
-        <div class="card shadow border-0">
-            <div class="card-body">
-                <div class="row1">
-                    <div class="col">
-                        <span class="h6 font-semibold text-muted text-sm d-block mb-2">Số lượng trang thiết bị</span>
-                        <span class="h3 font-bold mb-0">1.400</span>
-                    </div>
-                    <div class="col-auto">
-                        <div class="icon icon-shape bg-info text-white text-lg rounded-circle">
-                            <i class="bi bi-clock-history"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-2 mb-0 text-sm">
-                    <span class="badge badge-pill bg-soft-danger text-danger me-2">
-                        <i class="bi bi-arrow-down me-1"></i>-5%
+                <a href="#">
+                    <span>Go to Students</span>
+                    <span class="icon-button">
+                        <i class="fa fa-arrow-right"></i>
                     </span>
-                    <span class="text-nowrap text-xs text-muted">Since last month</span>
+                </a>
+            </article>
+            <article class="tile">
+                <div class="tile-header">
+                <i class="fa fa-house"></i>
+                    <h3>
+                        <span>2</span>
+                        <span>Total Rooms</span>
+                    </h3>
                 </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-3 col-sm-6 col-12">
-        <div class="card shadow border-0">
-            <div class="card-body">
-                <div class="row1">
-                    <div class="col">
-                        <span class="h6 font-semibold text-muted text-sm d-block mb-2">Số phòng</span>
-                        <span class="h3 font-bold mb-0">95%</span>
-                    </div>
-                    <div class="col-auto">
-                        <div class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                            <i class="bi bi-minecart-loaded"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-2 mb-0 text-sm">
-                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                        <i class="bi bi-arrow-up me-1"></i>10%
+                <a href="#">
+                    <span>Go to rooms</span>
+                    <span class="icon-button">
+                    <i class="fa fa-arrow-right"></i>
                     </span>
-                    <span class="text-nowrap text-xs text-muted">Since last month</span>
+                    
+                    </span>
+                </a>
+            </article>
+            <article class="tile">
+                <div class="tile-header">
+                    <i class="fa fa-toolbox"></i>
+                    <h3>
+                        <span>3</span>
+                        <span>Total Devices</span>
+                    </h3>
                 </div>
-            </div>
+                <a href="#">
+                    <span>Go to Devices</span>
+                    <span class="icon-button">
+                        <i class="fa fa-arrow-right"></i>
+                    </span>
+                </a>
+            </article>
+            <article class="tile">
+                <div class="tile-header">
+                    <i class="fa fa-money-bill"></i>
+                    <h3>
+                        <span>2</span>
+                        <span>Total bills</span>
+                    </h3>
+                </div>
+                <a href="#">
+                    <span>Go to bills</span>
+                    <span class="icon-button">
+                        <i class="fa fa-arrow-right"></i>
+                    </span>
+                </a>
+            </article>
         </div>
-    </div>
-</div></div>
-
-
+    </section>
+</div>

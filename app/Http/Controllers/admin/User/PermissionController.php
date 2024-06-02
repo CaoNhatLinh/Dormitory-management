@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Employee;
 use App\Models\Permission;
 use App\Models\Position;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
@@ -98,18 +99,21 @@ class PermissionController extends Controller
     {
 
         if (Auth::check()) {
-            if (!Session::has('employee') && !Session::has('position_name')) {
+            if (!Session::has('user')&& !Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
-                $employee = Employee::find($authId);
+                $user = User::find($authId);
+                $employee = $user->employee;
                 $employee_id = $employee->employee_id;
                 $position_name = Position::find($employee_id)->position_name;
                 Session::put('employee', $employee);
+                Session::put('user', $user);
                 Session::put('position_name', $position_name);
             }
-            $config = $this->config();
-            $title = 'Permission list';
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
+            $user = Session::get('user');
+            $config = $this->config();
+            $title = 'Permission list';
             $template = 'admin.permission.index';
             
             $permissions = Permission::withCount('users')->get();
@@ -121,6 +125,7 @@ class PermissionController extends Controller
                 'position_name',
                 'employee',
                 'data',
+                'user'
             ));
         } else {
             return redirect()->route('auth.admin')->with('error', 'Please log in first');
@@ -129,18 +134,21 @@ class PermissionController extends Controller
     public function createView()
     {
         if (Auth::check()) {
-            if (!Session::has('employee') && !Session::has('position_name')) {
+            if (!Session::has('user')&& !Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
-                $employee = Employee::find($authId);
+                $user = User::find($authId);
+                $employee = $user->employee;
                 $employee_id = $employee->employee_id;
                 $position_name = Position::find($employee_id)->position_name;
                 Session::put('employee', $employee);
+                Session::put('user', $user);
                 Session::put('position_name', $position_name);
             }
-            $title = 'Create permission';
-            $config = $this->configCreateView();
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
+            $user = Session::get('user');
+            $title = 'Create permission';
+            $config = $this->configCreateView();
             $template = 'admin.permission.create';
 
             return view('admin.dashboard.layout', compact(
@@ -149,6 +157,7 @@ class PermissionController extends Controller
                 'title',
                 'employee',
                 'position_name',
+                'user'
 
             ));
         } else {

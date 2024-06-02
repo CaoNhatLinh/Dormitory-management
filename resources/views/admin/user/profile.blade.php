@@ -1,4 +1,3 @@
-
 <div class="container">
     <div class="row">
         <div class="col-md-6 ">
@@ -13,10 +12,6 @@
                         <div class="box-body">
                             <div class="col-sm-6">
                                 <div align="center"> <img alt="User Pic" src="{{ asset('uploads/avatars/'. $employee->avatar) }}" id="profile-image1" class="img-circle img-responsive">
-
-                                    <input id="profile-image-upload" class="hidden" type="file">
-                                    <div style="color:#999;">click here to change profile image</div>
-                                    <!--Upload Image Js And Css-->
                                 </div>
                                 <br>
                             </div>
@@ -57,16 +52,26 @@
                             <div class="clearfix"></div>
                             <div class="bot-border"></div>
 
-                           
+
                             <!-- /.box-body -->
                         </div>
-                        <!-- /.box -->
+
 
                     </div>
 
 
                 </div>
             </div>
+            <a class="btn-link font-bold" href="{{route('employee.editView', $employee->employee_id)}}">
+                <button class="btn btn-primary btn-sm dim">
+                    Edit account
+                </button>
+            </a>
+            <a class="btn-link font-bold" href="{{ route('user.editView',$user->user_id) }}">
+                <button class="btn btn-primary btn-sm dim">
+                    Edit info
+                </button>
+            </a>
         </div>
 
     </div>

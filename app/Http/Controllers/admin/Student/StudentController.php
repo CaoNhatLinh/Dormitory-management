@@ -9,6 +9,7 @@ use App\Models\Contract;
 use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -104,17 +105,19 @@ class StudentController extends Controller
     public function index()
     {
         if (Auth::check()) {
-            if (!Session::has('employee') && !Session::has('position_name')) {
+            if (!Session::has('user')&& !Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
-                $employee = Employee::find($authId);
+                $user = User::find($authId);
+                $employee = $user->employee;
                 $employee_id = $employee->employee_id;
                 $position_name = Position::find($employee_id)->position_name;
                 Session::put('employee', $employee);
+                Session::put('user', $user);
                 Session::put('position_name', $position_name);
             }
-
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
+            $user = Session::get('user');
 
             $students = Student::all();
             $data = ['students' => $students];
@@ -136,7 +139,8 @@ class StudentController extends Controller
                 'data',
                 'title',
                 'employee',
-                'position_name'
+                'position_name',
+                'user'
             ));
         } else {
             return redirect()->route('auth.admin')->with('error', 'Please log in first');
@@ -146,16 +150,20 @@ class StudentController extends Controller
     public function createView()
     {
         if (Auth::check()) {
-            if (!Session::has('employee') && !Session::has('position_name')) {
+            if (!Session::has('user')&& !Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
-                $employee = Employee::find($authId);
+                $user = User::find($authId);
+                $employee = $user->employee;
                 $employee_id = $employee->employee_id;
                 $position_name = Position::find($employee_id)->position_name;
                 Session::put('employee', $employee);
+                Session::put('user', $user);
                 Session::put('position_name', $position_name);
             }
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
+            $user = Session::get('user');
+
 
             $title = 'Create student';
 
@@ -168,7 +176,8 @@ class StudentController extends Controller
                 'config',
                 'title',
                 'employee',
-                'position_name'
+                'position_name',
+                'user'
             ));
         } else {
             return redirect()->route('auth.admin')->with('error', 'Please log in first');
@@ -218,16 +227,20 @@ class StudentController extends Controller
     public function editView($id)
     {
         if (Auth::check()) {
-            if (!Session::has('employee') && !Session::has('position_name')) {
+            if (!Session::has('user')&& !Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
-                $employee = Employee::find($authId);
+                $user = User::find($authId);
+                $employee = $user->employee;
                 $employee_id = $employee->employee_id;
                 $position_name = Position::find($employee_id)->position_name;
                 Session::put('employee', $employee);
+                Session::put('user', $user);
                 Session::put('position_name', $position_name);
             }
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
+            $user = Session::get('user');
+
 
             // Config - template
             $title = 'Edit student';
@@ -245,7 +258,8 @@ class StudentController extends Controller
                 'title',
                 'employee',
                 'position_name',
-                'student'
+                'student',
+                'user'
             ));
         } else {
             return redirect()->route('auth.admin')->with('error', 'Please log in first');
@@ -316,16 +330,20 @@ class StudentController extends Controller
     public function detailView($id)
     {
         if (Auth::check()) {
-            if (!Session::has('employee') && !Session::has('position_name')) {
+            if (!Session::has('user')&& !Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
-                $employee = Employee::find($authId);
+                $user = User::find($authId);
+                $employee = $user->employee;
                 $employee_id = $employee->employee_id;
                 $position_name = Position::find($employee_id)->position_name;
                 Session::put('employee', $employee);
+                Session::put('user', $user);
                 Session::put('position_name', $position_name);
             }
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
+            $user = Session::get('user');
+
 
             // update contract status = 'expired' if end_date <= current date
             DB::table('contracts')
@@ -362,6 +380,7 @@ class StudentController extends Controller
                 'student',
                 'contracts',
                 'isAvailableCreateContract',
+                'user'
             ));
         } else {
             return redirect()->route('auth.admin')->with('error', 'Please log in first');

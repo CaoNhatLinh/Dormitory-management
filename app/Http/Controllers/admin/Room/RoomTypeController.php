@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\RoomType;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rule;
@@ -69,16 +70,19 @@ class RoomTypeController extends Controller
     public function index()
     {
         if (Auth::check()) {
-            if (!Session::has('employee') && !Session::has('position_name')) {
+            if (!Session::has('user')&& !Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
-                $employee = Employee::find($authId);
+                $user = User::find($authId);
+                $employee = $user->employee;
                 $employee_id = $employee->employee_id;
                 $position_name = Position::find($employee_id)->position_name;
                 Session::put('employee', $employee);
+                Session::put('user', $user);
                 Session::put('position_name', $position_name);
             }
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
+            $user = Session::get('user');
             $roomTypes = RoomType::all();
             $data = ['roomTypes' => $roomTypes];
             $title = 'Room type list';
@@ -91,7 +95,7 @@ class RoomTypeController extends Controller
                 'data',
                 'title',
                 'employee',
-                'position_name'
+                'position_name','user'
             ));
         } else {
             return redirect()->route('auth.admin')->with('error', 'Please log in first');
@@ -101,16 +105,19 @@ class RoomTypeController extends Controller
     public function createView()
     {
         if (Auth::check()) {
-            if (!Session::has('employee') && !Session::has('position_name')) {
+            if (!Session::has('user')&& !Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
-                $employee = Employee::find($authId);
+                $user = User::find($authId);
+                $employee = $user->employee;
                 $employee_id = $employee->employee_id;
                 $position_name = Position::find($employee_id)->position_name;
                 Session::put('employee', $employee);
+                Session::put('user', $user);
                 Session::put('position_name', $position_name);
             }
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
+            $user = Session::get('user');
 
             $title = 'Create room type';
             $config = $this->tailwindConfig();
@@ -123,7 +130,7 @@ class RoomTypeController extends Controller
                 'config',
                 'title',
                 'employee',
-                'position_name'
+                'position_name','user'
             ));
         } else {
             return redirect()->route('auth.admin')->with('error', 'Please log in first');
@@ -148,16 +155,19 @@ class RoomTypeController extends Controller
     public function editView($id)
     {
         if (Auth::check()) {
-            if (!Session::has('employee') && !Session::has('position_name')) {
+            if (!Session::has('user')&& !Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
-                $employee = Employee::find($authId);
+                $user = User::find($authId);
+                $employee = $user->employee;
                 $employee_id = $employee->employee_id;
                 $position_name = Position::find($employee_id)->position_name;
                 Session::put('employee', $employee);
+                Session::put('user', $user);
                 Session::put('position_name', $position_name);
             }
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
+            $user = Session::get('user');
 
             $title = 'Edit room type';
             $config = $this->tailwindConfig();
@@ -172,7 +182,8 @@ class RoomTypeController extends Controller
                 'title',
                 'employee',
                 'position_name',
-                'roomType'
+                'roomType',
+                'user'
             ));
         } else {
             return redirect()->route('auth.admin')->with('error', 'Please log in first');
@@ -196,7 +207,8 @@ class RoomTypeController extends Controller
         $roomType->room_type_name = $request->room_type_name;
         $roomType->room_type_price = $request->room_type_price;
         $result = $roomType->save();
-
+        if($result)
         return redirect()->route('roomType.index')->with('success', 'Room type updated successfully');
+        else  redirect()->route('roomType.index')->with('error', 'Room type updated fail');
     }
 }

@@ -110,7 +110,7 @@
                         <div class="col-sm-10">
                             <select class="form-control m-b" name="position_id" data-placeholder="Choose a position">
                                 @foreach($positions as $position)
-                                <option value="{{ $position->position_id }}" {{ $employee->position_id == '$position->position_id' ? 'selected' : '' }}>{{ $position->position_name }}</option>
+                                <option value="{{ $position->position_id }}" {{ $employee->position_id == $position->position_id ? 'selected' : '' }}>{{ $position->position_name }}</option>
                                 @endforeach
                             </select>
                             @if ($errors->has('gender'))
@@ -129,9 +129,7 @@
                                         {{ $status }}
                                     </option>
                                 @endforeach 
-                                <!-- <option value="Working" {{ $employee->status == 'Working' ? 'selected' : '' }}>Working</option>
-                                <option value="Terminated" {{ $employee->status == 'Terminated' ? 'selected' : '' }}>Terminated</option>
-                                <option value="On Leave" {{ $employee->status == 'On Leave' ? 'selected' : '' }}>On Leave</option> -->
+                               
                             </select>
                             @if ($errors->has('status'))
                             <span class="help-block m-b-none label label-warning">{{ $errors->first('status') }}</span>

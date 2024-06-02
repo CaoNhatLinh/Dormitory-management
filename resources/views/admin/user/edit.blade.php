@@ -11,11 +11,11 @@
                 </div>
             </div>
             <div class="ibox-content">
-                <form method="POST" action="{{ route('user.edit', $user->user_id) }}" enctype="multipart/form-data" class="form-horizontal">
+                <form method="POST" action="{{ route('user.edit', $userEdit->user_id) }}" enctype="multipart/form-data" class="form-horizontal">
                     @csrf 
                     <div class="form-group"><label class="col-sm-2 control-label">Email</label>
 
-                        <div class="col-sm-10"><input value="{{ $user->email }}" type="email" name="email" id="email" placeholder="Email" class="form-control" required></div>
+                        <div class="col-sm-10"><input value="{{ $userEdit->email }}" type="email" name="email" id="email" placeholder="Email" class="form-control" required></div>
                         @if ($errors->has('email'))
                         <span class="help-block m-b-none label label-warning">{{ $errors->first('email') }}</span>
                         @endif
@@ -27,7 +27,7 @@
                         <div class="col-sm-10">
                             <select class="form-control m-b" name="permission_id" data-placeholder="Choose a permission">
                                 @foreach($permissions as $permission)
-                                <option value="{{ $permission->permission_id }}" {{ $permission->permission_id == '$permission->permission_id' ? 'selected' : '' }}>{{ $permission->permission_name }}</option>
+                                <option value="{{ $permission->permission_id }}" {{ $permission->permission_id == $userEdit->permission_id ? 'selected' : '' }}>{{ $permission->permission_name }}</option>
                                 @endforeach
                             </select>
                             @if ($errors->has('permission_id'))
@@ -41,7 +41,7 @@
                         <div class="col-sm-10">
                             <select class="form-control m-b" name="employee_id" data-placeholder="Choose a permission">
                                 @foreach($employees as $employee)
-                                <option value="{{ $employee->employee_id }}" {{ $employee->employee_id == '$employee->employee_id' ? 'selected' : '' }}>{{ $employee->employee_id }}-{{ $employee->name }}</option>
+                                <option value="{{ $employee->employee_id }}" {{ $employee->employee_id == $userEdit->employee_id ? 'selected' : '' }}>{{ $employee->employee_id }}-{{ $employee->name }}</option>
                                 @endforeach
                             </select>
                             @if ($errors->has('employee_id'))

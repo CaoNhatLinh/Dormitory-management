@@ -76,16 +76,19 @@ class UserController extends Controller
     {
        
         if (Auth::check()) {
-            if (!Session::has('employee') && !Session::has('position_name')) {
+            if (!Session::has('user')&& !Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
-                $employee = Employee::find($authId);
+                $user = User::find($authId);
+                $employee = $user->employee;
                 $employee_id = $employee->employee_id;
                 $position_name = Position::find($employee_id)->position_name;
                 Session::put('employee', $employee);
+                Session::put('user', $user);
                 Session::put('position_name', $position_name);
             }
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
+            $user = Session::get('user');
             $users=User::with('permission', 'employee')->get();
             $data = ['users' => $users];
             $title = 'User list';
@@ -99,6 +102,7 @@ class UserController extends Controller
                 'title',
                 'employee',
                 'position_name',
+                'user'
             ));
         }
         else {
@@ -108,17 +112,19 @@ class UserController extends Controller
     public function profileView()
     {
         if (Auth::check()) {
-            if (!Session::has('employee') && !Session::has('position_name')) {
+            if (!Session::has('user')&& !Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
-                $employee = Employee::find($authId);
+                $user = User::find($authId);
+                $employee = $user->employee;
                 $employee_id = $employee->employee_id;
                 $position_name = Position::find($employee_id)->position_name;
                 Session::put('employee', $employee);
+                Session::put('user', $user);
                 Session::put('position_name', $position_name);
             }
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
-            $user = Auth::user();
+            $user = Session::get('user');
             $id = Auth::id();
             if ($user) {
                 $user = User::find($id);
@@ -141,16 +147,19 @@ class UserController extends Controller
     public function createView()
     {
         if (Auth::check()) {
-            if (!Session::has('employee') && !Session::has('position_name')) {
+            if (!Session::has('user')&& !Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
-                $employee = Employee::find($authId);
+                $user = User::find($authId);
+                $employee = $user->employee;
                 $employee_id = $employee->employee_id;
                 $position_name = Position::find($employee_id)->position_name;
                 Session::put('employee', $employee);
+                Session::put('user', $user);
                 Session::put('position_name', $position_name);
             }
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
+            $user = Session::get('user');
 
             $title = 'Create user';
 
@@ -165,7 +174,8 @@ class UserController extends Controller
                 'employee',
                 'position_name',
                 'employees',
-                'permissions'
+                'permissions',
+                'user'
             ));
         } else {
             return redirect()->route('auth.admin')->with('error', 'Please log in first');
@@ -194,22 +204,25 @@ class UserController extends Controller
     public function editView($id)
     {
         if (Auth::check()) {
-            if (!Session::has('employee') && !Session::has('position_name')) {
+            if (!Session::has('user')&& !Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
-                $employee = Employee::find($authId);
+                $user = User::find($authId);
+                $employee = $user->employee;
                 $employee_id = $employee->employee_id;
                 $position_name = Position::find($employee_id)->position_name;
                 Session::put('employee', $employee);
+                Session::put('user', $user);
                 Session::put('position_name', $position_name);
             }
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
+            $user = Session::get('user');
             $title = 'Edit user';
             $config = $this->config();
             $employees = Employee::all();
             $template = 'admin.user.edit';
             $permissions = Permission::all();
-            $user = User::find($id);
+            $userEdit = User::find($id);
             return view('admin.dashboard.layout', compact(
                 'template',
                 'config',
@@ -218,7 +231,8 @@ class UserController extends Controller
                 'position_name',
                 'employees',
                 'permissions',
-                'user'
+                'user',
+                 'userEdit'
             ));
         } else {
             return redirect()->route('auth.admin')->with('error', 'Please log in first');

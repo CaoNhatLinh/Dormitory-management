@@ -106,17 +106,17 @@ class ContractController extends Controller
 
     public function index()
     {
-        if (Auth::check()){
-        if (!Session::has('employee') && !Session::has('position_name')) {
-            $authId = Auth::id();
-            $user = User::find($authId)->with('employee');
-            $employee = Employee::find($user->employee_id);
-            $employee_id = $user->employee->employee_id;
-            $position_name = Position::find($employee_id)->position_name;
-            Session::put('employee', $employee);
-            Session::put('user', $user);
-            Session::put('position_name', $position_name);
-        }
+        if (Auth::check()) {
+            if (!Session::has('user') && !Session::has('employee') && !Session::has('position_name')) {
+                $authId = Auth::id();
+                $user = User::find($authId);
+                $employee = $user->employee;
+                $employee_id = $employee->employee_id;
+                $position_name = Position::find($employee_id)->position_name;
+                Session::put('employee', $employee);
+                Session::put('user', $user);
+                Session::put('position_name', $position_name);
+            }
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
             $user = Session::get('user');
@@ -144,21 +144,20 @@ class ContractController extends Controller
 
     public function createView($id)
     {
-        if (Auth::check()){
-        if (!Session::has('employee') && !Session::has('position_name')) {
-            $authId = Auth::id();
-            $user = User::find($authId)->with('employee');
-            $employee = Employee::find($user->employee_id);
-            $employee_id = $user->employee->employee_id;
-            $position_name = Position::find($employee_id)->position_name;
-            Session::put('employee', $employee);
-            Session::put('user', $user);
-            Session::put('position_name', $position_name);
-        }
+        if (Auth::check()) {
+            if (!Session::has('user') && !Session::has('employee') && !Session::has('position_name')) {
+                $authId = Auth::id();
+                $user = User::find($authId);
+                $employee = $user->employee;
+                $employee_id = $employee->employee_id;
+                $position_name = Position::find($employee_id)->position_name;
+                Session::put('employee', $employee);
+                Session::put('user', $user);
+                Session::put('position_name', $position_name);
+            }
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
             $user = Session::get('user');
-
             DB::table('contracts')
                 ->where('end_date', '<=', date('Y-m-d'))
                 ->where('status', '=', 'renting')
@@ -222,21 +221,20 @@ class ContractController extends Controller
 
     public function editView($id)
     {
-        if (Auth::check()){
-        if (!Session::has('employee') && !Session::has('position_name')) {
-            $authId = Auth::id();
-            $user = User::find($authId)->with('employee');
-            $employee = Employee::find($user->employee_id);
-            $employee_id = $user->employee->employee_id;
-            $position_name = Position::find($employee_id)->position_name;
-            Session::put('employee', $employee);
-            Session::put('user', $user);
-            Session::put('position_name', $position_name);
-        }
+        if (Auth::check()) {
+            if (!Session::has('user')&& !Session::has('employee') && !Session::has('position_name')) {
+                $authId = Auth::id();
+                $user = User::find($authId);
+                $employee = $user->employee;
+                $employee_id = $employee->employee_id;
+                $position_name = Position::find($employee_id)->position_name;
+                Session::put('employee', $employee);
+                Session::put('user', $user);
+                Session::put('position_name', $position_name);
+            }
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
             $user = Session::get('user');
-
 
             DB::table('contracts')
                 ->where('end_date', '<=', date('Y-m-d'))

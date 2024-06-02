@@ -8,6 +8,7 @@ use App\Models\Device;
 use App\Models\DeviceType;
 use App\Models\Employee;
 use App\Models\Position;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Session;
@@ -118,16 +119,19 @@ class DeviceTypeController extends Controller
     public function editView($id)
     {
         if (Auth::check()) {
-            if (!Session::has('employee') && !Session::has('position_name')) {
+            if (!Session::has('user')&& !Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
-                $employee = Employee::find($authId);
+                $user = User::find($authId);
+                $employee = $user->employee;
                 $employee_id = $employee->employee_id;
                 $position_name = Position::find($employee_id)->position_name;
                 Session::put('employee', $employee);
+                Session::put('user', $user);
                 Session::put('position_name', $position_name);
             }
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
+            $user = Session::get('user');
             $title = 'Edit device type';
             $config = $this->config();
 
@@ -141,7 +145,8 @@ class DeviceTypeController extends Controller
                 'title',
                 'employee',
                 'position_name',
-                'deviceType'
+                'deviceType',
+                'user'
             ));
         } else {
             return redirect()->route('auth.admin')->with('error', 'Please log in first');

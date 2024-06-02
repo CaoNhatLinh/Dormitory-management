@@ -12,6 +12,7 @@ use App\Models\Employee;
 use App\Models\Position;
 use App\Models\Room;
 use App\Models\RoomType;
+use App\Models\User;
 use Illuminate\Support\Facades\Session;
 
 class RoomController extends Controller
@@ -104,16 +105,19 @@ class RoomController extends Controller
     public function index()
     {
         if (Auth::check()) {
-            if (!Session::has('employee') && !Session::has('position_name')) {
+            if (!Session::has('user')&& !Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
-                $employee = Employee::find($authId);
+                $user = User::find($authId);
+                $employee = $user->employee;
                 $employee_id = $employee->employee_id;
                 $position_name = Position::find($employee_id)->position_name;
                 Session::put('employee', $employee);
+                Session::put('user', $user);
                 Session::put('position_name', $position_name);
             }
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
+            $user = Session::get('user');
 
             // Get all rooms with room type foreign key
             $rooms = Room::with('roomType')->get();
@@ -130,7 +134,8 @@ class RoomController extends Controller
                 'data',
                 'title',
                 'employee',
-                'position_name'
+                'position_name',
+                'user'
             ));
         } else {
             return redirect()->route('auth.admin')->with('error', 'Please log in first');
@@ -140,17 +145,20 @@ class RoomController extends Controller
     public function createView()
     {
         if (Auth::check()) {
-            if (!Session::has('employee') && !Session::has('position_name')) {
+            if (!Session::has('user')&& !Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
-                $employee = Employee::find($authId);
+                $user = User::find($authId);
+                $employee = $user->employee;
                 $employee_id = $employee->employee_id;
                 $position_name = Position::find($employee_id)->position_name;
                 Session::put('employee', $employee);
+                Session::put('user', $user);
                 Session::put('position_name', $position_name);
             }
-            $roomTypes = RoomType::all();
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
+            $user = Session::get('user');
+            $roomTypes = RoomType::all();
 
             $title = 'Create Room';
 
@@ -165,7 +173,8 @@ class RoomController extends Controller
                 'title',
                 'employee',
                 'position_name',
-                'statuses'
+                'statuses',
+                'user'
             ));
         } else {
             return redirect()->route('auth.admin')->with('error', 'Please log in first');
@@ -196,16 +205,19 @@ class RoomController extends Controller
     public function editView($id)
     {
         if (Auth::check()) {
-            if (!Session::has('employee') && !Session::has('position_name')) {
+            if (!Session::has('user')&& !Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
-                $employee = Employee::find($authId);
+                $user = User::find($authId);
+                $employee = $user->employee;
                 $employee_id = $employee->employee_id;
                 $position_name = Position::find($employee_id)->position_name;
                 Session::put('employee', $employee);
+                Session::put('user', $user);
                 Session::put('position_name', $position_name);
             }
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
+            $user = Session::get('user');
 
             $room = Room::find($id);
             $roomTypes = RoomType::all();
@@ -226,7 +238,7 @@ class RoomController extends Controller
                 'title',
                 'employee',
                 'position_name',
-                'statuses'
+                'statuses','user'
             ));
         } else {
             return redirect()->route('auth.admin')->with('error', 'Please log in first');

@@ -89,7 +89,7 @@
                     </li>
                 </ul>
             </li>
-            
+            @if($user->permission_id<=2)
             <li>
                 <a href="#"><i class="fa fa-files-o"></i> <span class="nav-label">Employees</span><span class="fa arrow"></span></a>
 
@@ -98,10 +98,9 @@
                     <li><a href="{{route('employee.createView')}}">New employee</a></li>
                     <li><a href="{{route('position.index')}}">Positions list</a></li>
                     <li><a href="{{route('position.createView')}}">New position</a></li>
-
                 </ul>
             </li>
-           
+            @elseif($user->permission_id==1)
             <li>
                 <a href="#"><i class="fa fa-flask"></i> <span class="nav-label">Users</span><span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse">
@@ -120,7 +119,7 @@
             <li>
                 <a href="#"><i class="fa fa-edit"></i> <span class="nav-label">Setting </span></a>
             </li>
-
+           @endif
         </ul>
 
     </div>

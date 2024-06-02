@@ -11,6 +11,7 @@ use App\Models\DeviceType;
 use App\Models\Employee;
 use App\Models\Position;
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Session;
@@ -90,14 +91,19 @@ class DeviceController extends Controller
     public function index()
     {
         if (Auth::check()) {
-            if (!Session::has('employee') && !Session::has('position_name')) {
+            if (!Session::has('user')&& !Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
-                $employee = Employee::find($authId);
+                $user = User::find($authId);
+                $employee = $user->employee;
                 $employee_id = $employee->employee_id;
                 $position_name = Position::find($employee_id)->position_name;
                 Session::put('employee', $employee);
+                Session::put('user', $user);
                 Session::put('position_name', $position_name);
             }
+            $employee = Session::get('employee');
+            $position_name = Session::get('position_name');
+            $user = Session::get('user');
             $devices = Device::with('deviceType')->get();
             foreach ($devices as $device) {
                 $rentalQuantity = DeviceRentalDetail::where('device_id', $device->device_id)->count();
@@ -105,8 +111,6 @@ class DeviceController extends Controller
             }
             $data = ['devices' => $devices];
             $title = 'Device list';
-            $employee = Session::get('employee');
-            $position_name = Session::get('position_name');
             $config = $this->config();
             $template = 'admin.device.index';
 
@@ -117,6 +121,7 @@ class DeviceController extends Controller
                 'title',
                 'employee',
                 'position_name',
+                'user'
             ));
         } else {
             return redirect()->route('auth.admin')->with('error', 'Please log in first');
@@ -125,11 +130,11 @@ class DeviceController extends Controller
     public function createView()
     {
         if (Auth::check()) {
-            if (!Session::has('employee') && !Session::has('position_name')) {
+            if (!Session::has('user')&& !Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
-                $user = User::find($authId)->with('employee');
-                $employee = Employee::find($user->employee_id);
-                $employee_id = $user->employee->employee_id;
+                $user = User::find($authId);
+                $employee = $user->employee;
+                $employee_id = $employee->employee_id;
                 $position_name = Position::find($employee_id)->position_name;
                 Session::put('employee', $employee);
                 Session::put('user', $user);
@@ -178,11 +183,11 @@ class DeviceController extends Controller
     public function editView($id)
     {
         if (Auth::check()) {
-            if (!Session::has('employee') && !Session::has('position_name')) {
+            if (!Session::has('user')&& !Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
-                $user = User::find($authId)->with('employee');
-                $employee = Employee::find($user->employee_id);
-                $employee_id = $user->employee->employee_id;
+                $user = User::find($authId);
+                $employee = $user->employee;
+                $employee_id = $employee->employee_id;
                 $position_name = Position::find($employee_id)->position_name;
                 Session::put('employee', $employee);
                 Session::put('user', $user);
@@ -235,11 +240,11 @@ class DeviceController extends Controller
     {
 
         if (Auth::check()) {
-            if (!Session::has('employee') && !Session::has('position_name')) {
+            if (!Session::has('user')&& !Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
-                $user = User::find($authId)->with('employee');
-                $employee = Employee::find($user->employee_id);
-                $employee_id = $user->employee->employee_id;
+                $user = User::find($authId);
+                $employee = $user->employee;
+                $employee_id = $employee->employee_id;
                 $position_name = Position::find($employee_id)->position_name;
                 Session::put('employee', $employee);
                 Session::put('user', $user);
@@ -314,16 +319,19 @@ class DeviceController extends Controller
     public function createExcelView(Request $request)
     {
         if (Auth::check()) {
-            if (!Session::has('employee') && !Session::has('position_name')) {
+            if (!Session::has('user')&& !Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
-                $employee = Employee::find($authId);
+                $user = User::find($authId);
+                $employee = $user->employee;
                 $employee_id = $employee->employee_id;
                 $position_name = Position::find($employee_id)->position_name;
                 Session::put('employee', $employee);
+                Session::put('user', $user);
                 Session::put('position_name', $position_name);
             }
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
+            $user = Session::get('user');
             $title = 'Create device from excel';
 
             $config = $this->config();
@@ -409,7 +417,8 @@ class DeviceController extends Controller
                 'employee',
                 'position_name',
                 'excel_devices',
-                'excel_file_path'
+                'excel_file_path',
+                'user'
             ));
         } else {
             return redirect()->route('auth.admin')->with('error', 'Please log in first');

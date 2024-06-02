@@ -9,6 +9,7 @@ use App\Models\DeviceRentalDetail;
 use App\Models\Employee;
 use App\Models\Position;
 use App\Models\Room;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Session;
@@ -142,14 +143,19 @@ class DeviceRentalController extends Controller
     public function createDeviceRental()
     {
         if (Auth::check()) {
-            if (!Session::has('employee') && !Session::has('position_name')) {
+            if (!Session::has('user')&& !Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
-                $employee = Employee::find($authId);
+                $user = User::find($authId);
+                $employee = $user->employee;
                 $employee_id = $employee->employee_id;
                 $position_name = Position::find($employee_id)->position_name;
                 Session::put('employee', $employee);
+                Session::put('user', $user);
                 Session::put('position_name', $position_name);
             }
+            $employee = Session::get('employee');
+            $position_name = Session::get('position_name');
+            $user = Session::get('user');
             $devices = Device::with('deviceType')->get();
             foreach ($devices as $device) {
                 $rentalQuantity = DeviceRentalDetail::where('device_id', $device->device_id)->count();
@@ -157,8 +163,6 @@ class DeviceRentalController extends Controller
             }
             $data = ['devices' => $devices];
             $title = 'Device rental list';
-            $employee = Session::get('employee');
-            $position_name = Session::get('position_name');
             $config = $this->config();
             $template = 'admin.device.devicerental.createDeviceRental';
     
@@ -168,7 +172,8 @@ class DeviceRentalController extends Controller
                 'data',
                 'title',
                 'employee',
-                'position_name'
+                'position_name',
+                'user'
             ));
         } else {
             return redirect()->route('auth.admin')->with('error', 'Vui lòng đăng nhập');

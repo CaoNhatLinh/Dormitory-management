@@ -145,11 +145,11 @@ class RoomBillController extends Controller
     public function index()
     {
         if (Auth::check()) {
-            if (!Session::has('employee') && !Session::has('position_name')) {
+            if (!Session::has('user')&& !Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
-                $user = User::find($authId)->with('employee');
-                $employee =Employee::find($user->employee_id);
-                $employee_id = $user->employee->employee_id;
+                $user = User::find($authId);
+                $employee = $user->employee;
+                $employee_id = $employee->employee_id;
                 $position_name = Position::find($employee_id)->position_name;
                 Session::put('employee', $employee);
                 Session::put('user', $user);
@@ -184,11 +184,11 @@ class RoomBillController extends Controller
     public function createView()
     {
         if (Auth::check()) {
-            if (!Session::has('employee') && !Session::has('position_name')) {
+            if (!Session::has('user')&& !Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
-                $user = User::find($authId)->with('employee');
-                $employee =Employee::find($user->employee_id);
-                $employee_id = $user->employee->employee_id;
+                $user = User::find($authId);
+                $employee = $user->employee;
+                $employee_id = $employee->employee_id;
                 $position_name = Position::find($employee_id)->position_name;
                 Session::put('employee', $employee);
                 Session::put('user', $user);
@@ -262,9 +262,6 @@ class RoomBillController extends Controller
             $file->move($path, $fileName);
             $filePath = 'uploads/excels/' . $fileName;
 
-
-
-
             return redirect()->route('bill.room.createExcelView', ['excel_file_path' => $filePath])->with('success', 'File uploaded successfully');
         } else {
             return redirect()->route('bill.room.createExcelView')->with('error', 'File not found');
@@ -275,11 +272,11 @@ class RoomBillController extends Controller
     public function createExcelView(Request $request)
     {
         if (Auth::check()) {
-            if (!Session::has('employee') && !Session::has('position_name')) {
+            if (!Session::has('user')&& !Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
-                $user = User::find($authId)->with('employee');
-                $employee =Employee::find($user->employee_id);
-                $employee_id = $user->employee->employee_id;
+                $user = User::find($authId);
+                $employee = $user->employee;
+                $employee_id = $employee->employee_id;
                 $position_name = Position::find($employee_id)->position_name;
                 Session::put('employee', $employee);
                 Session::put('user', $user);
@@ -505,11 +502,11 @@ class RoomBillController extends Controller
     public function editView($id)
     {
         if (Auth::check()) {
-            if (!Session::has('employee') && !Session::has('position_name')) {
+            if (!Session::has('user')&& !Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
-                $user = User::find($authId)->with('employee');
-                $employee =Employee::find($user->employee_id);
-                $employee_id = $user->employee->employee_id;
+                $user = User::find($authId);
+                $employee = $user->employee;
+                $employee_id = $employee->employee_id;
                 $position_name = Position::find($employee_id)->position_name;
                 Session::put('employee', $employee);
                 Session::put('user', $user);
@@ -518,8 +515,6 @@ class RoomBillController extends Controller
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
             $user = Session::get('user');
-            $employee = Session::get('employee');
-            $position_name = Session::get('position_name');
 
             $title = 'Edit room bill';
 
