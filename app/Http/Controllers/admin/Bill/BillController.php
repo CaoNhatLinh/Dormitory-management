@@ -33,35 +33,46 @@ class BillController extends Controller
         return $config = [
             'js' => [
 
+                'js/plugins/dataTables/datatables.min.js',
                 'js/plugins/pace/pace.min.js',
-                'js/plugins/footable/footable.all.min.js'
+                'js/plugins/footable/footable.all.min.js',
 
             ],
             'linkjs' => [],
             'css' => [
-                'css/plugins/footable/footable.core.css'
+                'css/plugins/dataTables/datatables.min.css',
+                'css/plugins/footable/footable.core.css',
             ],
             'linkcss' => [],
 
             'script' => [
-                '$(document).ready(function() {
-
-                    $(\'.footable\').footable();
+                '
+                $(document).ready(function(){
+                    $(\'.dataTables-example\').DataTable({
+                        pageLength: 20,
+                        searching: true, 
+                        ordering: true, 
+                        responsive: true,
+                        info: false,  
+                        paging: true,
+                        lengthChange: false,
+                        dom: \'<"html5buttons"B>lTfgitp\',
+                        buttons: [
         
-                });',
-                'document.addEventListener("DOMContentLoaded", function() {
-                  
-                    $(\'#myModal\').on(\'show.bs.modal\', function(event) {
-                       
-                        var button = $(event.relatedTarget);
-                        var permissionId = button.data(\'id\');
-                        var permissionName = button.data(\'name\');
-                        
-                        var modal = $(this);
-                        modal.find(\'.modal-body input[name="permission_id"]\').val(permissionId);
-                        modal.find(\'.modal-body input[name="permission_name"]\').val(permissionName);
+                            {extend: \'print\',
+                             customize: function (win){
+                                    $(win.document.body).addClass(\'white-bg\');
+                                    $(win.document.body).css(\'font-size\', \'10px\');
+        
+                                    $(win.document.body).find(\'table\')
+                                            .addClass(\'compact\')
+                                            .css(\'font-size\', \'inherit\');
+                            }
+                            }
+                        ]
                     });
-                });'
+                });
+                ',
             ]
 
 
