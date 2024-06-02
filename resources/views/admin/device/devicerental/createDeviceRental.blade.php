@@ -83,8 +83,8 @@
                                 </tfoot>
                             </table>
                             <div class="form-inline-end">
-                                Chọn phòng: <select id="roomSelect" name="room_id" class="form-control me-2"></select>
-                                <button type="submit" id="rentButton" class="btn btn-primary">Cho thuê</button>
+                                Select room: <select id="roomSelect" name="room_id" class="form-control me-2"></select>
+                                <button type="submit" id="rentButton" class="btn btn-primary">Rent</button>
                                 <input type="hidden" id="room_id" name="room_id">
                                 <input type="hidden" id="totalAmountInput" name="total_amount"> 
                             </div>
