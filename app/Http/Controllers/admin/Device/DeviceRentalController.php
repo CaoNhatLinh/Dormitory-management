@@ -117,16 +117,19 @@ class DeviceRentalController extends Controller
     {
 
         if (Auth::check()) {
-            if (!Session::has('employee') && !Session::has('position_name')) {
+            if (!Session::has('user') && !Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
-                $employee = Employee::find($authId);
+                $user = User::find($authId);
+                $employee = $user->employee;
                 $employee_id = $employee->employee_id;
                 $position_name = Position::find($employee_id)->position_name;
                 Session::put('employee', $employee);
+                Session::put('user', $user);
                 Session::put('position_name', $position_name);
             }
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
+            $user = Session::get('user');
             $deviceRentals = DeviceRental::all();
             $data = ['deviceRentals' => $deviceRentals];
             $title = 'Device Rental';
@@ -139,7 +142,8 @@ class DeviceRentalController extends Controller
                 'data',
                 'title',
                 'employee',
-                'position_name'
+                'position_name',
+                'user'
             ));
         } else {
             return redirect()->route('auth.admin')->with('error', 'Please log in first');
@@ -148,7 +152,7 @@ class DeviceRentalController extends Controller
     public function createDeviceRental()
     {
         if (Auth::check()) {
-            if (!Session::has('user')&& !Session::has('employee') && !Session::has('position_name')) {
+            if (!Session::has('user') && !Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
                 $user = User::find($authId);
                 $employee = $user->employee;
