@@ -3,7 +3,7 @@
         <div class="col-lg-12">
             <div class="ibox">
                 <div class="ibox-title d-flex justify-content-between align-items-center">
-                    <h5>Danh sách thiết bị</h5>
+                    <h5>Device list</h5>
                 </div>
                 <div class="ibox-content">
                     <div class="table-responsive">

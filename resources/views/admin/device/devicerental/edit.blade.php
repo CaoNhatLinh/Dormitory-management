@@ -3,7 +3,7 @@
         <div class="col-lg-12">
             <div class="ibox">
                 <div class="ibox-title">
-                    <h5>Chỉnh sửa thiết bị thuê</h5>
+                    <h5>Edit device rental</h5>
                 </div>
                 <div class="ibox-content">
                     <form method="POST" action="{{ route('deviceRental.edit', $deviceRental->device_rental_id) }}">
@@ -49,7 +49,7 @@
                                 <span class="tw-text-red-500">{{ $errors->first('date_device_rental') }}</span>
                             @endif
                         </div>
-                        <button type="submit" class="btn btn-primary">Chỉnh sửa thiết bị thuê</button>
+                        <button type="submit" class="btn btn-primary">Edit device rental</button>
                     </form>
                 </div>
             </div>
