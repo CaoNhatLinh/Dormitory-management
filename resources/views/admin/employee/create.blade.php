@@ -52,31 +52,29 @@
                             <select class="form-control m-b chosen-select" tabindex="2" data-placeholder="Choose a nationality..." name="nationality">
                                 <option value="">Select</option>
                                 <?php
-                                $apiUrl = "https://restcountries.com/v3.1/all";
-                                $ch = curl_init();
-                                curl_setopt($ch, CURLOPT_URL, $apiUrl);
-                                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                                $response = curl_exec($ch);
-                                curl_close($ch);
-                                $countries = json_decode($response, true);
-                                if (json_last_error() === JSON_ERROR_NONE) {
-                                    foreach ($countries as $country) {
-                                        $countryName = $country['name']['common'];
-                                        ?>
-                                       <option value="{{ $countryName }}"> {{htmlspecialchars($countryName) }}</option>
-                                       <?php
+                                $filePath = public_path('./js/countries.json');
+
+                                if (file_exists($filePath)) {
+                                    $jsonContent = file_get_contents($filePath);
+                                    $countries = json_decode($jsonContent, true);
+                                    if (json_last_error() === JSON_ERROR_NONE) {
+                                        foreach ($countries as $country) {
+                                            $countryName = $country['name']['common'];
+                                ?>
+                                            <option value="{{ $countryName }}"> {{ htmlspecialchars($countryName) }}</option>
+                                <?php
+                                        }
+                                        echo '</select>';
+                                    } else {
+                                        echo 'Error decoding country data';
                                     }
-                                   
                                 } else {
-                                    echo 'Error retrieving country data';
+                                    echo 'File not found';
                                 }
                                 ?>
-
-
-                            </select>
-                            @if ($errors->has('nationality'))
-                            <span class="help-block m-b-none label label-warning">{{ $errors->first('nationality') }}</span>
-                            @endif
+                                @if ($errors->has('nationality'))
+                                <span class="help-block m-b-none label label-warning">{{ $errors->first('nationality') }}</span>
+                                @endif
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
@@ -99,17 +97,17 @@
                             </div>
                         </div>
                         @if ($errors->has('date_of_birth'))
-                            <span class="help-block m-b-none label label-warning">{{ $errors->first('date_of_birth') }}</span>
-                            @endif
+                        <span class="help-block m-b-none label label-warning">{{ $errors->first('date_of_birth') }}</span>
+                        @endif
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group"><label class="col-sm-2 control-label">Position</label>
 
                         <div class="col-sm-10">
                             <select class="form-control m-b" name="position_id" data-placeholder="Choose a position">
-                            @foreach($positions as $position)
+                                @foreach($positions as $position)
                                 <option value="{{ $position->position_id }}">{{ $position->position_name }}</option>
-                            @endforeach   
+                                @endforeach
                             </select>
                             @if ($errors->has('position'))
                             <span class="help-block m-b-none label label-warning">{{ $errors->first('position') }}</span>
@@ -120,18 +118,18 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">Avatar</label>
                         <div class="col-sm-10">
-                        <div class="fileinput max-w-96 fileinput-new input-group" data-provides="fileinput">
-                                    <div class="form-control " data-trigger="fileinput">
-                                        <i class="glyphicon glyphicon-file fileinput-exists"></i>
-                                        <span class="fileinput-filename"></span>
-                                    </div>
-                                    <span class="input-group-addon btn btn-success btn-file">
-                                        <span class="fileinput-new">Change</span>
-                                        <span class="fileinput-exists"><i class="fa fa-upload"></i> Select</span>
-                                        <input type="file" name="avatar" />
-                                    </span>
-                                    <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                            <div class="fileinput max-w-96 fileinput-new input-group" data-provides="fileinput">
+                                <div class="form-control " data-trigger="fileinput">
+                                    <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                                    <span class="fileinput-filename"></span>
                                 </div>
+                                <span class="input-group-addon btn btn-success btn-file">
+                                    <span class="fileinput-new">Change</span>
+                                    <span class="fileinput-exists"><i class="fa fa-upload"></i> Select</span>
+                                    <input type="file" name="avatar" />
+                                </span>
+                                <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                            </div>
                             @if ($errors->has('avatar'))
                             <span class="help-block m-b-none label label-warning">{{ $errors->first('avatar') }}</span>
                             @endif

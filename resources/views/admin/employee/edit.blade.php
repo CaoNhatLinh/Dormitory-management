@@ -19,7 +19,7 @@
                             <input value="{{ $employee->person_id }}" type="text" name="person_id" id="person_id" placeholder="Person ID" class="form-control" required>
                         </div>
                         @if ($errors->has('person_id'))
-                        <span class="help-block m-b-none label label-warning"label label-warning>{{ $errors->first('person_id') }}</span>
+                        <span class="help-block m-b-none label label-warning" label label-warning>{{ $errors->first('person_id') }}</span>
                         @endif
                     </div>
                     <div class="hr-line-dashed"></div>
@@ -38,7 +38,7 @@
                         <div class="col-sm-10">
                             <select class="form-control m-b" name="gender" required data-placeholder="Choose a gender">
                                 <option value="Male" {{ $employee->gender == 'Male' ? 'selected' : '' }}>Male</option>
-                                <option value="Female"{{ $employee->gender == 'Female' ? 'selected' : '' }}>Female</option>
+                                <option value="Female" {{ $employee->gender == 'Female' ? 'selected' : '' }}>Female</option>
                             </select>
                             @if ($errors->has('gender'))
                             <span class="help-block m-b-none label label-warning">{{ $errors->first('gender') }}</span>
@@ -54,23 +54,24 @@
                             <select class="form-control m-b chosen-select" tabindex="2" data-placeholder="Choose a nationality..." name="nationality">';
                                 <option value="">Select</option>';
                                 <?php
-                                $apiUrl = "https://restcountries.com/v3.1/all";
-                                $ch = curl_init();
-                                curl_setopt($ch, CURLOPT_URL, $apiUrl);
-                                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                                $response = curl_exec($ch);
-                                curl_close($ch);
-                                $countries = json_decode($response, true);
-                                if (json_last_error() === JSON_ERROR_NONE) {
-                                    foreach ($countries as $country) {
-                                        $countryName = $country['name']['common'];
-                                        ?>
-                                       <option value="{{ $countryName }}" {{$employee->nationality == $countryName ? 'selected' : ''}}  > {{htmlspecialchars($countryName) }}</option>
-                                       <?php
+                                $filePath = public_path('js/countries.json');
+
+                                if (file_exists($filePath)) {
+                                    $jsonContent = file_get_contents($filePath);
+                                    $countries = json_decode($jsonContent, true);
+                                    if (json_last_error() === JSON_ERROR_NONE) {
+                                        foreach ($countries as $country) {
+                                            $countryName = $country['name']['common'];
+                                ?>
+                                            <option value="{{ $countryName }}" {{$employee->nationality == $countryName ? 'selected' : ''}}> {{ htmlspecialchars($countryName) }}</option>
+                                <?php
+                                        }
+                                        echo '</select>';
+                                    } else {
+                                        echo 'Error decoding country data';
                                     }
-                                    echo '</select>';
                                 } else {
-                                    echo 'Error retrieving country data';
+                                    echo 'File not found';
                                 }
                                 ?>
                                 @if ($errors->has('nationality'))
@@ -83,7 +84,7 @@
                         <label class="col-sm-2 control-label">Address</label>
                         <div class="col-sm-10"><input value="{{ $employee->address }}" type="text" name="address" id="address" placeholder="Address" class="form-control" required>
                             @if ($errors->has('address'))
-                            <span class="help-block m-b-none"label label-warning>{{ $errors->first('address') }}</span>
+                            <span class="help-block m-b-none" label label-warning>{{ $errors->first('address') }}</span>
                             @endif
                         </div>
                     </div>
@@ -94,11 +95,11 @@
                         <div class="col-sm-10">
                             <div class="input-group date">
                                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" class="form-control" name="date_of_birth" id="date_of_birth" required value="<?php
-                                $dateString = $employee->date_of_birth;
-                                $date = new DateTime($dateString);
-                                $formattedDate = $date->format('d/m/Y');
-                                echo $formattedDate; 
-                                ?>">
+                                                                                                                                                                                                        $dateString = $employee->date_of_birth;
+                                                                                                                                                                                                        $date = new DateTime($dateString);
+                                                                                                                                                                                                        $formattedDate = $date->format('d/m/Y');
+                                                                                                                                                                                                        echo $formattedDate;
+                                                                                                                                                                                                        ?>">
                             </div>
                         </div>
                         @if ($errors->has('date_of_birth'))
@@ -123,13 +124,10 @@
                     <div class="form-group"><label class="col-sm-2 control-label">Status</label>
 
                         <div class="col-sm-10">
-                            <select class="form-control m-b" name="status" required data-placeholder="Choose a Status">
-                                @foreach($statuses as  $status)
-                                    <option value="{{ $status }}" {{ $status == $employee->status ? 'selected' : '' }}>
-                                        {{ $status }}
-                                    </option>
-                                @endforeach 
-                               
+                            <select class="form-control m-b" name="status" required data-placeholder="Choose a Status" disabled>
+                                <option value="{{ $employee->status }}" >
+                                    {{ $employee->status }}
+                                </option>
                             </select>
                             @if ($errors->has('status'))
                             <span class="help-block m-b-none label label-warning">{{ $errors->first('status') }}</span>
@@ -166,12 +164,20 @@
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <div class="col-sm-4 col-sm-offset-2">
-                            <button class="btn btn-white btn-outline btn-link"><a href="{{route('employee.index')}}">Cancel</a></button>
-                            <button class="btn btn-primary" type="submit">Save changes</button>
+                            <button class="btn btn-white btn-link btn-sm dim"><a href="{{route('employee.index')}}">Cancel</a></button>
+                            <button class="btn btn-primary btn-sm dim" style="margin: 0 12px;" type="submit">Save changes</button>
                         </div>
+                        <a class="btn-link font-bold" style="float: right;" href="{{ route('employee.delete',$employee->employee_id) }}" onclick="return confirm('Are you sure you want to terminate this employee?');">
+                            <button class="btn btn-danger btn-sm dim">
+                                Quit job
+                            </button>
+                        </a>
                     </div>
+
                 </form>
             </div>
+
         </div>
+
     </div>
 </div>

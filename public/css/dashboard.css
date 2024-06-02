@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
 :root {
-	--c-gray-900: #000000;
+	--c-gray-900: #e2e1e1;
 	--c-gray-800: #1f1f1f;
 	--c-gray-700: #2e2e2e;
 	--c-gray-600: #313131;
@@ -236,7 +236,7 @@ a {
 	&:hover,
 	&:focus {
 		color: var(--c-text-primary);
-		span:last-child {
+		span::nth-child(2) {
 			box-shadow: 0 0 0 4px var(--c-gray-800), 0 0 0 5px var(--c-text-tertiary);
 		}
 	}
@@ -250,7 +250,7 @@ a {
 		font-weight: 300;
 	}
 
-	span:last-child {
+	span::nth-child(2) {
 		transition: 0.25s ease;
 		display: flex;
 		justify-content: center;
@@ -309,7 +309,7 @@ a {
 .tile {
 	padding: 1rem;
 	border-radius: 8px;
-	background-color: var(--c-olive-500);
+	background-color: #eb2f06;
 	color: var(--c-gray-900);
 	min-height: 150px;
 	display: flex;
@@ -327,25 +327,31 @@ a {
 	}
 
 	&:nth-child(2) {
-		background-color: var(--c-green-500);
+		background-color: #fc4c66;
 		&:focus-within {
 			box-shadow: 0 0 0 2px var(--c-gray-800), 0 0 0 4px var(--c-green-500);
 		}
 	}
 	&:nth-child(3) {
-		background-color: #f6e58d;
+		background-color: #38ada9;
 		&:focus-within {
 			box-shadow: 0 0 0 2px var(--c-gray-800), 0 0 0 4px var(--c-gray-300);
 		}
 	}
     &:nth-child(4) {
-		background-color:  #686de0;
+		background-color:  #4a69bd;
 		&:focus-within {
 			box-shadow: 0 0 0 2px var(--c-gray-800), 0 0 0 4px var(--c-gray-300);
 		}
 	}
     &:nth-child(5) {
-		background-color:#6ab04c;
+		background-color:#009432;
+		&:focus-within {
+			box-shadow: 0 0 0 2px var(--c-gray-800), 0 0 0 4px var(--c-gray-300);
+		}
+	}
+	&:nth-child(6) {
+		background-color:#3c6382;
 		&:focus-within {
 			box-shadow: 0 0 0 2px var(--c-gray-800), 0 0 0 4px var(--c-gray-300);
 		}
@@ -392,7 +398,7 @@ a {
     justify-content: space-between;
 
 	i {
-		font-size: 2.5em;
+		font-size: 2.8em;
 	}
 
 	h3 {

@@ -16,7 +16,7 @@
                     </ul>
                 </div>
                 <div class="logo-element">
-                    IN+
+                    NHOM3
                 </div>
             </li>
             <li class="active">
@@ -101,7 +101,7 @@
                     <li><a href="{{route('position.createView')}}">New position</a></li>
                 </ul>
             </li>
-            @elseif($user->permission_id==1)
+            @if($user->permission_id==1)
             <li>
                 <a href="#"><i class="fa fa-users"></i> <span class="nav-label">Users</span><span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse">
@@ -117,9 +117,7 @@
                     <li><a href="{{route('permission.createView')}}">New Permission</a></li>
                 </ul>
             </li>
-            <li>
-                <a href="#"><i class="fa fa-gear"></i> <span class="nav-label">Setting </span></a>
-            </li>
+            @endif
            @endif
         </ul>
 

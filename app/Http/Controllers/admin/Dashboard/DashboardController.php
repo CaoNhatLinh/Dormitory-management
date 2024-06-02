@@ -3,11 +3,18 @@
 namespace App\Http\Controllers\Admin\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Models\Bill;
+use App\Models\Contract;
+use App\Models\Device;
 use Illuminate\Http\Request;
 use App\Models\Employee;
 use App\Models\Position;
+use App\Models\Room;
+use App\Models\Student;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 class DashboardController extends Controller
@@ -20,22 +27,13 @@ class DashboardController extends Controller
         return $config = [
             'js' => [
                 'js/plugins/flot/jquery.flot.js',
-                'js/plugins/flot/jquery.flot.js',
                 'js/plugins/flot/jquery.flot.tooltip.min.js',
                 'js/plugins/flot/jquery.flot.spline.js',
-                'js/plugins/flot/query.flot.resize.js',
-                'js/plugins/flot/query.flot.resize.js',
+                'js/plugins/flot/jquery.flot.resize.js',
                 'js/plugins/flot/jquery.flot.pie.js',
-                'js/plugins/peity/jquery.peity.min.js',
-                'js/demo/peity-demo.js',
-                'js/plugins/gritter/jquery.gritter.min.js',
-                'js/demo/sparkline-demo.js',
-                'js/plugins/sparkline/jquery.sparkline.min.js',
-                'js/plugins/chartJs/Chart.min.js',
-                'js/plugins/toastr/toastr.min.js',
-                'js/plugins/d3/d3.min.js',
-                'js/plugins/c3/c3.min.js',
-
+                'js/plugins/flot/jquery.flot.symbol.js',
+                'js/plugins/flot/jquery.flot.time.js',
+                'js/plugins/easypiechart/jquery.easypiechart.js'
             ],
             'linkjs' => [],
             'css' => [
@@ -58,117 +56,130 @@ class DashboardController extends Controller
                 });
                 ',
                 '
-                $(document).ready(function () { 
-
-                    c3.generate({
-                        bindto: \'#lineChart\',
-                        data:{
-                            columns: [
-                                [\'data1\', 30, 200, 100, 400, 150, 250],
-                                [\'data2\', 50, 20, 10, 40, 15, 25]
-                            ],
-                            colors:{
-                                data1: \'#1ab394\',
-                                data2: \'#BABABA\'
+                $(document).ready(function () {
+                    var currentYear = new Date().getFullYear();
+                    function gd(year, month, day) {
+                        return new Date(year, month - 1, day).getTime();
+                    }
+                    function plotData(data3, data2) {
+                        var dataset = [
+                            {
+                                label: "Total Bill",
+                                data: data3,
+                                color: "#1ab394",
+                                bars: {
+                                    show: true,
+                                    align: "center",
+                                    barWidth: 60 * 600 * 60 * 600,
+                                    lineWidth: 0
+                                }
+                            },
+                            {
+                                label: "Bill Count",
+                                data: data2,
+                                yaxis: 2,
+                                color: "#1C84C6",
+                                lines: {
+                                    lineWidth: 1,
+                                    show: true,
+                                    fill: true,
+                                    fillColor: {
+                                        colors: [{ opacity: 0.2 }, { opacity: 0.4 }]
+                                    }
+                                },
+                                splines: {
+                                    show: false,
+                                    tension: 0.6,
+                                    lineWidth: 1,
+                                    fill: 0.1
+                                }
                             }
-                        }
-                    });
-        
-                    c3.generate({
-                        bindto: \'#slineChart\',
-                        data:{
-                            columns: [
-                                [\'data1\', 30, 200, 100, 400, 150, 250],
-                                [\'data2\', 130, 100, 140, 200, 150, 50]
-                            ],
-                            colors:{
-                                data1: \'#1ab394\',
-                                data2: \'#BABABA\'
+                        ];
+                        var options = {
+                            xaxis: {
+                                mode: "time",
+                                tickSize: [1, "month"],
+                                tickLength: 0,
+                                axisLabel: "Date",
+                                axisLabelUseCanvas: true,
+                                axisLabelFontSizePixels: 12,
+                                axisLabelFontFamily: \'Arial\',
+                                axisLabelPadding: 10,
+                                color: "#d5d5d5"
                             },
-                            type: \'spline\'
-                        }
-                    });
-        
-                    c3.generate({
-                        bindto: \'#scatter\',
-                        data:{
-                            xs:{
-                                data1: \'data1_x\',
-                                data2: \'data2_x\'
+                            yaxes: [{
+                                position: "left",
+                                color: "#d5d5d5",
+                                axisLabelUseCanvas: true,
+                                axisLabelFontSizePixels: 12,
+                                axisLabelFontFamily: \'Arial\',
+                                axisLabelPadding: 3
+                            }, {
+                                position: "right",
+                                color: "#d5d5d5",
+                                axisLabelUseCanvas: true,
+                                axisLabelFontSizePixels: 12,
+                                axisLabelFontFamily: \'Arial\',
+                                axisLabelPadding: 67
+                            }],
+                            legend: {
+                                noColumns: 1,
+                                labelBoxBorderColor: "#000000",
+                                position: "nw"
                             },
-                            columns: [
-                                ["data1_x", 3.2, 3.2, 3.1, 2.3, 2.8, 2.8, 3.3, 2.4, 2.9, 2.7, 2.0, 3.0, 2.2, 2.9, 2.9, 3.1, 3.0, 2.7, 2.2, 2.5, 3.2, 2.8, 2.5, 2.8, 2.9, 3.0, 2.8, 3.0, 2.9, 2.6, 2.4, 2.4, 2.7, 2.7, 3.0, 3.4, 3.1, 2.3, 3.0, 2.5, 2.6, 3.0, 2.6, 2.3, 2.7, 3.0, 2.9, 2.9, 2.5, 2.8],
-                                ["data2_x", 3.3, 2.7, 3.0, 2.9, 3.0, 3.0, 2.5, 2.9, 2.5, 3.6, 3.2, 2.7, 3.0, 2.5, 2.8, 3.2, 3.0, 3.8, 2.6, 2.2, 3.2, 2.8, 2.8, 2.7, 3.3, 3.2, 2.8, 3.0, 2.8, 3.0, 2.8, 3.8, 2.8, 2.8, 2.6, 3.0, 3.4, 3.1, 3.0, 3.1, 3.1, 3.1, 2.7, 3.2, 3.3, 3.0, 2.5, 3.0, 3.4, 3.0],
-                                ["data1", 1.4, 1.5, 1.5, 1.3, 1.5, 1.3, 1.6, 1.0, 1.3, 1.4, 1.0, 1.5, 1.0, 1.4, 1.3, 1.4, 1.5, 1.0, 1.5, 1.1, 1.8, 1.3, 1.5, 1.2, 1.3, 1.4, 1.4, 1.7, 1.5, 1.0, 1.1, 1.0, 1.2, 1.6, 1.5, 1.6, 1.5, 1.3, 1.3, 1.3, 1.2, 1.4, 1.2, 1.0, 1.3, 1.2, 1.3, 1.3, 1.1, 1.3],
-                                ["data2", 2.5, 1.9, 2.1, 1.8, 2.2, 2.1, 1.7, 1.8, 1.8, 2.5, 2.0, 1.9, 2.1, 2.0, 2.4, 2.3, 1.8, 2.2, 2.3, 1.5, 2.3, 2.0, 2.0, 1.8, 2.1, 1.8, 1.8, 1.8, 2.1, 1.6, 1.9, 2.0, 2.2, 1.5, 1.4, 2.3, 2.4, 1.8, 1.8, 2.1, 2.4, 2.3, 1.9, 2.3, 2.5, 2.3, 1.9, 2.0, 2.3, 1.8]
-                            ],
-                            colors:{
-                                data1: \'#1ab394\',
-                                data2: \'#BABABA\'
-                            },
-                            type: \'scatter\'
-                        }
-                    });
+                            grid: {
+                                hoverable: false,
+                                borderWidth: 0
+                            }
+                        };
         
-                    c3.generate({
-                        bindto: \'#stocked\',
-                        data:{
-                            columns: [
-                                [\'data1\', 30,200,100,400,150,250],
-                                [\'data2\', 50,20,10,40,15,25]
-                            ],
-                            colors:{
-                                data1: \'#1ab394\',
-                                data2: \'#BABABA\'
-                            },
-                            type: \'bar\',
-                            groups: [
-                                [\'data1\', \'data2\']
-                            ]
-                        }
-                    });
+                        $.plot($("#flot-dashboard-chart"), dataset, options);
+                    }
+                    $.ajax({
+                        url: \'/dormitory-management/public/bill-Total/\' + currentYear,
+                        method: \'GET\',
+                        success: function(response3) {
+                            var data3 = response3.map(function(item) {
+                                var year = item[0][0];
+                                var month = item[0][1];
+                                var total = item[1];
+                                return [gd(year, month, 1), total];
+                            });
         
-                    c3.generate({
-                        bindto: \'#gauge\',
-                        data:{
-                            columns: [
-                                [\'data\', 91.4]
-                            ],
+                            $.ajax({
+                                url: \'/dormitory-management/public/bill-Cout/\' + currentYear,
+                                method: \'GET\',
+                                success: function(response2) {
+                                    var data2 = response2.map(function(item) {
+                                        var year = item[0][0];
+                                        var month = item[0][1];
+                                        var total = item[1];
+                                        return [gd(year, month, 1), total];
+                                    });
         
-                            type: \'gauge\'
+                                    plotData(data3, data2);
+                                },
+                                error: function(xhr, status, error) {
+                                    console.error(\'Error fetching data2:\', error);
+                                }
+                            });
                         },
-                        color:{
-                            pattern: [\'#1ab394\', \'#BABABA\']
-        
+                        error: function(xhr, status, error) {
+                            console.error(\'Error fetching data3:\', error);
                         }
                     });
-        
-                    c3.generate({
-                        bindto: \'#pie\',
-                        data:{
-                            columns: [
-                                [\'data1\', 30],
-                                [\'data2\', 120]
-                            ],
-                            colors:{
-                                data1: \'#1ab394\',
-                                data2: \'#BABABA\'
-                            },
-                            type : \'pie\'
-                        }
-                    });
-        
                 });
                 '
+
             ]
         ];
     }
 
     public function index()
     {
-        
+
         if (Auth::check()) {
-            if (!Session::has('user')|| !Session::has('employee') || !Session::has('position_name')) {
+            if (!Session::has('user') && !Session::has('employee') && !Session::has('position_name')) {
                 $authId = Auth::id();
                 $user = User::find($authId);
                 $employee = $user->employee;
@@ -182,6 +193,21 @@ class DashboardController extends Controller
             $position_name = Session::get('position_name');
             $user = Session::get('user');
             $title = 'Dormitory management';
+            $totalContracts = Contract::where('status', 'renting')
+                ->where('end_date', '>', Carbon::now())
+                ->count();
+            $totalRooms = Room::count();
+            $totalDevices = Device::count();
+            $totalStudents = Student::count();
+            $totalEmployees = Employee::where('status', 'Working')->count();
+
+            $currentMonth = Carbon::now()->month;
+            $currentYear = Carbon::now()->year;
+
+            $totalBills = Bill::whereYear('date_bill', $currentYear)
+                ->whereMonth('date_bill', $currentMonth)
+                ->sum('total_bill');
+
             $config = $this->config();
             $template = 'admin.dashboard.home.index';
             return view('admin.dashboard.layout', compact(
@@ -190,10 +216,65 @@ class DashboardController extends Controller
                 'title',
                 'position_name',
                 'employee',
-                'user'
+                'user',
+                'totalStudents',
+                'totalRooms',
+                'totalContracts',
+                'totalBills',
+                'totalDevices',
+                'totalEmployees'
             ));
         } else {
             return redirect()->route('auth.admin')->with('error', 'Please log in first');
         }
+    }
+    public function getMonthlyBillStatistics($year)
+    {
+        $bills = Bill::select(
+            DB::raw('YEAR(date_bill) as year'),
+            DB::raw('MONTH(date_bill) as month'),
+            DB::raw('SUM(total_bill) as total_bill')
+        )
+            ->whereYear('date_bill', $year)
+            ->groupBy(DB::raw('YEAR(date_bill)'), DB::raw('MONTH(date_bill)'))
+            ->get();
+
+        $monthlyStatistics = [];
+        for ($month = 1; $month <= 12; $month++) {
+            $monthlyStatistics[] = [[$year, $month], 0];
+        }
+        foreach ($bills as $bill) {
+            $monthlyStatistics[$bill->month - 1] = [[$bill->year, $bill->month], $bill->total_bill];
+        }
+
+        return response()->json($monthlyStatistics);
+    }
+    public function getBillStatistics($year)
+    {
+        $bills = DB::table('bills')
+            ->select(
+                DB::raw('YEAR(date_bill) as year'),
+                DB::raw('MONTH(date_bill) as month'),
+                DB::raw('COUNT(bill_id) as bill_count')
+            )
+            ->whereYear('date_bill', $year)
+            ->groupBy('year', 'month')
+            ->get();
+        $billStatistics = [];
+        for ($month = 1; $month <= 12; $month++) {
+            $found = false;
+            foreach ($bills as $bill) {
+                if ($bill->month == $month) {
+                    $billStatistics[] = [[$year, $month], $bill->bill_count];
+                    $found = true;
+                    break;
+                }
+            }
+            if (!$found) {
+                $billStatistics[] = [[$year, $month], 0];
+            }
+        }
+
+        return response()->json($billStatistics);
     }
 }

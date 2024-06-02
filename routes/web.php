@@ -9,7 +9,7 @@ use App\Http\Controllers\Admin\Room\RoomController;
 use App\Http\Controllers\Admin\Room\RoomTypeController;
 use App\Http\Controllers\Admin\Student\StudentController;
 use App\Http\Controllers\Admin\Employee\PositionController;
-use App\Http\Controllers\Admin\Device\DeviceController; 
+use App\Http\Controllers\Admin\Device\DeviceController;
 use App\Http\Controllers\Admin\Device\DeviceTypeController;
 use App\Http\Controllers\Admin\Bill\BillController;
 use App\Http\Controllers\Admin\Device\DeviceRentalController;
@@ -28,116 +28,146 @@ Route::post('login', [AuthController::class, 'login'])->name('auth.login');
 Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');
 //DASHBOARD
 Route::GET('dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+Route::get('/bill-Total/{year}', [DashboardController::class, 'getMonthlyBillStatistics']);
+Route::get('/bill-Cout/{year}', [DashboardController::class, 'getBillStatistics']);
 
 //USER
-Route::get("/profile", [UserController::class, 'profileView'])->name("user.profileView");
-Route::get("/user", [UserController::class, 'index'])->name("user.index");
-Route::get("/user/createView", [UserController::class, 'createView'])->name("user.createView");
-Route::post("/user/create", [UserController::class, 'create'])->name("user.create");
-Route::post("/user/edit/{id}", [UserController::class, 'edit'])->name("user.edit");
-Route::get("/user/editView/{id}", [UserController::class, 'editView'])->name("user.editView");
-Route::get("/user/delete/{id}", [UserController::class, 'delete'])->name("user.delete");
-Route::get("/user/resetpassword/{id}", [UserController::class, 'resetpassword'])->name("user.resetpassword");
-
+Route::group(['prefix' => 'user'], function () {
+    Route::get("/profile", [UserController::class, 'profileView'])->name("user.profileView");
+    Route::get("", [UserController::class, 'index'])->name("user.index");
+    Route::get("/createView", [UserController::class, 'createView'])->name("user.createView");
+    Route::post("/create", [UserController::class, 'create'])->name("user.create");
+    Route::post("/edit/{id}", [UserController::class, 'edit'])->name("user.edit");
+    Route::get("/editView/{id}", [UserController::class, 'editView'])->name("user.editView");
+    Route::get("/delete/{id}", [UserController::class, 'delete'])->name("user.delete");
+    Route::get("/resetpassword/{id}", [UserController::class, 'resetpassword'])->name("user.resetpassword");
+});
 //PERMISSION
-Route::get('/permission', [PermissionController::class, 'index'])->name('permission.index');
-Route::get("/permission/createView", [PermissionController::class, 'createView'])->name("permission.createView");
-Route::post("/permission/create", [PermissionController::class, 'create'])->name("permission.create");
-Route::post("/permission/edit", [PermissionController::class, 'edit'])->name("permission.edit");
-Route::get("/permission/delete/{id}", [PermissionController::class, 'delete'])->name("permission.delete");
+Route::group(['prefix' => 'permission'], function () {
+    Route::get('', [PermissionController::class, 'index'])->name('permission.index');
+    Route::get("/createView", [PermissionController::class, 'createView'])->name("permission.createView");
+    Route::post("/create", [PermissionController::class, 'create'])->name("permission.create");
+    Route::post("/edit", [PermissionController::class, 'edit'])->name("permission.edit");
+    Route::get("/delete/{id}", [PermissionController::class, 'delete'])->name("permission.delete");
+});
+
 
 // EMPLOYEE
-Route::get('/employee', [EmployeeController::class, 'index'])->name('employee.index');
-Route::get("/employee/createView", [EmployeeController::class, 'createView'])->name("employee.createView");
-Route::post("/employee/create", [EmployeeController::class, 'create'])->name("employee.create");
-Route::get("/employee/editView/{id}", [EmployeeController::class, 'editView'])->name("employee.editView");
-Route::post("/employee/edit/{id}", [EmployeeController::class, 'edit'])->name("employee.edit");
-Route::get("/employee/detailView/{id}", [EmployeeController::class, 'detailView'])->name("employee.detailView");
+Route::group(['prefix' => 'employee'], function () {
+    Route::get("", [EmployeeController::class, 'index'])->name('employee.index');
+    Route::get("/createView", [EmployeeController::class, 'createView'])->name("employee.createView");
+    Route::post("/create", [EmployeeController::class, 'create'])->name("employee.create");
+    Route::get("/editView/{id}", [EmployeeController::class, 'editView'])->name("employee.editView");
+    Route::post("/edit/{id}", [EmployeeController::class, 'edit'])->name("employee.edit");
+    Route::get("/detailView/{id}", [EmployeeController::class, 'detailView'])->name("employee.detailView");
+    Route::get("/delete/{id}", [EmployeeController::class, 'delete'])->name("employee.delete");
+});
 
 //POSITION
-Route::get('/position', [PositionController::class, 'index'])->name('position.index');
-Route::get("/position/createView", [PositionController::class, 'createView'])->name("position.createView");
-Route::post("/position/create", [PositionController::class, 'create'])->name("position.create");
-Route::post("/position/edit", [PositionController::class, 'edit'])->name("position.edit");
-Route::get("/position/delete/{id}", [PositionController::class, 'delete'])->name("position.delete");
-// STUDENT
-Route::get("/student", [StudentController::class, 'index'])->name("student.index");
-Route::get("/student/createView", [StudentController::class, 'createView'])->name("student.createView");
-Route::post("/student/create", [StudentController::class, 'create'])->name("student.create");
-Route::get("/student/editView/{id}", [StudentController::class, 'editView'])->name("student.editView");
-Route::post("/student/edit/{id}", [StudentController::class, 'edit'])->name("student.edit");
-Route::get("/student/detailView/{id}", [StudentController::class, 'detailView'])->name("student.detailView");
+Route::group(['prefix' => 'position'], function () {
+    Route::get("", [PositionController::class, 'index'])->name('position.index');
+    Route::get("/createView", [PositionController::class, 'createView'])->name("position.createView");
+    Route::post("/create", [PositionController::class, 'create'])->name("position.create");
+    Route::post("/edit", [PositionController::class, 'edit'])->name("position.edit");
+    Route::get("/delete/{id}", [PositionController::class, 'delete'])->name("position.delete");
+});
 
+// STUDENT
+Route::group(['prefix' => 'student'], function () {
+    Route::get("", [StudentController::class, 'index'])->name("student.index");
+    Route::get("/createView", [StudentController::class, 'createView'])->name("student.createView");
+    Route::post("/create", [StudentController::class, 'create'])->name("student.create");
+    Route::get("/editView/{id}", [StudentController::class, 'editView'])->name("student.editView");
+    Route::post("/edit/{id}", [StudentController::class, 'edit'])->name("student.edit");
+    Route::get("/detailView/{id}", [StudentController::class, 'detailView'])->name("student.detailView");
+});
 
 // ROOM
-Route::get("/room", [RoomController::class, 'index'])->name("room.index");
-Route::get("/room/createView", [RoomController::class, 'createView'])->name("room.createView");
-Route::post("/room/create", [RoomController::class, 'create'])->name("room.create");
-Route::get("/room/editView/{id}", [RoomController::class, 'editView'])->name("room.editView");
-Route::post("/room/edit/{id}", [RoomController::class, 'edit'])->name("room.edit");
+Route::group(['prefix' => 'room'], function () {
+    Route::get("", [RoomController::class, 'index'])->name("room.index");
+    Route::get("/createView", [RoomController::class, 'createView'])->name("room.createView");
+    Route::post("/create", [RoomController::class, 'create'])->name("room.create");
+    Route::get("/editView/{id}", [RoomController::class, 'editView'])->name("room.editView");
+    Route::post("/edit/{id}", [RoomController::class, 'edit'])->name("room.edit");
 
-// ROOM TYPE
-Route::get("/room/type", [RoomTypeController::class, 'index'])->name("roomType.index");
-Route::get("/room/type/createView", [RoomTypeController::class, 'createView'])->name("roomType.createView");
-Route::post("/room/type/create", [RoomTypeController::class, 'create'])->name("roomType.create");
-Route::get("/room/type/editView/{id}", [RoomTypeController::class, 'editView'])->name("roomType.editView");
-Route::post("/room/type/edit/{id}", [RoomTypeController::class, 'edit'])->name("roomType.edit");
-
+    // ROOM TYPE
+    Route::group(['prefix' => 'type'], function () {
+        Route::get("", [RoomTypeController::class, 'index'])->name("roomType.index");
+        Route::get("/createView", [RoomTypeController::class, 'createView'])->name("roomType.createView");
+        Route::post("/create", [RoomTypeController::class, 'create'])->name("roomType.create");
+        Route::get("/editView/{id}", [RoomTypeController::class, 'editView'])->name("roomType.editView");
+        Route::post("/edit/{id}", [RoomTypeController::class, 'edit'])->name("roomType.edit");
+    });
+});
 
 // CONTRACT
-Route::get("/contract", [ContractController::class, 'index'])->name("contract.index");
-Route::get("/contract/createView/{id}", [ContractController::class, 'createView'])->name("contract.createView");
-Route::post("/contract/create/{id}", [ContractController::class, 'create'])->name("contract.create");
-Route::get("/contract/editView/{id}", [ContractController::class, 'editView'])->name("contract.editView");
-Route::post("/contract/edit/{id}", [ContractController::class, 'edit'])->name("contract.edit");
-
+Route::group(['prefix' => 'contract'], function () {
+    Route::get("", [ContractController::class, 'index'])->name("contract.index");
+    Route::get("/createView/{id}", [ContractController::class, 'createView'])->name("contract.createView");
+    Route::post("/create/{id}", [ContractController::class, 'create'])->name("contract.create");
+    Route::get("/editView/{id}", [ContractController::class, 'editView'])->name("contract.editView");
+    Route::post("/edit/{id}", [ContractController::class, 'edit'])->name("contract.edit");
+});
 //DEVICE
-Route::get("/device", [DeviceController::class, 'index'])->name("device.index");
-Route::get("/device/createView", [DeviceController::class, 'createView'])->name("device.createView");
-Route::post("/device/create", [DeviceController::class, 'create'])->name("device.create");
-Route::get("/device/editView/{id}", [DeviceController::class, 'editView'])->name("device.editView");
-Route::post("/device/edit/{id}", [DeviceController::class, 'edit'])->name("device.edit");
-Route::get('/device/search', [DeviceController::class, 'search'])->name('device.search');
-Route::get('/device/delete/{id}', [DeviceController::class, 'delete'])->name('device.delete');
-Route::get("/device/createExcelView", [DeviceController::class, 'createExcelView'])->name("device.createExcelView");
-Route::post("/device/createExcel", [DeviceController::class, 'createExcel'])->name("device.createExcel");
-Route::post("/device/loadExcel", [DeviceController::class, 'loadExcel'])->name("device.loadExcel");
-Route::post('/device/rent', [DeviceRentalController::class, 'rent'])->name('device.rent');
+Route::group(['prefix' => 'device'], function () {
+    Route::get("", [DeviceController::class, 'index'])->name("device.index");
+    Route::get("/createView", [DeviceController::class, 'createView'])->name("device.createView");
+    Route::post("/create", [DeviceController::class, 'create'])->name("device.create");
+    Route::get("/editView/{id}", [DeviceController::class, 'editView'])->name("device.editView");
+    Route::post("/edit/{id}", [DeviceController::class, 'edit'])->name("device.edit");
+    Route::get('/search', [DeviceController::class, 'search'])->name('device.search');
+    Route::get('/delete/{id}', [DeviceController::class, 'delete'])->name('device.delete');
+    Route::get("/createExcelView", [DeviceController::class, 'createExcelView'])->name("device.createExcelView");
+    Route::post("/createExcel", [DeviceController::class, 'createExcel'])->name("device.createExcel");
+    Route::post("/loadExcel", [DeviceController::class, 'loadExcel'])->name("device.loadExcel");
+    Route::post('/rent', [DeviceRentalController::class, 'rent'])->name('device.rent');
 
+    //DEVICE TYPE
+    Route::group(['prefix' => 'devicetype'], function () {
+        Route::get("", [DeviceTypeController::class, 'index'])->name("deviceType.index");
+        Route::get("/createView", [DeviceTypeController::class, 'createView'])->name("deviceType.createView");
+        Route::post("/create", [DeviceTypeController::class, 'create'])->name("deviceType.create");
+        Route::get("/editView/{id}", [DeviceTypeController::class, 'editView'])->name("deviceType.editView");
+        Route::post("/edit/{id}", [DeviceTypeController::class, 'edit'])->name("deviceType.edit");
+    });
 
-//DEVICE TYPE
-Route::get("/device/devicetype", [DeviceTypeController::class, 'index'])->name("deviceType.index");
-Route::get("/device/devicetype/createView", [DeviceTypeController::class, 'createView'])->name("deviceType.createView");
-Route::post("/device/devicetype/create", [DeviceTypeController::class, 'create'])->name("deviceType.create");
-Route::get("/device/devicetype/editView/{id}", [DeviceTypeController::class, 'editView'])->name("deviceType.editView");
-Route::post("/device/devicetype/edit/{id}", [DeviceTypeController::class, 'edit'])->name("deviceType.edit");
+    //DEVICE RENTAL
+    Route::group(['prefix' => 'devicerental'], function () {
+        Route::get("", [DeviceRentalController::class, 'index'])->name("deviceRental.index");
+        Route::get("/createDeviceRental", [DeviceRentalController::class, 'createDeviceRental'])->name("deviceRental.createDeviceRental");
+        Route::get("/editView/{id}", [DeviceRentalController::class, 'editView'])->name("deviceRental.editView");
+        Route::post("/edit/{id}", [DeviceRentalController::class, 'edit'])->name("deviceRental.edit");
+    });
+});
 
 //BILL
-Route::get("/bill", [BillController::class, 'index'])->name("bill.index");
-Route::get("/bill/createView", [BillController::class, 'createView'])->name("bill.createView");
-Route::post('/bill/create', [BillController::class, 'create'])->name('bill.create');
-Route::get("/bill/billroomView/{id}/{student_id}", [BillController::class, 'billroomView'])->name("bill.billroomView");
-Route::get("/bill/eawView/{id}", [BillController::class, 'eawView'])->name("bill.eawView");
-Route::get("/bill/equipmentView/{id}", [BillController::class, 'equipmentView'])->name("bill.equipmentView");
-Route::get("/bill/pay/billroom/{id}", [BillController::class, 'billroomPay'])->name("bill.billroomPay");
-Route::get("/bill/pay/eaw/{id}", [BillController::class, 'eawPay'])->name("bill.eawPay");
-Route::get("/bill/pay/equipment/{id}", [BillController::class, 'equipmentPay'])->name("bill.equipmentPay");
+Route::group(['prefix' => 'bill'], function () {
+    Route::get("", [BillController::class, 'index'])->name("bill.index");
+    Route::get("/createView", [BillController::class, 'createView'])->name("bill.createView");
+    Route::post('/create', [BillController::class, 'create'])->name('bill.create');
+    Route::get("/billroomView/{id}/{student_id}", [BillController::class, 'billroomView'])->name("bill.billroomView");
+    Route::get("/eawView/{id}", [BillController::class, 'eawView'])->name("bill.eawView");
+    Route::get("/equipmentView/{id}", [BillController::class, 'equipmentView'])->name("bill.equipmentView");
+
+    Route::group(['prefix' => 'pay'], function () {
+        Route::get("/billroom/{id}", [BillController::class, 'billroomPay'])->name("bill.billroomPay");
+        Route::get("/eaw/{id}", [BillController::class, 'eawPay'])->name("bill.eawPay");
+        Route::get("/equipment/{id}", [BillController::class, 'equipmentPay'])->name("bill.equipmentPay");
+    });
+
+    Route::group(['prefix' => 'room'], function () {
+        // ROOM BILL
+        Route::get("", [RoomBillController::class, 'index'])->name("bill.room.index");
+        Route::get("/createView", [RoomBillController::class, 'createView'])->name("bill.room.createView");
+        Route::post("/create", [RoomBillController::class, 'create'])->name("bill.room.create");
+        Route::get("/createExcelView", [RoomBillController::class, 'createExcelView'])->name("bill.room.createExcelView");
+        Route::post("/createExcel", [RoomBillController::class, 'createExcel'])->name("bill.room.createExcel");
+        Route::post("/loadExcel", [RoomBillController::class, 'loadExcel'])->name("bill.room.loadExcel");
+        Route::get("/editView/{id}", [RoomBillController::class, 'editView'])->name("bill.room.editView");
+        Route::post("/edit/{id}", [RoomBillController::class, 'edit'])->name("bill.room.edit");
+    });
+});
+
+//API
 Route::get("/api/student/{id}", [BillController::class, 'getstudentbyid']);
-
-//DEVICE RENTAL
-Route::get("/device/devicerental", [DeviceRentalController::class, 'index'])->name("deviceRental.index");
-Route::get("/device/devicerental/createDeviceRental", [DeviceRentalController::class, 'createDeviceRental'])->name("deviceRental.createDeviceRental");
 Route::get('/api/rooms', [DeviceRentalController::class, 'getRooms']);
-Route::get("/device/devicerental/editView/{id}", [DeviceRentalController::class, 'editView'])->name("deviceRental.editView");
-Route::post("/device/devicerental/edit/{id}", [DeviceRentalController::class, 'edit'])->name("deviceRental.edit");
-
-
-// ROOM BILL
-Route::get("/bill/room", [RoomBillController::class, 'index'])->name("bill.room.index");
-Route::get("/bill/room/createView", [RoomBillController::class, 'createView'])->name("bill.room.createView");
-Route::post("/bill/room/create", [RoomBillController::class, 'create'])->name("bill.room.create");
-Route::get("/bill/room/createExcelView", [RoomBillController::class, 'createExcelView'])->name("bill.room.createExcelView");
-Route::post("/bill/room/createExcel", [RoomBillController::class, 'createExcel'])->name("bill.room.createExcel");
-Route::post("/bill/room/loadExcel", [RoomBillController::class, 'loadExcel'])->name("bill.room.loadExcel");
-Route::get("/bill/room/editView/{id}", [RoomBillController::class, 'editView'])->name("bill.room.editView");
-Route::post("/bill/room/edit/{id}", [RoomBillController::class, 'edit'])->name("bill.room.edit");

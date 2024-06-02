@@ -333,13 +333,7 @@ class EmployeeController extends Controller
         $employee = Employee::find($id);
         $request->validate([
 
-            'name' => 'required|string',
-            'avatar' => 'image|mimes:jpg,png,jpeg',
-            'gender' => 'required|string',
-            'address' => 'required|string',
-            'nationality' => 'required|string',
-            'date_of_birth' => 'required|date',
-            'position_id' => 'required|integer',
+          
             'person_id' => [
                 'required',
                 Rule::unique('employees', 'person_id')->ignore($employee->person_id, 'person_id'),
@@ -376,6 +370,29 @@ class EmployeeController extends Controller
             return redirect()->route('employee.index')->with('success', 'employee edited successfully.');
         } else {
             return redirect()->back()->with('error', 'Failed to update employee.');
+        }
+    }
+    public function delete($id)
+    {
+        if($id==1)
+        {
+            return redirect()->route('employee.index')->with('error', 'This employee cannot be deleted!');
+        }
+        $employee = Employee::find($id);
+        $employee->status ='On Leave';
+        $result = $employee->save();
+        $users = User::where('employee_id',$id)->get();
+        if(count($users)>0 )
+        {
+            foreach($users as $user)
+            {
+                $user->employee_id = 1;
+            }
+        }
+        if ($result) {
+            return redirect()->route('employee.index')->with('success', 'employee delete successfully.');
+        } else {
+            return redirect()->back()->with('error', 'Failed to delete employee.');
         }
     }
 }

@@ -146,7 +146,7 @@ class BillController extends Controller
     {
 
         if (Auth::check()) {
-            if (!Session::has('user')|| !Session::has('employee') || !Session::has('position_name')) {
+            if (!Session::has('user') || !Session::has('employee') || !Session::has('position_name')) {
                 $authId = Auth::id();
                 $user = User::find($authId);
                 $employee = $user->employee;
@@ -180,7 +180,7 @@ class BillController extends Controller
     public function createView()
     {
         if (Auth::check()) {
-            if (!Session::has('user')|| !Session::has('employee') || !Session::has('position_name')) {
+            if (!Session::has('user') || !Session::has('employee') || !Session::has('position_name')) {
                 $authId = Auth::id();
                 $user = User::find($authId);
                 $employee = $user->employee;
@@ -228,7 +228,7 @@ class BillController extends Controller
     public function billroomView($id, $student_id)
     {
         if (Auth::check()) {
-            if (!Session::has('user')|| !Session::has('employee') || !Session::has('position_name')) {
+            if (!Session::has('user') || !Session::has('employee') || !Session::has('position_name')) {
                 $authId = Auth::id();
                 $user = User::find($authId);
                 $employee = $user->employee;
@@ -272,7 +272,7 @@ class BillController extends Controller
     public function eawView($id)
     {
         if (Auth::check()) {
-            if (!Session::has('user')|| !Session::has('employee') || !Session::has('position_name')) {
+            if (!Session::has('user') || !Session::has('employee') || !Session::has('position_name')) {
                 $authId = Auth::id();
                 $user = User::find($authId);
                 $employee = $user->employee;
@@ -307,7 +307,7 @@ class BillController extends Controller
     public function equipmentView($id)
     {
         if (Auth::check()) {
-            if (!Session::has('user')|| !Session::has('employee') || !Session::has('position_name')) {
+            if (!Session::has('user') || !Session::has('employee') || !Session::has('position_name')) {
                 $authId = Auth::id();
                 $user = User::find($authId);
                 $employee = $user->employee;
@@ -497,4 +497,5 @@ class BillController extends Controller
         }
         return $options;
     }
+    
 }
