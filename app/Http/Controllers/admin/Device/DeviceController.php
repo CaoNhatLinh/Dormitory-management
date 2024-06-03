@@ -297,7 +297,7 @@ class DeviceController extends Controller
             $device->delete();
             return redirect()->route('device.index')->with('success', 'Device deleted successfully!');
         } catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->route('device.index')->with('error', 'Error deleting device: ' . $e->getMessage());
+            return redirect()->route('device.index')->with('error', 'Error deleting device ');
         }
     }    
     public function loadExcel(Request $request)
