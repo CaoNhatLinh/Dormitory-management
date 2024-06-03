@@ -38,7 +38,7 @@
                             <tr>
                                 <td>{{ $employee->employee_id }}</td>
                                 <td>{{ $employee->name }}</td>
-                                <td>{{ $employee->position->position_name }}</td>
+                                <td>{{ $employee->position->position_name ?? 'null'}}</td>
 
                                 <td>
                                     @if ($employee->status == 'Working' )

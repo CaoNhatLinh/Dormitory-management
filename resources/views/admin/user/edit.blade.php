@@ -26,9 +26,16 @@
 
                         <div class="col-sm-10">
                             <select class="form-control m-b" name="permission_id" data-placeholder="Choose a permission">
+                                <option value="">Select</option>
+                                @if($user->permission_id!=null)
                                 @foreach($permissions as $permission)
+
+                                @if($user->permission_id>$permission->permission_id)
+                                @else
                                 <option value="{{ $permission->permission_id }}" {{ $permission->permission_id == $userEdit->permission_id ? 'selected' : '' }}>{{ $permission->permission_name }}</option>
+                                @endif
                                 @endforeach
+                                @endif
                             </select>
                             @if ($errors->has('permission_id'))
                             <span class="help-block m-b-none label label-warning">{{ $errors->first('permission_id') }}</span>

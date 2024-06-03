@@ -284,4 +284,58 @@ class UserController extends Controller
         }
         return redirect()->route('user.index')->with('success', 'password to reset successfully!');
     }
+    public function changepassword(Request $request)
+    {
+        $user = Session::get('user');
+           
+        $request->validate([
+            'password' => 'required|string|min:6|',
+            'repassword' => 'required|string|min:6|',
+        ]);
+        $password = $request->password;
+        $repassword = $request->repassword;
+        if ($password != $repassword) {
+            return redirect()->back()->with('error', 'Re-password do not match');
+        }
+        $user->password = $request->password;
+        $result = $user->save();
+        if ($result) {
+            return redirect()->route('user.profileView')->with('success', 'password to change successfully.');
+        } else {
+            return redirect()->back()->with('error', 'password to change fail.');
+        }
+        return redirect()->route('user.profileView')->with('success', 'password to reset successfully!');
+    }
+    public function changepasswordView()
+    {
+        if (Auth::check()) {
+            if (!Session::has('user')|| !Session::has('employee') || !Session::has('position_name')) {
+                $authId = Auth::id();
+                $user = User::find($authId);
+                $employee = $user->employee;
+                $employee_id = $employee->employee_id;
+                $position_name = Position::find($employee_id)->position_name;
+                Session::put('employee', $employee);
+                Session::put('user', $user);
+                Session::put('position_name', $position_name);
+            }
+            $employee = Session::get('employee');
+            $position_name = Session::get('position_name');
+            $user = Session::get('user');
+            
+            $title = 'Change password';
+            $config = $this->config();
+            $template = 'admin.user.changepassword';
+            return view('admin.dashboard.layout', compact(
+                'template',
+                'config',
+                'title',
+                'employee',
+                'position_name',
+                'user',
+            ));
+        } else {
+            return redirect()->route('auth.admin')->with('error', 'Please log in first');
+        }
+    }
 }

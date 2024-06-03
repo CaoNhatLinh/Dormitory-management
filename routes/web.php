@@ -47,8 +47,10 @@ Route::group(['prefix' => 'user'], function () {
     Route::post("/create", [UserController::class, 'create'])->name("user.create");
     Route::post("/edit/{id}", [UserController::class, 'edit'])->name("user.edit");
     Route::get("/editView/{id}", [UserController::class, 'editView'])->name("user.editView");
-    Route::get("/delete/{id}", [UserController::class, 'delete'])->name("user.delete");
+    Route::post("/delete/{id}", [UserController::class, 'delete'])->name("user.delete");
     Route::get("/resetpassword/{id}", [UserController::class, 'resetpassword'])->name("user.resetpassword");
+    Route::get("/changepasswordView", [UserController::class, 'changepasswordView'])->name("user.changepasswordView");
+    Route::post("/changepassword/{id}", [UserController::class, 'changepassword'])->name("user.changepassword");
 });
 //PERMISSION
 Route::group(['prefix' => 'permission'], function () {
@@ -156,6 +158,7 @@ Route::group(['prefix' => 'bill'], function () {
     Route::get("/billroomView/{id}/{student_id}", [BillController::class, 'billroomView'])->name("bill.billroomView");
     Route::get("/eawView/{id}", [BillController::class, 'eawView'])->name("bill.eawView");
     Route::get("/equipmentView/{id}", [BillController::class, 'equipmentView'])->name("bill.equipmentView");
+    Route::get("/equipmentPayCancle/{id}", [BillController::class, 'equipmentPayCancle'])->name("bill.equipmentPayCancel");
 
     Route::group(['prefix' => 'pay'], function () {
         Route::get("/billroom/{id}", [BillController::class, 'billroomPay'])->name("bill.billroomPay");

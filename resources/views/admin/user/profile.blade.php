@@ -64,12 +64,17 @@
             </div>
             <a class="btn-link font-bold" href="{{route('employee.editView', $employee->employee_id)}}">
                 <button class="btn btn-primary btn-sm dim">
-                    Edit account
+                    Edit info
                 </button>
             </a>
             <a class="btn-link font-bold" href="{{ route('user.editView',$user->user_id) }}">
                 <button class="btn btn-primary btn-sm dim">
-                    Edit info
+                Edit account
+                </button>
+            </a>
+            <a class="btn-link font-bold" href="{{ route('user.changepasswordView') }}">
+                <button class="btn btn-primary btn-sm dim">
+                Change password
                 </button>
             </a>
         </div>

@@ -110,6 +110,7 @@
                     <div class="form-group"><label class="col-sm-2 control-label">Position</label>
                         <div class="col-sm-10">
                             <select class="form-control m-b" name="position_id" data-placeholder="Choose a position">
+                            <option value="">Select</option>
                                 @foreach($positions as $position)
                                 <option value="{{ $position->position_id }}" {{ $employee->position_id == $position->position_id ? 'selected' : '' }}>{{ $position->position_name }}</option>
                                 @endforeach
@@ -125,7 +126,7 @@
 
                         <div class="col-sm-10">
                             <select class="form-control m-b" name="status" required data-placeholder="Choose a Status" disabled>
-                                <option value="{{ $employee->status }}" >
+                                <option value="{{ $employee->status }}">
                                     {{ $employee->status }}
                                 </option>
                             </select>

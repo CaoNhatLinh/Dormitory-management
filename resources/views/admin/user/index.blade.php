@@ -35,7 +35,7 @@
                             <td>{{ $user->user_id }}</td>
                             <td>{{ $user->email }}</td>
                             <td> {{ $user->employee->name }}</td>
-                            <td>{{ $user->permission->permission_name }}</td>
+                            <td>{{ $user->permission->permission_name ?? 'null' }}</td>
                             <td>
                                 <div class="btn-group">
                                    
