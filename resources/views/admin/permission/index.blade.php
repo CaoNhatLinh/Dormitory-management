@@ -38,7 +38,7 @@
                                     <button class="btn btn-primary dim btn-sm" data-toggle="modal" data-target="#myModal" data-id="{{ $permission->permission_id }}" data-name="{{ $permission->permission_name }}">
                                         <i class="fa fa-edit"></i>
                                     </button>
-                                    <a href="{{ route('permission.delete', $permission->permission_id) }}" onclick="return confirm('Are you sure you want to delete this position?');">
+                                    <a href="{{ route('permission.delete', $permission->permission_id) }}" onclick="return confirm('Are you sure you want to delete this permission?');">
                                         <button class="btn btn-danger dim btn-sm">
                                             <i class="fa fa-trash"></i>
                                         </button>

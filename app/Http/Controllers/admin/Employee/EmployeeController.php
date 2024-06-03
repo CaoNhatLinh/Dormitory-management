@@ -273,7 +273,7 @@ class EmployeeController extends Controller
             $employee = Session::get('employee');
             $position_name = Session::get('position_name');
             $user = Session::get('user');
-            $title = 'Edit student';
+            $title = 'Employee detail';
             $config = $this->configDetail();
             $template = 'admin.employee.detail';
             $employeeDetails = Employee::with('position')->find($id);
