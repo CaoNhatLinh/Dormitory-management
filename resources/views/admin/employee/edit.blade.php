@@ -11,12 +11,12 @@
                 </div>
             </div>
             <div class="ibox-content">
-                <form method="POST" action="{{ route('employee.edit', $employee->employee_id) }}" enctype="multipart/form-data" class="form-horizontal">
+                <form method="POST" action="{{ route('employee.edit', $employeeEdit->employee_id) }}" enctype="multipart/form-data" class="form-horizontal">
                     @csrf
                     <div class="form-group"><label class="col-sm-2 control-label">Person ID</label>
 
                         <div class="col-sm-10">
-                            <input value="{{ $employee->person_id }}" type="text" name="person_id" id="person_id" placeholder="Person ID" class="form-control" required>
+                            <input value="{{ $employeeEdit->person_id }}" type="text" name="person_id" id="person_id" placeholder="Person ID" class="form-control" required>
                         </div>
                         @if ($errors->has('person_id'))
                         <span class="help-block m-b-none label label-warning" label label-warning>{{ $errors->first('person_id') }}</span>
@@ -26,7 +26,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">Full name</label>
                         <div class="col-sm-10">
-                            <input value="{{ $employee->name }}" type="text" name="name" id="name" placeholder="Full name" class="form-control" required>
+                            <input value="{{ $employeeEdit->name }}" type="text" name="name" id="name" placeholder="Full name" class="form-control" required>
                             @if ($errors->has('name'))
                             <span class="help-block m-b-none label label-warning">{{ $errors->first('name') }}</span>
                             @endif
@@ -37,8 +37,8 @@
 
                         <div class="col-sm-10">
                             <select class="form-control m-b" name="gender" required data-placeholder="Choose a gender">
-                                <option value="Male" {{ $employee->gender == 'Male' ? 'selected' : '' }}>Male</option>
-                                <option value="Female" {{ $employee->gender == 'Female' ? 'selected' : '' }}>Female</option>
+                                <option value="Male" {{ $employeeEdit->gender == 'Male' ? 'selected' : '' }}>Male</option>
+                                <option value="Female" {{ $employeeEdit->gender == 'Female' ? 'selected' : '' }}>Female</option>
                             </select>
                             @if ($errors->has('gender'))
                             <span class="help-block m-b-none label label-warning">{{ $errors->first('gender') }}</span>
@@ -63,7 +63,7 @@
                                         foreach ($countries as $country) {
                                             $countryName = $country['name']['common'];
                                 ?>
-                                            <option value="{{ $countryName }}" {{$employee->nationality == $countryName ? 'selected' : ''}}> {{ htmlspecialchars($countryName) }}</option>
+                                            <option value="{{ $countryName }}" {{$employeeEdit->nationality == $countryName ? 'selected' : ''}}> {{ htmlspecialchars($countryName) }}</option>
                                 <?php
                                         }
                                         echo '</select>';
@@ -112,7 +112,7 @@
                             <select class="form-control m-b" name="position_id" data-placeholder="Choose a position">
                             <option value="">Select</option>
                                 @foreach($positions as $position)
-                                <option value="{{ $position->position_id }}" {{ $employee->position_id == $position->position_id ? 'selected' : '' }}>{{ $position->position_name }}</option>
+                                <option value="{{ $position->position_id }}" {{ $employeeEdit->position_id == $position->position_id ? 'selected' : '' }}>{{ $position->position_name }}</option>
                                 @endforeach
                             </select>
                             @if ($errors->has('gender'))
@@ -125,11 +125,23 @@
                     <div class="form-group"><label class="col-sm-2 control-label">Status</label>
 
                         <div class="col-sm-10">
-                            <select class="form-control m-b" name="status" required data-placeholder="Choose a Status" disabled>
-                                <option value="{{ $employee->status }}">
-                                    {{ $employee->status }}
+                        @if($employeeEdit->status!='Terminated')
+                            <select class="form-control m-b" name="status" required data-placeholder="Choose a Status">
+                                @foreach($statuses as $status)
+                                @if($status!='Terminated')
+                                <option value="{{ $status }}" {{ $employeeEdit->status ==$status ? 'selected' : '' }}>
+                                    {{ $status }}
+                                </option>
+                               @endif
+                                @endforeach
+                            </select>
+                        @else
+                        <select class="form-control m-b" name="status" required data-placeholder="Choose a Status" disabled>
+                                <option value="{{ $employeeEdit->status }}">
+                                    {{ $employeeEdit->status }}
                                 </option>
                             </select>
+                        @endif
                             @if ($errors->has('status'))
                             <span class="help-block m-b-none label label-warning">{{ $errors->first('status') }}</span>
                             @endif
@@ -140,8 +152,8 @@
                         <label class="col-sm-2 control-label">Avatar</label>
                         <div class="col-sm-10">
                             <div class="tw-flex tw-items-center tw-justify-between">
-                                @if ($employee->avatar)
-                                <img src="{{ asset('uploads/avatars/' . $employee->avatar) }}" alt="avatar" class="tw-w-[80px] tw-h-[80px] tw-rounded-full tw-me-3 tw-mb-4">
+                                @if ($employeeEdit->avatar)
+                                <img src="{{ asset('uploads/avatars/' . $employeeEdit->avatar) }}" alt="avatar" class="tw-w-[80px] tw-h-[80px] tw-rounded-full tw-me-3 tw-mb-4">
                                 @endif
                                 <div class="fileinput max-w-96 fileinput-new input-group" style="width:90%" data-provides="fileinput">
                                     <div class="form-control " data-trigger="fileinput">
@@ -166,13 +178,25 @@
                     <div class="form-group">
                         <div class="col-sm-4 col-sm-offset-2">
                             <button class="btn btn-white btn-link btn-sm dim"><a href="{{route('employee.index')}}">Cancel</a></button>
+                            @if($employeeEdit->status!='Terminated')
                             <button class="btn btn-primary btn-sm dim" style="margin: 0 12px;" type="submit">Save changes</button>
+                            @else
+                            <button class="btn btn-primary btn-sm dim" style="margin: 0 12px;" type="submit" disabled>Save changes</button>
+                            @endif
                         </div>
-                        <a class="btn-link font-bold" style="float: right;" href="{{ route('employee.delete',$employee->employee_id) }}" onclick="return confirm('Are you sure you want to terminate this employee?');">
+                        @if($employeeEdit->status!='Terminated')
+                        <a class="btn-link font-bold" style="float: right;" href="{{ route('employee.delete',$employeeEdit->employee_id) }}" onclick="return confirm('Are you sure you want to terminate this employee?');">
                             <button class="btn btn-danger btn-sm dim">
                                 Quit job
                             </button>
                         </a>
+                        @else
+                        <a class="btn-link font-bold" style="float: right;" href="#">
+                            <button class="btn btn-danger btn-sm dim" disabled>
+                                Quit job
+                            </button>
+                        </a>
+                        @endif
                     </div>
 
                 </form>

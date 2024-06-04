@@ -379,7 +379,7 @@ class EmployeeController extends Controller
             return redirect()->route('employee.index')->with('error', 'This employee cannot be deleted!');
         }
         $employee = Employee::find($id);
-        $employee->status ='On Leave';
+        $employee->status ='Terminal';
         $result = $employee->save();
         $users = User::where('employee_id',$id)->get();
         if(count($users)>0 )
