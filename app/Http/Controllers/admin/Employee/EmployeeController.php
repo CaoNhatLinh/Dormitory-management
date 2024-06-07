@@ -51,7 +51,7 @@ class EmployeeController extends Controller
                         lengthChange: false,
                         dom: \'<"html5buttons"B>lTfgitp\',
                         buttons: [
-        
+                           
                             {extend: \'print\',
                              customize: function (win){
                                     $(win.document.body).addClass(\'white-bg\');
